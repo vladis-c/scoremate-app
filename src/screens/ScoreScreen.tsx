@@ -1,11 +1,12 @@
 import React from 'react';
 import {View, StyleSheet} from 'react-native';
 import {Text} from 'react-native-paper';
+import ScoreCard from '../components/ScoreCard';
 
 const ScoreScreen = () => {
   return (
     <View style={styles.container}>
-      <Text>ScoreScreen</Text>
+      <ScoreCard />
     </View>
   );
 };
