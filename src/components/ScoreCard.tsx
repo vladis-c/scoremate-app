@@ -45,56 +45,63 @@ const ScoreCard = ({id, color, name, onOutOfScreen}: ScoreCardProps) => {
       dispatch(removePlayer(id));
     };
     return (
-      <Card.Content style={[styles.content, styles.contentInEdit]}>
-        {/* Color randomizer */}
-        <IconButton
-          icon="invert-colors"
-          onPress={() =>
-            dispatch(
-              setPlayerSettings({id, key: 'color', value: getRandomColor()}),
-            )
-          }
-          iconColor={secondaryColor}
-        />
-        {/* Color picker */}
-        <>
+      <Card.Content style={styles.content}>
+        <View style={styles.contentInEdit}>
+          {/* Color randomizer */}
           <IconButton
-            icon="palette"
-            onPress={() => setColorPaletteIsOpen(true)}
+            icon="invert-colors"
+            onPress={() =>
+              dispatch(
+                setPlayerSettings({id, key: 'color', value: getRandomColor()}),
+              )
+            }
             iconColor={secondaryColor}
           />
-          <ColorPalette
-            color={color}
-            onColorChangeComplete={color =>
-              dispatch(setPlayerSettings({id, key: 'color', value: color}))
-            }
-            onDismiss={() => {
-              setColorPaletteIsOpen(false);
-            }}
-            visible={colorPaletteIsOpen}
-          />
-        </>
-        <>
+          {/* Color picker */}
+          <>
+            <IconButton
+              icon="palette"
+              onPress={() => setColorPaletteIsOpen(true)}
+              iconColor={secondaryColor}
+            />
+            <ColorPalette
+              color={color}
+              onColorChangeComplete={color =>
+                dispatch(setPlayerSettings({id, key: 'color', value: color}))
+              }
+              onDismiss={() => {
+                setColorPaletteIsOpen(false);
+              }}
+              visible={colorPaletteIsOpen}
+            />
+          </>
+          <>
+            <IconButton
+              icon="account-edit"
+              onPress={() => setTextModalIsOpen(true)}
+              iconColor={secondaryColor}
+            />
+            <TextModal
+              value={name}
+              onValueChange={value =>
+                dispatch(setPlayerSettings({id, key: 'name', value}))
+              }
+              visible={textModalIsOpen}
+              onDismiss={() => {
+                setTextModalIsOpen(false);
+                setIsEditState(false);
+              }}
+            />
+          </>
           <IconButton
-            icon="account-edit"
-            onPress={() => setTextModalIsOpen(true)}
+            icon="delete"
+            onPress={deletePlayer}
             iconColor={secondaryColor}
           />
-          <TextModal
-            value={name}
-            onValueChange={value =>
-              dispatch(setPlayerSettings({id, key: 'name', value}))
-            }
-            visible={textModalIsOpen}
-            onDismiss={() => {
-              setTextModalIsOpen(false);
-              setIsEditState(false);
-            }}
-          />
-        </>
+        </View>
         <IconButton
-          icon="delete"
-          onPress={deletePlayer}
+          icon="check"
+          onPress={() => setIsEditState(false)}
           iconColor={secondaryColor}
         />
       </Card.Content>
@@ -169,6 +176,8 @@ const styles = StyleSheet.create({
     height: 100,
   },
   contentInEdit: {
+    flexDirection: 'row',
+    alignItems: 'center',
     justifyContent: 'flex-start',
   },
   center: {
