@@ -13,11 +13,8 @@ const service = createSlice({
     clearService: state => {
       Object.assign(state, initialState);
     },
-    setAppIsReady: (state, action: PayloadAction<boolean>) => {
-      state.appIsReady = action.payload;
-    },
   },
 });
 
-export const {clearService, setAppIsReady} = service.actions;
+export const {clearService} = service.actions;
 export default service;

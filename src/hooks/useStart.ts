@@ -4,12 +4,11 @@ import {
   Quicksand_700Bold,
   useFonts,
 } from '@expo-google-fonts/quicksand';
-import {store} from '../store/store';
-import {useEffect} from 'react';
-import {setAppIsReady} from '../store/service';
+import {useEffect, useState} from 'react';
 
 export const useStart = () => {
-  const {dispatch} = store;
+  const [appIsReady, setAppIsReady] = useState(false);
+
   const [fontsLoaded] = useFonts({
     Quicksand_300Light,
     Quicksand_500Medium,
@@ -18,7 +17,9 @@ export const useStart = () => {
 
   useEffect(() => {
     if (fontsLoaded) {
-      dispatch(setAppIsReady(true));
+      setAppIsReady(true);
     }
   }, [fontsLoaded]);
+
+  return {appIsReady};
 };
