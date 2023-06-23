@@ -49,7 +49,11 @@ const AddCard = () => {
 export default AddCard;
 
 const styles = StyleSheet.create({
-  container: {width: '100%', height: 50, marginVertical: 10},
+  container: {
+    width: '100%',
+    height: 50,
+    marginVertical: 10,
+  },
   content: {
     alignItems: 'center',
     justifyContent: 'space-between',
