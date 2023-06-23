@@ -15,9 +15,6 @@ const MainNavigator = () => {
   return (
     <MainStack.Navigator
       screenOptions={{
-        contentStyle: {
-          padding: 20,
-        },
         headerShown: true,
         headerBackVisible: false,
       }}>

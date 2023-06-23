@@ -5,6 +5,7 @@ import {PaperProvider} from 'react-native-paper';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 import {Provider} from 'react-redux';
 import * as SplashScreen from 'expo-splash-screen';
+import {ClickOutsideProvider} from 'react-native-click-outside';
 
 import {store} from './src/store/store';
 import {NavigationTheme, PaperTheme} from './src/theme';
@@ -35,7 +36,9 @@ const App = () => {
         <PaperProvider theme={PaperTheme}>
           <NavigationContainer theme={NavigationTheme}>
             <StatusBar translucent={true} />
-            <MainNavigator />
+            <ClickOutsideProvider>
+              <MainNavigator />
+            </ClickOutsideProvider>
           </NavigationContainer>
         </PaperProvider>
       </Provider>

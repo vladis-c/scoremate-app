@@ -1,19 +1,23 @@
-import React, {useCallback, useEffect, useRef, useState} from 'react';
-import {StyleSheet} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {StyleSheet, View} from 'react-native';
 import {Card, IconButton, Text} from 'react-native-paper';
+import {useClickOutside} from 'react-native-click-outside';
+
 import {colors} from '../theme';
 import ColorPalette from './ColorPalette';
 import {Player} from '../types';
 import {useAppDispatch, useAppSelector} from '../hooks/redux-hooks';
 import {removePlayer, setPlayerSettings} from '../store/score';
-import {handleTextColorForBackground} from '../helpers';
+import {getRandomColor, handleTextColorForBackground} from '../helpers';
+import TextModal from './TextModal';
 
 type ScoreCardProps = {
   id: Player['id'];
   color: Player['color'];
+  name: Player['name'];
 };
 
-const ScoreCard = ({id, color}: ScoreCardProps) => {
+const ScoreCard = ({id, color, name}: ScoreCardProps) => {
   const dispatch = useAppDispatch();
   const players = useAppSelector(({score: {players}}) => players);
   const currentPlayer = players.find(player => player.id === id);
@@ -25,7 +29,9 @@ const ScoreCard = ({id, color}: ScoreCardProps) => {
 
   const [count, setCount] = useState<number>(0);
   const [isEditState, setIsEditState] = useState(false);
-  const [visible, setVisible] = useState(false);
+  const [colorPaletteIsOpen, setColorPaletteIsOpen] = useState(false);
+  const [textModalIsOpen, setTextModalIsOpen] = useState(false);
+  const ref = useClickOutside<View>(() => setIsEditState(false));
 
   useEffect(() => {
     // setting new color for the text and icons based on background
@@ -34,20 +40,26 @@ const ScoreCard = ({id, color}: ScoreCardProps) => {
   }, [color]);
 
   const renderEditState = () => {
-    const showModal = () => setVisible(true);
-    const hideModal = () => {
-      setVisible(false);
-      setIsEditState(false);
-    };
     const deletePlayer = () => {
       dispatch(removePlayer(id));
     };
     return (
       <Card.Content style={[styles.content, styles.contentInEdit]}>
+        {/* Color randomizer */}
+        <IconButton
+          icon="invert-colors"
+          onPress={() =>
+            dispatch(
+              setPlayerSettings({id, key: 'color', value: getRandomColor()}),
+            )
+          }
+          iconColor={secondaryColor}
+        />
+        {/* Color picker */}
         <>
           <IconButton
             icon="palette"
-            onPress={showModal}
+            onPress={() => setColorPaletteIsOpen(true)}
             iconColor={secondaryColor}
           />
           <ColorPalette
@@ -55,8 +67,28 @@ const ScoreCard = ({id, color}: ScoreCardProps) => {
             onColorChangeComplete={color =>
               dispatch(setPlayerSettings({id, key: 'color', value: color}))
             }
-            onDismiss={hideModal}
-            visible={visible}
+            onDismiss={() => {
+              setColorPaletteIsOpen(false);
+            }}
+            visible={colorPaletteIsOpen}
+          />
+        </>
+        <>
+          <IconButton
+            icon="account-edit"
+            onPress={() => setTextModalIsOpen(true)}
+            iconColor={secondaryColor}
+          />
+          <TextModal
+            value={name}
+            onValueChange={value =>
+              dispatch(setPlayerSettings({id, key: 'name', value}))
+            }
+            visible={textModalIsOpen}
+            onDismiss={() => {
+              setTextModalIsOpen(false);
+              setIsEditState(false);
+            }}
           />
         </>
         <IconButton
@@ -76,9 +108,16 @@ const ScoreCard = ({id, color}: ScoreCardProps) => {
           onPress={() => setCount(prev => prev - 1)}
           iconColor={secondaryColor}
         />
-        <Text variant="headlineLarge" style={{color: secondaryColor}}>
-          {count}
-        </Text>
+        <View style={styles.center}>
+          {name ? (
+            <Text variant="bodyLarge" style={{color: secondaryColor}}>
+              {name}
+            </Text>
+          ) : null}
+          <Text variant="headlineLarge" style={{color: secondaryColor}}>
+            {count}
+          </Text>
+        </View>
         <IconButton
           icon="plus"
           onPress={() => setCount(prev => prev + 1)}
@@ -89,17 +128,19 @@ const ScoreCard = ({id, color}: ScoreCardProps) => {
   };
 
   return (
-    <Card style={[styles.container, {backgroundColor: color}]}>
-      {isEditState ? renderEditState() : renderNonEditState()}
-      <IconButton
-        icon="pencil"
-        size={12}
-        iconColor={colors.White}
-        onPress={() => setIsEditState(prev => !prev)}
-        style={styles.edit}
-        containerColor={colors.Blue}
-      />
-    </Card>
+    <View ref={ref}>
+      <Card style={[styles.container, {backgroundColor: color}]}>
+        {isEditState ? renderEditState() : renderNonEditState()}
+        <IconButton
+          icon="pencil"
+          size={12}
+          iconColor={colors.White}
+          onPress={() => setIsEditState(prev => !prev)}
+          style={styles.edit}
+          containerColor={colors.Blue}
+        />
+      </Card>
+    </View>
   );
 };
 
@@ -112,13 +153,18 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     flexDirection: 'row',
     paddingVertical: 8,
+    height: 100,
   },
   contentInEdit: {
     justifyContent: 'flex-start',
   },
+  center: {
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   edit: {
     position: 'absolute',
-    bottom: 45,
+    bottom: 75,
     right: -15,
     elevation: 5,
     shadowOffset: {
