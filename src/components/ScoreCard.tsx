@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {StyleSheet, View} from 'react-native';
+import {Dimensions, StyleSheet, View} from 'react-native';
 import {Card, IconButton, Text} from 'react-native-paper';
 import {useClickOutside} from 'react-native-click-outside';
 
@@ -15,9 +15,10 @@ type ScoreCardProps = {
   id: Player['id'];
   color: Player['color'];
   name: Player['name'];
+  onOutOfScreen?: (value: boolean) => void;
 };
 
-const ScoreCard = ({id, color, name}: ScoreCardProps) => {
+const ScoreCard = ({id, color, name, onOutOfScreen}: ScoreCardProps) => {
   const dispatch = useAppDispatch();
   const players = useAppSelector(({score: {players}}) => players);
   const currentPlayer = players.find(player => player.id === id);
@@ -128,7 +129,19 @@ const ScoreCard = ({id, color, name}: ScoreCardProps) => {
   };
 
   return (
-    <View ref={ref}>
+    <View
+      ref={ref}
+      onLayout={e => {
+        if (onOutOfScreen) {
+          const height = Dimensions.get('screen').height;
+          const currentY = e.nativeEvent.layout.y;
+          if (currentY > height * 0.7) {
+            onOutOfScreen(true);
+          } else {
+            onOutOfScreen(false);
+          }
+        }
+      }}>
       <Card style={[styles.container, {backgroundColor: color}]}>
         {isEditState ? renderEditState() : renderNonEditState()}
         <IconButton

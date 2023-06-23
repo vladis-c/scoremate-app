@@ -1,15 +1,29 @@
-import React from 'react';
+import React, {useEffect, useRef} from 'react';
 import {ScrollView, StyleProp, StyleSheet, ViewStyle} from 'react-native';
 
+type ScrollContainerProps = {
+  children: React.ReactNode;
+  scrollToEnd?: boolean;
+  onScrolledToEnd?: () => void;
+  style?: StyleProp<ViewStyle>;
+};
 const ScrollContainer = ({
   children,
   style,
-}: {
-  children: React.ReactNode;
-  style?: StyleProp<ViewStyle>;
-}) => {
+  scrollToEnd,
+  onScrolledToEnd,
+}: ScrollContainerProps) => {
+  const ref = useRef<ScrollView | null>(null);
+
+  useEffect(() => {
+    if (scrollToEnd && ref.current) {
+      ref.current.scrollToEnd();
+      onScrolledToEnd && onScrolledToEnd();
+    }
+  }, [scrollToEnd]);
+
   return (
-    <ScrollView contentContainerStyle={[styles.container, style]}>
+    <ScrollView contentContainerStyle={[styles.container, style]} ref={ref}>
       {children}
     </ScrollView>
   );
