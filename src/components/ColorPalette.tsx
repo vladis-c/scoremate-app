@@ -1,6 +1,6 @@
 import React from 'react';
 import {StyleSheet} from 'react-native';
-import {Modal, Portal, Card} from 'react-native-paper';
+import {Modal, Portal, Card, Button} from 'react-native-paper';
 import ColorPicker from 'react-native-wheel-color-picker';
 
 type ColorPaletteProps = {
@@ -33,6 +33,9 @@ const ColorPalette = ({
               row={false}
             />
           </Card.Content>
+          <Card.Actions style={styles.actions}>
+            <Button onPress={onDismiss}>Ok</Button>
+          </Card.Actions>
         </Card>
       </Modal>
     </Portal>
@@ -42,12 +45,21 @@ const ColorPalette = ({
 export default ColorPalette;
 
 const styles = StyleSheet.create({
-  container: {width: '100%', height: '70%', padding: 20},
+  container: {
+    width: '100%',
+    height: '70%',
+    padding: 20,
+  },
   card: {
     width: '100%',
     height: '100%',
     justifyContent: 'center',
     alignItems: 'center',
-    padding: 20,
+    paddingTop: 0,
+    paddingHorizontal: 20,
+    paddingBottom: 100,
+  },
+  actions: {
+    paddingVertical: 30,
   },
 });

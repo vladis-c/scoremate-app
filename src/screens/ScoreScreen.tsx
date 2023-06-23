@@ -5,17 +5,14 @@ import {useAppSelector} from '../hooks/redux-hooks';
 import AddCard from '../components/AddCard';
 
 const ScoreScreen = () => {
-  const {amountOfPlayers} = useAppSelector(({score}) => score);
-  const numberOfCards: number[] = Array.from(
-    {length: amountOfPlayers},
-    (_, index) => index + 1,
-  );
+  const players = useAppSelector(({score: {players}}) => players);
+
   return (
     <View style={styles.container}>
       <AddCard />
       <View style={styles.cardsContainer}>
-        {numberOfCards.map(card => (
-          <ScoreCard key={card} />
+        {players.map(player => (
+          <ScoreCard key={player.id} id={player.id} color={player.color} />
         ))}
       </View>
     </View>

@@ -72,6 +72,9 @@ export const PaperTheme: ThemeProp = {
     titleLarge: fonts.BigHeading,
     titleMedium: fonts.SmallHeading,
     titleSmall: fonts.SmallText,
+    labelLarge: fonts.SmallHeading,
+    labelMedium: fonts.BasicText,
+    labelSmall: fonts.SmallText
   },
   dark: false,
   colors: {

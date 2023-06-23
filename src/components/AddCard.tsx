@@ -2,11 +2,13 @@ import React from 'react';
 import {StyleSheet, View} from 'react-native';
 import {Card, IconButton, Text} from 'react-native-paper';
 import {useAppDispatch, useAppSelector} from '../hooks/redux-hooks';
-import {setAmountOfPlayers} from '../store/score';
+import {removePlayer, setNewPlayer} from '../store/score';
+import {getRandomColor} from '../helpers';
 
 const AddCard = () => {
   const dispatch = useAppDispatch();
-  const {amountOfPlayers} = useAppSelector(({score}) => score);
+  const players = useAppSelector(({score: {players}}) => players);
+  const amountOfPlayers = players.length;
 
   return (
     <Card style={styles.container}>
@@ -18,13 +20,25 @@ const AddCard = () => {
           <IconButton
             size={16}
             icon="minus"
-            onPress={() => dispatch(setAmountOfPlayers(amountOfPlayers - 1))}
+            onPress={() => {
+              // removing last player
+              dispatch(removePlayer(players[players.length - 1].id));
+            }}
           />
           <Text variant="headlineMedium">{amountOfPlayers}</Text>
           <IconButton
             size={16}
             icon="plus"
-            onPress={() => dispatch(setAmountOfPlayers(amountOfPlayers + 1))}
+            onPress={() => {
+              dispatch(
+                setNewPlayer({
+                  id: amountOfPlayers + 1,
+                  score: 0,
+                  name: '',
+                  color: getRandomColor(),
+                }),
+              );
+            }}
           />
         </View>
       </Card.Content>
