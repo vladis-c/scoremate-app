@@ -11,7 +11,7 @@ type ObjectValues<T> = T[keyof T];
 export const MAIN_NAV = {
   SCORE: 'Score',
   SETTINGS: 'Settings',
-  RANDOM: 'Random',
+  RANDOM: 'Randomizer',
   DICE: 'Dice',
   COIN: 'Coin',
 } as const;
@@ -29,7 +29,7 @@ export type MainNavParamList = {
 };
 
 // Navigation Props without useNavigation hook
-export type LoginScreenProps = NativeStackScreenProps<
+export type ScoreScreenProps = NativeStackScreenProps<
   MainNavParamList,
   'Score'
 >;

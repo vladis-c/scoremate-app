@@ -21,9 +21,6 @@ const score = createSlice({
   name: 'score',
   initialState: initialState,
   reducers: {
-    clearScoreSlice: state => {
-      Object.assign(state, initialState);
-    },
     setNewPlayer: (state, action: PayloadAction<Player>) => {
       const newPlayer = action.payload;
       const objIndex = state.players.findIndex(el => el.id === newPlayer.id);
@@ -64,7 +61,6 @@ const score = createSlice({
 });
 
 export const {
-  clearScoreSlice,
   setPlayerSettings,
   setNewPlayer,
   removePlayer,

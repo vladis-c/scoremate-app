@@ -26,10 +26,7 @@ const ColorPalette = ({
           <Card.Content>
             <ColorPicker
               color={color}
-              onColorChangeComplete={e => {
-                console.log(e);
-                onColorChangeComplete(e);
-              }}
+              onColorChangeComplete={onColorChangeComplete}
               thumbSize={40}
               sliderSize={40}
               noSnap={true}

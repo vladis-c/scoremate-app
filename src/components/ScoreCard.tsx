@@ -118,7 +118,7 @@ const ScoreCard = ({id, color, name}: ScoreCardProps) => {
         />
         <View style={styles.center}>
           {name ? (
-            <Text variant="bodyLarge" style={{color: secondaryColor}}>
+            <Text variant="bodySmall" style={{color: secondaryColor}}>
               {name}
             </Text>
           ) : null}
