@@ -10,15 +10,15 @@ import {useAppDispatch, useAppSelector} from '../hooks/redux-hooks';
 import {removePlayer, setPlayerSettings} from '../store/score';
 import {getRandomColor, handleTextColorForBackground} from '../helpers';
 import TextModal from './TextModal';
+import {setShouldScrollToEnd} from '../store/service';
 
 type ScoreCardProps = {
   id: Player['id'];
   color: Player['color'];
   name: Player['name'];
-  onOutOfScreen?: (value: boolean) => void;
 };
 
-const ScoreCard = ({id, color, name, onOutOfScreen}: ScoreCardProps) => {
+const ScoreCard = ({id, color, name}: ScoreCardProps) => {
   const dispatch = useAppDispatch();
   const players = useAppSelector(({score: {players}}) => players);
   const currentPlayer = players.find(player => player.id === id);
@@ -139,14 +139,12 @@ const ScoreCard = ({id, color, name, onOutOfScreen}: ScoreCardProps) => {
     <View
       ref={ref}
       onLayout={e => {
-        if (onOutOfScreen) {
-          const height = Dimensions.get('screen').height;
-          const currentY = e.nativeEvent.layout.y;
-          if (currentY > height * 0.7) {
-            onOutOfScreen(true);
-          } else {
-            onOutOfScreen(false);
-          }
+        const height = Dimensions.get('screen').height;
+        const currentY = e.nativeEvent.layout.y;
+        if (currentY > height * 0.7) {
+          dispatch(setShouldScrollToEnd(true));
+        } else {
+          dispatch(setShouldScrollToEnd(false));
         }
       }}>
       <Card style={[styles.container, {backgroundColor: color}]}>

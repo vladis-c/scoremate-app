@@ -1,26 +1,23 @@
 import React, {useEffect, useRef} from 'react';
 import {ScrollView, StyleProp, StyleSheet, ViewStyle} from 'react-native';
+import {useAppDispatch, useAppSelector} from '../hooks/redux-hooks';
+import {setShouldScrollToEnd} from '../store/service';
 
 type ScrollContainerProps = {
   children: React.ReactNode;
-  scrollToEnd?: boolean;
-  onScrolledToEnd?: () => void;
   style?: StyleProp<ViewStyle>;
 };
-const ScrollContainer = ({
-  children,
-  style,
-  scrollToEnd,
-  onScrolledToEnd,
-}: ScrollContainerProps) => {
+const ScrollContainer = ({children, style}: ScrollContainerProps) => {
+  const displatch = useAppDispatch();
+  const {shouldScrollToEnd} = useAppSelector(({service}) => service);
   const ref = useRef<ScrollView | null>(null);
 
   useEffect(() => {
-    if (scrollToEnd && ref.current) {
+    if (shouldScrollToEnd && ref.current) {
       ref.current.scrollToEnd();
-      onScrolledToEnd && onScrolledToEnd();
+      displatch(setShouldScrollToEnd(false));
     }
-  }, [scrollToEnd]);
+  }, [shouldScrollToEnd, displatch]);
 
   return (
     <ScrollView contentContainerStyle={[styles.container, style]} ref={ref}>

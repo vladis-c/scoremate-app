@@ -8,7 +8,6 @@ import ScrollContainer from '../components/ScrollContaner';
 const ScoreScreen = () => {
   const players = useAppSelector(({score: {players}}) => players);
   const [addCardHeight, setAddCardHeigth] = useState<number | null>(null);
-  const [shouldScrollToEnd, setShouldScrollToEnd] = useState(false);
 
   return (
     <>
@@ -18,10 +17,7 @@ const ScoreScreen = () => {
         <AddCard />
       </View>
       {addCardHeight !== null ? (
-        <ScrollContainer
-          style={{paddingTop: addCardHeight}}
-          scrollToEnd={shouldScrollToEnd}
-          onScrolledToEnd={() => setShouldScrollToEnd(false)}>
+        <ScrollContainer style={{paddingTop: addCardHeight}}>
           <View style={styles.cardsContainer}>
             {players.map(player => (
               <ScoreCard
@@ -29,7 +25,6 @@ const ScoreScreen = () => {
                 id={player.id}
                 color={player.color}
                 name={player.name}
-                onOutOfScreen={v => setShouldScrollToEnd(v)}
               />
             ))}
           </View>
