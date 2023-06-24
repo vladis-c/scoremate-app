@@ -1,40 +1,39 @@
 import React from 'react';
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import {Menu, Divider, IconButton} from 'react-native-paper';
+import {IconButton} from 'react-native-paper';
+import {createDrawerNavigator} from '@react-navigation/drawer';
+
 import {MAIN_NAV, MainNavParamList} from './navigation-types';
 import ScoreScreen from '../screens/ScoreScreen';
+import {fonts} from '../theme';
 
-const MainStack = createNativeStackNavigator<MainNavParamList>();
+const MainStack = createDrawerNavigator<MainNavParamList>();
 
 const MainNavigator = () => {
-  const [visible, setVisible] = React.useState(false);
-
-  const openMenu = () => setVisible(true);
-
-  const closeMenu = () => setVisible(false);
   return (
     <MainStack.Navigator
       screenOptions={{
         headerShown: true,
-        headerBackVisible: false,
+        drawerType: 'front',
+        headerTitleStyle: {
+          ...fonts.SmallHeading,
+        },
+        drawerLabelStyle: {
+          ...fonts.BasicText,
+        },
       }}>
       <MainStack.Screen
         name={MAIN_NAV.SCORE}
         component={ScoreScreen}
-        options={{
+        options={({navigation}) => ({
+          drawerIcon: () => <IconButton icon="star" />,
           headerLeft: () => (
-            <Menu
-              visible={visible}
-              onDismiss={closeMenu}
-              style={{top: 90, left: 35}}
-              anchor={<IconButton icon="menu" size={20} onPress={openMenu} />}>
-              <Menu.Item onPress={() => {}} title="Item 1" />
-              <Menu.Item onPress={() => {}} title="Item 2" />
-              <Divider />
-              <Menu.Item onPress={() => {}} title="Item 3" />
-            </Menu>
+            <IconButton
+              icon="menu"
+              size={20}
+              onPress={() => navigation.toggleDrawer()}
+            />
           ),
-        }}
+        })}
       />
     </MainStack.Navigator>
   );
