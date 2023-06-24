@@ -8,6 +8,7 @@ import Die6 from '../components/Dice/Die6';
 import {removeDie, setAddDie, setRollDice} from '../store/dice';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import Die4 from '../components/Dice/Die4';
+import Die from '../components/Dice/Die';
 
 const DiceScreen = () => {
   const dispatch = useAppDispatch();
@@ -42,9 +43,8 @@ const DiceScreen = () => {
             style={styles.dice}
             onPress={() => dispatch(setRollDice())}>
             {diceArray.map(die => (
-              <Die6 key={die.id} dots={die.randomNumber} />
+              <Die key={die.id} dots={die.randomNumber} type={die.to} />
             ))}
-            <Die4 dots={4} />
           </TouchableOpacity>
           <View style={styles.addDice}>
             <Text variant="bodySmall">Add dice</Text>

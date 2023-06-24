@@ -6,8 +6,10 @@ export type Player = {
 };
 
 export type Dice = {
-  id: number,
+  id: number;
   randomNumber: number;
   from: number;
-  to: number;
+  to: DieType;
 };
+
+export type DieType = 4 | 6;
