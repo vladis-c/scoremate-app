@@ -6,6 +6,7 @@ import {MAIN_NAV, MainNavParamList} from './navigation-types';
 import ScoreScreen from '../screens/ScoreScreen';
 import {fonts} from '../theme';
 import RandomizerScreen from '../screens/RandomizerScreen';
+import DiceScreen from '../screens/DiceScreen';
 
 const MainStack = createDrawerNavigator<MainNavParamList>();
 
@@ -41,6 +42,13 @@ const MainNavigator = () => {
         component={RandomizerScreen}
         options={{
           drawerIcon: () => <IconButton icon="refresh" />,
+        }}
+      />
+      <MainStack.Screen
+        name={MAIN_NAV.DICE}
+        component={DiceScreen}
+        options={{
+          drawerIcon: () => <IconButton icon="dice-6" />,
         }}
       />
     </MainStack.Navigator>

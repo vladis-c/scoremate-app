@@ -1,8 +1,8 @@
 import React from 'react';
-import {View, StyleSheet} from 'react-native';
-import {Button, Card, Text, TextInput} from 'react-native-paper';
+import {View, StyleSheet, TouchableOpacity} from 'react-native';
+import {Card, Text, TextInput} from 'react-native-paper';
+
 import {useAppDispatch, useAppSelector} from '../hooks/redux-hooks';
-import {TouchableOpacity} from 'react-native-gesture-handler';
 import {setRandomNumber, setRandomizerLimit} from '../store/random';
 
 const RandomizerScreen = () => {
@@ -13,7 +13,7 @@ const RandomizerScreen = () => {
       <Card style={styles.card}>
         <Card.Content style={styles.content}>
           {randomNumber !== null ? (
-            <Text variant="bodySmall">Press number to randomize again</Text>
+            <Text variant="bodySmall">Press on number to randomize again</Text>
           ) : null}
           <TouchableOpacity
             onPress={() => dispatch(setRandomNumber())}

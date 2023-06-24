@@ -4,3 +4,10 @@ export type Player = {
   id: number;
   score: number;
 };
+
+export type Dice = {
+  id: number,
+  randomNumber: number;
+  from: number;
+  to: number;
+};

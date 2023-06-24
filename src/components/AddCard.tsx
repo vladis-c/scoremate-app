@@ -19,6 +19,7 @@ const AddCard = () => {
         </View>
         <View style={styles.halfContainer}>
           <IconButton
+            disabled={players.length === 0}
             size={16}
             icon="minus"
             onPress={() => {
@@ -44,6 +45,7 @@ const AddCard = () => {
         </View>
         <View style={styles.rightContainer}>
           <IconButton
+            disabled={players.length === 0}
             size={24}
             icon="refresh"
             onPress={() => {
