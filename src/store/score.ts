@@ -1,7 +1,6 @@
 import {PayloadAction, createSlice} from '@reduxjs/toolkit';
 import type {Player} from '../types';
-import {colors} from '../theme';
-import {getRandomColor} from '../helpers';
+import {getRandomColor, shuffleArray} from '../helpers';
 
 type ScoreInitialStateProps = {
   players: Player[];
@@ -56,9 +55,19 @@ const score = createSlice({
       //@ts-ignore
       state.players[playerIndex][key] = value;
     },
+    setShuffledArray: state => {
+      // In the future we can also return to initial state, as the ids are staying the same 1, 2, 3
+      const shuffled = shuffleArray([...state.players]);
+      state.players = shuffled;
+    },
   },
 });
 
-export const {clearScoreSlice, setPlayerSettings, setNewPlayer, removePlayer} =
-  score.actions;
+export const {
+  clearScoreSlice,
+  setPlayerSettings,
+  setNewPlayer,
+  removePlayer,
+  setShuffledArray,
+} = score.actions;
 export default score;

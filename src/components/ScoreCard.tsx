@@ -184,8 +184,8 @@ const styles = StyleSheet.create({
   },
   edit: {
     position: 'absolute',
-    bottom: 75,
-    right: -15,
+    bottom: 70,
+    right: -10,
     elevation: 5,
     shadowOffset: {
       width: 0,

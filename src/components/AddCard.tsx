@@ -2,7 +2,7 @@ import React from 'react';
 import {StyleSheet, View} from 'react-native';
 import {Card, IconButton, Text} from 'react-native-paper';
 import {useAppDispatch, useAppSelector} from '../hooks/redux-hooks';
-import {removePlayer, setNewPlayer} from '../store/score';
+import {removePlayer, setNewPlayer, setShuffledArray} from '../store/score';
 import {getRandomColor} from '../helpers';
 
 const AddCard = () => {
@@ -15,7 +15,7 @@ const AddCard = () => {
     <Card style={styles.container}>
       <Card.Content style={styles.content}>
         <View style={styles.halfContainer}>
-          <Text variant="headlineMedium">Players: </Text>
+          <Text variant="headlineMedium">Players:</Text>
         </View>
         <View style={styles.halfContainer}>
           <IconButton
@@ -42,6 +42,16 @@ const AddCard = () => {
             }}
           />
         </View>
+        <View style={styles.rightContainer}>
+          <IconButton
+            size={24}
+            icon="refresh"
+            onPress={() => {
+              // shuffles the array of players in random order
+              dispatch(setShuffledArray());
+            }}
+          />
+        </View>
       </Card.Content>
     </Card>
   );
@@ -59,13 +69,19 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     flexDirection: 'row',
-    paddingVertical: 4,
+    paddingTop: 0,
     width: '100%',
   },
   halfContainer: {
-    width: '50%',
+    width: '40%',
     alignItems: 'center',
     justifyContent: 'space-between',
+    flexDirection: 'row',
+  },
+  rightContainer: {
+    width: '20%',
+    alignItems: 'center',
+    justifyContent: 'flex-end',
     flexDirection: 'row',
   },
 });
