@@ -1,41 +1,42 @@
 import React from 'react';
 import {View, StyleSheet} from 'react-native';
-import { colors } from '../../theme';
+import {colors} from '../../theme';
 
 type Die6Props = {
   dots: number;
 };
+const Dot = () => <View style={styles.dot} />;
 
 const Die6 = ({dots}: Die6Props) => {
   const renderDots = () => {
     switch (dots) {
       case 1:
-        return <View style={styles.dot} />;
+        return <Dot />;
       case 2:
         return (
           <View style={styles.diagonal}>
-            <View style={styles.dot} />
-            <View style={styles.dot} />
+            <Dot />
+            <Dot />
           </View>
         );
       case 3:
         return (
           <View style={styles.diagonal}>
-            <View style={styles.dot} />
-            <View style={styles.dot} />
-            <View style={styles.dot} />
+            <Dot />
+            <Dot />
+            <Dot />
           </View>
         );
       case 4:
         return (
           <>
             <View style={[styles.twoThreeDots, {marginBottom: 10}]}>
-              <View style={styles.dot} />
-              <View style={styles.dot} />
+              <Dot />
+              <Dot />
             </View>
             <View style={styles.twoThreeDots}>
-              <View style={styles.dot} />
-              <View style={styles.dot} />
+              <Dot />
+              <Dot />
             </View>
           </>
         );
@@ -43,12 +44,12 @@ const Die6 = ({dots}: Die6Props) => {
         return (
           <>
             <View style={[styles.twoThreeDots, {marginBottom: 10}]}>
-              <View style={styles.dot} />
-              <View style={styles.dot} />
+              <Dot />
+              <Dot />
             </View>
             <View style={styles.twoThreeDots}>
-              <View style={styles.dot} />
-              <View style={styles.dot} />
+              <Dot />
+              <Dot />
             </View>
             <View style={[styles.dot, styles.absoluteDot]} />
           </>
@@ -57,14 +58,14 @@ const Die6 = ({dots}: Die6Props) => {
         return (
           <View style={{transform: [{rotate: `90 deg`}]}}>
             <View style={[styles.twoThreeDots, {marginBottom: 10}]}>
-              <View style={styles.dot} />
-              <View style={styles.dot} />
-              <View style={styles.dot} />
+              <Dot />
+              <Dot />
+              <Dot />
             </View>
             <View style={styles.twoThreeDots}>
-              <View style={styles.dot} />
-              <View style={styles.dot} />
-              <View style={styles.dot} />
+              <Dot />
+              <Dot />
+              <Dot />
             </View>
           </View>
         );
