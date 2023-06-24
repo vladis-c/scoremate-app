@@ -1,26 +1,11 @@
 import React from 'react';
-import {StyleSheet, View} from 'react-native';
-import Svg, {Polygon} from 'react-native-svg';
-import {colors} from '../../theme';
+import {StyleSheet} from 'react-native';
 import {Text} from 'react-native-paper';
+
+import Triangle from './Triangle';
 
 type Die4Props = {
   dots: number;
-};
-
-const Triangle = ({children}: {children: React.ReactNode}) => {
-  const size = 80;
-  return (
-    <View style={{width: size, height: size, margin: 10}}>
-      <Svg width="100%" height="100%">
-        <Polygon
-          points={`0,${size} ${size / 2},0 ${size},${size}`}
-          fill={colors.Wooden}
-        />
-      </Svg>
-      {children}
-    </View>
-  );
 };
 
 const Die4 = ({dots}: Die4Props) => {

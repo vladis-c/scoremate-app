@@ -10,6 +10,7 @@ export type Dice = {
   randomNumber: number;
   from: number;
   to: DieType;
+  type: DieType;
 };
 
-export type DieType = 4 | 6;
+export type DieType = 4 | 6 | 8;

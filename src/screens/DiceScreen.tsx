@@ -43,7 +43,7 @@ const DiceScreen = () => {
             style={styles.dice}
             onPress={() => dispatch(setRollDice())}>
             {diceArray.map(die => (
-              <Die key={die.id} dots={die.randomNumber} type={die.to} />
+              <Die key={die.id} dots={die.randomNumber} type={die.type} />
             ))}
           </TouchableOpacity>
           <View style={styles.addDice}>
@@ -66,8 +66,9 @@ const DiceScreen = () => {
                     setAddDie({
                       id: diceArray.length + 1,
                       from: 1,
-                      to: 6,
+                      to: 8,
                       randomNumber: 1,
+                      type: 8,
                     }),
                   );
                 }}

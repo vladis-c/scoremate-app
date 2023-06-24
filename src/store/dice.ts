@@ -13,6 +13,7 @@ const initialState: DiceInitialStateProps = {
       from: 1,
       to: 6,
       randomNumber: 1,
+      type: 6,
     },
   ],
 };
