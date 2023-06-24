@@ -9,6 +9,7 @@ const AddCard = () => {
   const dispatch = useAppDispatch();
   const players = useAppSelector(({score: {players}}) => players);
   const amountOfPlayers = players.length;
+  const appliedColors = players.map(player => player.color);
 
   return (
     <Card style={styles.container}>
@@ -35,7 +36,7 @@ const AddCard = () => {
                   id: amountOfPlayers + 1,
                   score: 0,
                   name: '',
-                  color: getRandomColor(),
+                  color: getRandomColor(appliedColors),
                 }),
               );
             }}

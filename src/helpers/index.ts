@@ -1,6 +1,26 @@
 import {colors} from '../theme';
 
-export const getRandomColor = (): string => {
+export const getRandomColor = (appliedColors?: string[]): string => {
+  const commonColors: string[] = [
+    '#c26e73', // Soft Red
+    '#728cb9', // Soft Blue
+    '#89a77f', // Soft Green
+    '#d5c87d', // Soft Yellow
+    '#f0f0f0', // Whitish
+    '#1a1a1a', // Blackish
+    '#db8f6c', // Soft Orange
+    '#a994b8', // Soft Purple
+  ];
+
+  // it first returns a color from commonColors list
+  if (appliedColors !== undefined) {
+    for (const color of commonColors) {
+      if (!appliedColors.includes(color)) {
+        return color;
+      }
+    }
+  }
+
   const letters = '0123456789ABCDEF';
   let color = '#';
   for (let i = 0; i < 6; i++) {

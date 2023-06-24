@@ -12,7 +12,7 @@ const initialState: ScoreInitialStateProps = {
     {
       id: 1,
       name: '',
-      color: getRandomColor(),
+      color: getRandomColor([]),
       score: 0,
     },
   ],
