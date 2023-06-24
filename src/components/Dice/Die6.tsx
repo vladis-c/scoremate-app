@@ -1,11 +1,12 @@
 import React from 'react';
 import {View, StyleSheet} from 'react-native';
+import { colors } from '../../theme';
 
-type DieSideProps = {
+type Die6Props = {
   dots: number;
 };
 
-const DieSide = ({dots}: DieSideProps) => {
+const Die6 = ({dots}: Die6Props) => {
   const renderDots = () => {
     switch (dots) {
       case 1:
@@ -77,7 +78,7 @@ const DieSide = ({dots}: DieSideProps) => {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#F5DEB3', // Light wooden color
+    backgroundColor: colors.Wooden,
     borderRadius: 10,
     justifyContent: 'center',
     alignItems: 'center',
@@ -112,4 +113,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default DieSide;
+export default Die6;

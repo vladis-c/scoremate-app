@@ -4,9 +4,10 @@ import {Card, IconButton, Text} from 'react-native-paper';
 import {Accelerometer, AccelerometerMeasurement} from 'expo-sensors';
 
 import {useAppDispatch, useAppSelector} from '../hooks/redux-hooks';
-import DieSide from '../components/DieSide';
+import Die6 from '../components/Dice/Die6';
 import {removeDie, setAddDie, setRollDice} from '../store/dice';
 import {TouchableOpacity} from 'react-native-gesture-handler';
+import Die4 from '../components/Dice/Die4';
 
 const DiceScreen = () => {
   const dispatch = useAppDispatch();
@@ -41,8 +42,9 @@ const DiceScreen = () => {
             style={styles.dice}
             onPress={() => dispatch(setRollDice())}>
             {diceArray.map(die => (
-              <DieSide key={die.id} dots={die.randomNumber} />
+              <Die6 key={die.id} dots={die.randomNumber} />
             ))}
+            <Die4 dots={4} />
           </TouchableOpacity>
           <View style={styles.addDice}>
             <Text variant="bodySmall">Add dice</Text>

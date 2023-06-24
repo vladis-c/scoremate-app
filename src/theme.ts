@@ -53,6 +53,7 @@ export const colors = {
   LightGrey: '#F6F6F5',
   Red: '#D23535',
   Green: '#108045',
+  Wooden: '#F5DEB3'
 };
 
 export const NavigationTheme: Theme = {
