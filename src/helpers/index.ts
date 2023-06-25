@@ -72,3 +72,19 @@ export const shuffleArray = <T>(array: T[]): T[] => {
 export const getRandomNumber = (min: number, max: number): number => {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 };
+
+export const handleCreateDropdownArray = (
+  min: number = 0,
+  max: number = 10,
+  step: number = 1,
+): {value: string; label: string}[] => {
+  const length = Math.floor((max - min) / step) + 1;
+  const newArray = Array.from({length}, (_, i) => {
+    const value = max - i * step;
+    return {
+      value: value.toString(),
+      label: value.toString(),
+    };
+  });
+  return newArray.reverse();
+};

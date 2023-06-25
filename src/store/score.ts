@@ -1,9 +1,14 @@
 import {PayloadAction, createSlice} from '@reduxjs/toolkit';
-import type {Player} from '../types';
-import {getRandomColor, shuffleArray} from '../helpers';
+import type {CustomScore, Player, ScoreSettings} from '../types';
+import {
+  getRandomColor,
+  handleCreateDropdownArray,
+  shuffleArray,
+} from '../helpers';
 
 type ScoreInitialStateProps = {
   players: Player[];
+  scoreSettings: ScoreSettings;
 };
 
 const initialState: ScoreInitialStateProps = {
@@ -15,6 +20,10 @@ const initialState: ScoreInitialStateProps = {
       score: 0,
     },
   ],
+  scoreSettings: {
+    customScore: [{label: '', value: '0', isShown: false, id: 1}],
+    availableScore: handleCreateDropdownArray(-10, 20, 1),
+  },
 };
 
 const score = createSlice({
@@ -57,6 +66,41 @@ const score = createSlice({
       const shuffled = shuffleArray([...state.players]);
       state.players = shuffled;
     },
+    setAddNewCustomScore: (
+      state,
+      action: PayloadAction<CustomScore | number>,
+    ) => {
+      if (typeof action.payload === 'number') {
+        const cusIndex = state.scoreSettings.customScore.findIndex(
+          cs => cs.id === action.payload,
+        );
+        state.scoreSettings.customScore.splice(cusIndex, 1);
+        return;
+      }
+      state.scoreSettings.customScore.push(action.payload);
+    },
+    setCustomScore: (state, action: PayloadAction<CustomScore>) => {
+      const {id} = action.payload;
+      const cusIndex = state.scoreSettings.customScore.findIndex(
+        cs => cs.id === id,
+      );
+      if (cusIndex !== -1) {
+        state.scoreSettings.customScore[cusIndex] = action.payload;
+      }
+    },
+    setCustomScoreDropdownIsShown: (
+      state,
+      action: PayloadAction<{id: number; isShown: boolean}>,
+    ) => {
+      const {id, isShown} = action.payload;
+      const cusIndex = state.scoreSettings.customScore.findIndex(
+        cs => cs.id === id,
+      );
+      if (cusIndex === -1) {
+        return;
+      }
+      state.scoreSettings.customScore[cusIndex].isShown = isShown;
+    },
   },
 });
 
@@ -65,5 +109,8 @@ export const {
   setNewPlayer,
   removePlayer,
   setShuffledArray,
+  setCustomScore,
+  setCustomScoreDropdownIsShown,
+  setAddNewCustomScore,
 } = score.actions;
 export default score;

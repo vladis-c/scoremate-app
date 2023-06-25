@@ -1,4 +1,4 @@
-import { Dice } from "../types";
+import {Dice} from '../types';
 
 export const addDiceButtons: Dice[] = [
   {

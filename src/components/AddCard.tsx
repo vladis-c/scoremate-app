@@ -1,12 +1,14 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {StyleSheet, View} from 'react-native';
 import {Card, IconButton, Text} from 'react-native-paper';
 import {useAppDispatch, useAppSelector} from '../hooks/redux-hooks';
 import {removePlayer, setNewPlayer, setShuffledArray} from '../store/score';
 import {getRandomColor} from '../helpers';
+import ScoreSettingsModal from './ScoreSettingsModal';
 
 const AddCard = () => {
   const dispatch = useAppDispatch();
+  const [settingsModal, setSettingsModal] = useState(false);
   const players = useAppSelector(({score: {players}}) => players);
   const amountOfPlayers = players.length;
   const appliedColors = players.map(player => player.color);
@@ -49,7 +51,15 @@ const AddCard = () => {
             }}
           />
         </View>
-        <IconButton size={24} icon="cog" onPress={() => {}} />
+        <IconButton
+          size={24}
+          icon="cog"
+          onPress={() => setSettingsModal(true)}
+        />
+        <ScoreSettingsModal
+          visible={settingsModal}
+          onDismiss={() => setSettingsModal(false)}
+        />
       </Card.Content>
     </Card>
   );
