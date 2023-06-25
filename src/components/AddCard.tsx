@@ -14,10 +14,16 @@ const AddCard = () => {
   return (
     <Card style={styles.container}>
       <Card.Content style={styles.content}>
-        <View style={styles.halfContainer}>
-          <Text variant="headlineMedium">Players:</Text>
-        </View>
-        <View style={styles.halfContainer}>
+        <IconButton
+          disabled={players.length === 0 || players.length === 1}
+          size={24}
+          icon="refresh"
+          onPress={() => {
+            // shuffles the array of players in random order
+            dispatch(setShuffledArray());
+          }}
+        />
+        <View style={styles.plusMinus}>
           <IconButton
             disabled={players.length === 0}
             size={16}
@@ -43,17 +49,7 @@ const AddCard = () => {
             }}
           />
         </View>
-        <View style={styles.rightContainer}>
-          <IconButton
-            disabled={players.length === 0}
-            size={24}
-            icon="refresh"
-            onPress={() => {
-              // shuffles the array of players in random order
-              dispatch(setShuffledArray());
-            }}
-          />
-        </View>
+        <IconButton size={24} icon="cog" onPress={() => {}} />
       </Card.Content>
     </Card>
   );
@@ -74,16 +70,9 @@ const styles = StyleSheet.create({
     paddingTop: 0,
     width: '100%',
   },
-  halfContainer: {
-    width: '40%',
+  plusMinus: {
     alignItems: 'center',
     justifyContent: 'space-between',
-    flexDirection: 'row',
-  },
-  rightContainer: {
-    width: '20%',
-    alignItems: 'center',
-    justifyContent: 'flex-end',
     flexDirection: 'row',
   },
 });
