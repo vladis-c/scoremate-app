@@ -1,14 +1,12 @@
 import React, {useEffect} from 'react';
-import {View, StyleSheet} from 'react-native';
+import {View, StyleSheet, TouchableOpacity} from 'react-native';
 import {Card, IconButton, Text} from 'react-native-paper';
 import {Accelerometer, AccelerometerMeasurement} from 'expo-sensors';
 
 import {useAppDispatch, useAppSelector} from '../hooks/redux-hooks';
-import Die6 from '../components/Dice/Die6';
 import {removeDie, setAddDie, setRollDice} from '../store/dice';
-import {TouchableOpacity} from 'react-native-gesture-handler';
-import Die4 from '../components/Dice/Die4';
 import Die from '../components/Dice/Die';
+import {addDiceButtons} from '../constants';
 
 const DiceScreen = () => {
   const dispatch = useAppDispatch();
@@ -47,7 +45,6 @@ const DiceScreen = () => {
             ))}
           </TouchableOpacity>
           <View style={styles.addDice}>
-            <Text variant="bodySmall">Add dice</Text>
             <View style={styles.buttons}>
               <IconButton
                 disabled={diceArray.length === 0}
@@ -58,21 +55,21 @@ const DiceScreen = () => {
                   dispatch(removeDie(diceArray[diceArray.length - 1].id));
                 }}
               />
-              <IconButton
-                size={24}
-                icon="plus"
-                onPress={() => {
-                  dispatch(
-                    setAddDie({
-                      id: diceArray.length + 1,
-                      from: 1,
-                      to: 8,
-                      randomNumber: 1,
-                      type: 8,
-                    }),
-                  );
-                }}
-              />
+              {addDiceButtons.map(die => (
+                <IconButton
+                  key={die.id}
+                  size={24}
+                  icon={`dice-d${die.type}`}
+                  onPress={() => {
+                    dispatch(
+                      setAddDie({
+                        ...die,
+                        id: diceArray.length + 1,
+                      }),
+                    );
+                  }}
+                />
+              ))}
             </View>
           </View>
         </Card.Content>

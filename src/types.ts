@@ -13,4 +13,4 @@ export type Dice = {
   type: DieType;
 };
 
-export type DieType = 4 | 6 | 8;
+export type DieType = 4 | 6 | 8 | 10 | 12 | 20;

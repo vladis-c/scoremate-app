@@ -1,6 +1,6 @@
 import React from 'react';
 import {View, StyleSheet} from 'react-native';
-import {colors} from '../../theme';
+import Square from './Sqare';
 
 type Die6Props = {
   dots: number;
@@ -74,20 +74,10 @@ const Die6 = ({dots}: Die6Props) => {
     }
   };
 
-  return <View style={styles.container}>{renderDots()}</View>;
+  return <Square>{renderDots()}</Square>;
 };
 
 const styles = StyleSheet.create({
-  container: {
-    backgroundColor: colors.Wooden,
-    borderRadius: 10,
-    justifyContent: 'center',
-    alignItems: 'center',
-    width: 80,
-    height: 80,
-    padding: 10,
-    margin: 10,
-  },
   dot: {
     backgroundColor: 'black',
     width: 16,

@@ -1,8 +1,8 @@
 import React from 'react';
 import {Text} from 'react-native-paper';
-import {StyleSheet} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 
-import Triangle from './Triangle';
+import Square from './Sqare';
 
 type Die8Props = {
   dots: number;
@@ -10,18 +10,28 @@ type Die8Props = {
 
 const Die8 = ({dots}: Die8Props) => {
   return (
-    <Triangle>
-      <Text style={styles.text}>{dots}</Text>
-    </Triangle>
+    <View style={styles.container}>
+      <Square style={styles.square}>
+        <Text style={styles.text}>{dots}</Text>
+      </Square>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
+  container: {
+    transform: [{rotate: `-45deg`}],
+  },
+  square: {
+    width: 60,
+    height: 60,
+  },
   text: {
     position: 'absolute',
-    left: 30,
-    top: 26,
+    left: 18,
+    top: 5,
     fontSize: 40,
+    transform: [{rotate: `45deg`}],
   },
 });
 

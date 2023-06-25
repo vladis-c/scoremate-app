@@ -1,8 +1,8 @@
 import React from 'react';
 import Die4 from './Die4';
 import Die6 from './Die6';
-import {DieType} from '../../types';
 import Die8 from './Die8';
+import {DieType} from '../../types';
 
 type DieProps = {
   type: DieType;
