@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {Dimensions, StyleSheet, View} from 'react-native';
-import {Card, IconButton, Text} from 'react-native-paper';
+import {Button, Card, IconButton, Text} from 'react-native-paper';
 import {useClickOutside} from 'react-native-click-outside';
 
 import {colors} from '../theme';
@@ -8,7 +8,11 @@ import ColorPalette from './ColorPalette';
 import {Player} from '../types';
 import {useAppDispatch, useAppSelector} from '../hooks/redux-hooks';
 import {removePlayer, setPlayerSettings} from '../store/score';
-import {getRandomColor, handleTextColorForBackground} from '../helpers';
+import {
+  getRandomColor,
+  handleSplitArray,
+  handleTextColorForBackground,
+} from '../helpers';
 import TextModal from './TextModal';
 import {setShouldScrollToEnd} from '../store/service';
 
@@ -20,7 +24,10 @@ type ScoreCardProps = {
 
 const ScoreCard = ({id, color, name}: ScoreCardProps) => {
   const dispatch = useAppDispatch();
-  const players = useAppSelector(({score: {players}}) => players);
+  const {
+    players,
+    scoreSettings: {customScore},
+  } = useAppSelector(({score}) => score);
   const currentPlayer = players.find(player => player.id === id);
   const [secondaryColor, setSecondaryColor] = useState(colors.Black);
 
@@ -108,29 +115,59 @@ const ScoreCard = ({id, color, name}: ScoreCardProps) => {
     );
   };
 
+  const renderScoreButton = (sign: 'negative' | 'positive') => {
+    const [negativeValues, positiveValues] = handleSplitArray(customScore);
+    if (sign === 'negative') {
+      return negativeValues.map(v => (
+        <Button
+          key={v}
+          textColor={colors.Black}
+          onPress={() => setCount(prev => prev + +v)}>
+          {v}
+        </Button>
+      ));
+    }
+    return positiveValues.map(v => (
+      <Button
+        key={v}
+        textColor={colors.Black}
+        onPress={() => setCount(prev => prev + +v)}>
+        +{v}
+      </Button>
+    ));
+  };
+
   const renderNonEditState = () => {
     return (
       <Card.Content style={styles.content}>
-        <IconButton
-          icon="minus"
-          onPress={() => setCount(prev => prev - 1)}
-          iconColor={secondaryColor}
-        />
-        <View style={styles.center}>
-          {name ? (
-            <Text variant="bodySmall" style={{color: secondaryColor}}>
-              {name}
+        <View style={styles.topContainer}>
+          <IconButton
+            icon="minus"
+            onPress={() => setCount(prev => prev - 1)}
+            iconColor={secondaryColor}
+          />
+          <View style={styles.center}>
+            {name ? (
+              <Text variant="bodySmall" style={{color: secondaryColor}}>
+                {name}
+              </Text>
+            ) : null}
+            <Text variant="headlineLarge" style={{color: secondaryColor}}>
+              {count}
             </Text>
-          ) : null}
-          <Text variant="headlineLarge" style={{color: secondaryColor}}>
-            {count}
-          </Text>
+          </View>
+          <IconButton
+            icon="plus"
+            onPress={() => setCount(prev => prev + 1)}
+            iconColor={secondaryColor}
+          />
         </View>
-        <IconButton
-          icon="plus"
-          onPress={() => setCount(prev => prev + 1)}
-          iconColor={secondaryColor}
-        />
+        {customScore.filter(el => el.label).length > 0 ? (
+          <View style={styles.buttonsContainer}>
+            {renderScoreButton('negative')}
+            {renderScoreButton('positive')}
+          </View>
+        ) : null}
       </Card.Content>
     );
   };
@@ -168,10 +205,20 @@ const styles = StyleSheet.create({
   container: {width: '100%', marginVertical: 10},
   content: {
     alignItems: 'center',
-    justifyContent: 'space-between',
-    flexDirection: 'row',
-    paddingVertical: 8,
+    justifyContent: 'center',
+    paddingTop: 2,
     height: 100,
+  },
+  topContainer: {
+    width: '100%',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  buttonsContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
   },
   contentInEdit: {
     flexDirection: 'row',

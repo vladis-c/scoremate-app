@@ -88,3 +88,27 @@ export const handleCreateDropdownArray = (
   });
   return newArray.reverse();
 };
+
+export const handleSplitArray = <T extends Record<string, any>>(
+  arr: T[],
+): [string[], string[]] => {
+  const result: [string[], string[]] = [[], []];
+  arr.reduce((acc, {label}) => {
+    if (label === '') {
+      // Skip empty strings
+      return acc;
+    }
+    const numValue = Number(label);
+    if (isNaN(numValue)) {
+      // Skip non-numeric strings
+      return acc;
+    }
+    if (numValue < 0) {
+      result[0].push(label); // Negative values
+    } else {
+      result[1].push(label); // Positive values (includes zero)
+    }
+    return acc; // Return the accumulated value
+  }, undefined);
+  return result;
+};

@@ -43,7 +43,7 @@ const ScoreSettingsModal = ({visible, onDismiss}: ScoreSettingsModalProps) => {
         setValue={v =>
           dispatch(
             setCustomScore({
-              label: v,
+              label: v === '0' ? '' : v,
               value: v,
               isShown: false,
               id,
@@ -66,7 +66,7 @@ const ScoreSettingsModal = ({visible, onDismiss}: ScoreSettingsModalProps) => {
         contentContainerStyle={styles.container}>
         <Card style={styles.card}>
           <Card.Title
-            title={'Set custom settings'}
+            title={'Set custom score settings'}
             titleVariant="headlineMedium"
           />
           <Card.Content style={styles.content}>
@@ -74,7 +74,6 @@ const ScoreSettingsModal = ({visible, onDismiss}: ScoreSettingsModalProps) => {
               return (
                 <View style={styles.ddContainer} key={d.id}>
                   <IconButton
-                    disabled={customScore.length === 1}
                     icon="minus"
                     onPress={() => {
                       dispatch(setAddNewCustomScore(d.id));

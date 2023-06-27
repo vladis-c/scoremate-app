@@ -16,7 +16,7 @@ const initialState: ScoreInitialStateProps = {
     {
       id: 1,
       name: '',
-      color: getRandomColor([]),
+      color: getRandomColor([]), // empty array to get first color from the list
       score: 0,
     },
   ],
@@ -70,10 +70,11 @@ const score = createSlice({
       state,
       action: PayloadAction<CustomScore | number>,
     ) => {
+      console.log(action.payload)
       if (typeof action.payload === 'number') {
         const cusIndex = state.scoreSettings.customScore.findIndex(
           cs => cs.id === action.payload,
-        );
+        );      
         state.scoreSettings.customScore.splice(cusIndex, 1);
         return;
       }
