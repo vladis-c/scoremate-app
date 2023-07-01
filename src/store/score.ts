@@ -70,11 +70,19 @@ const score = createSlice({
       state,
       action: PayloadAction<CustomScore | number>,
     ) => {
-      console.log(action.payload)
       if (typeof action.payload === 'number') {
         const cusIndex = state.scoreSettings.customScore.findIndex(
           cs => cs.id === action.payload,
-        );      
+        );
+        if (state.scoreSettings.customScore.length === 1) {
+          state.scoreSettings.customScore.splice(
+            cusIndex,
+            1,
+            initialState.scoreSettings.customScore[0],
+          );
+          console.log(state.scoreSettings.customScore)
+          return;
+        }
         state.scoreSettings.customScore.splice(cusIndex, 1);
         return;
       }

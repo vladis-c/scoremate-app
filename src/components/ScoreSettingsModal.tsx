@@ -88,7 +88,7 @@ const ScoreSettingsModal = ({visible, onDismiss}: ScoreSettingsModalProps) => {
                           value: '0',
                           label: '',
                           isShown: false,
-                          id: customScore.length + 1,
+                          id: d.id + 1,
                         }),
                       );
                     }}
