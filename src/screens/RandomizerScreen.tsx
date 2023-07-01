@@ -12,16 +12,6 @@ const RandomizerScreen = () => {
     <View style={styles.container}>
       <Card style={styles.card}>
         <Card.Content style={styles.content}>
-          {randomNumber !== null ? (
-            <Text variant="bodySmall">Press on number to randomize again</Text>
-          ) : null}
-          <TouchableOpacity
-            onPress={() => dispatch(setRandomNumber())}
-            style={styles.touchable}>
-            <Text variant={randomNumber !== null ? 'bodyLarge' : 'bodySmall'}>
-              {randomNumber !== null ? randomNumber : 'Press here to randomize'}
-            </Text>
-          </TouchableOpacity>
           <View style={styles.inputs}>
             <TextInput
               value={from}
@@ -46,6 +36,22 @@ const RandomizerScreen = () => {
               autoComplete="off"
             />
           </View>
+          <View style={styles.textContainer}>
+            {randomNumber !== null ? (
+              <Text variant="bodySmall">
+                Press on number to randomize again
+              </Text>
+            ) : null}
+            <TouchableOpacity
+              onPress={() => dispatch(setRandomNumber())}
+              style={styles.touchable}>
+              <Text variant={randomNumber !== null ? 'bodyLarge' : 'bodySmall'}>
+                {randomNumber !== null
+                  ? randomNumber
+                  : 'Press here to randomize'}
+              </Text>
+            </TouchableOpacity>
+          </View>
         </Card.Content>
       </Card>
     </View>
@@ -65,11 +71,10 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '50%',
     marginBottom: 100,
-    justifyContent: 'center',
   },
   content: {
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
   },
   inputs: {
     marginTop: 50,
@@ -78,6 +83,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
+  },
+  textContainer: {
+    marginTop: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   input: {
     width: '40%',

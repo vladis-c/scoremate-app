@@ -24,6 +24,7 @@ const TextModal = ({
         <Card style={styles.card}>
           <Card.Content>
             <TextInput
+              autoFocus
               value={value}
               onChangeText={onValueChange}
               mode="outlined"

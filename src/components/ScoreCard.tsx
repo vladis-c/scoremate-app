@@ -52,8 +52,8 @@ const ScoreCard = ({id, color, name}: ScoreCardProps) => {
       dispatch(removePlayer(id));
     };
     return (
-      <Card.Content style={styles.content}>
-        <View style={styles.contentInEdit}>
+      <Card.Content style={[styles.content, styles.contentIsEditMode]}>
+        <View style={styles.leftInEdit}>
           {/* Color randomizer */}
           <IconButton
             icon="invert-colors"
@@ -209,6 +209,10 @@ const styles = StyleSheet.create({
     paddingTop: 2,
     height: 100,
   },
+  contentIsEditMode: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
   topContainer: {
     width: '100%',
     flexDirection: 'row',
@@ -220,7 +224,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
   },
-  contentInEdit: {
+  leftInEdit: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'flex-start',
