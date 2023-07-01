@@ -4,6 +4,7 @@ import {
   getRandomColor,
   handleCreateDropdownArray,
   shuffleArray,
+  swapArrayItems,
 } from '../helpers';
 
 type ScoreInitialStateProps = {
@@ -80,7 +81,7 @@ const score = createSlice({
             1,
             initialState.scoreSettings.customScore[0],
           );
-          console.log(state.scoreSettings.customScore)
+          console.log(state.scoreSettings.customScore);
           return;
         }
         state.scoreSettings.customScore.splice(cusIndex, 1);
@@ -110,6 +111,14 @@ const score = createSlice({
       }
       state.scoreSettings.customScore[cusIndex].isShown = isShown;
     },
+    setNewPlayersOrder: (
+      state,
+      action: PayloadAction<{id1: number; id2: number}>,
+    ) => {
+      const {id1, id2} = action.payload;
+      const newPlayers = swapArrayItems([...state.players], id1, id2);
+      state.players = newPlayers;
+    },
   },
 });
 
@@ -121,5 +130,6 @@ export const {
   setCustomScore,
   setCustomScoreDropdownIsShown,
   setAddNewCustomScore,
+  setNewPlayersOrder,
 } = score.actions;
 export default score;

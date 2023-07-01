@@ -1,13 +1,17 @@
 import React, {useState} from 'react';
 import {View, StyleSheet} from 'react-native';
+import {DraxView} from 'react-native-drax';
+
 import ScoreCard from '../components/ScoreCard';
-import {useAppSelector} from '../hooks/redux-hooks';
+import {useAppDispatch, useAppSelector} from '../hooks/redux-hooks';
 import AddCard from '../components/AddCard';
 import ScrollContainer from '../components/ScrollContaner';
+import {setNewPlayersOrder} from '../store/score';
 
 const ScoreScreen = () => {
   const players = useAppSelector(({score: {players}}) => players);
   const [addCardHeight, setAddCardHeigth] = useState<number | null>(null);
+  const dispatch = useAppDispatch();
 
   return (
     <>
@@ -20,12 +24,24 @@ const ScoreScreen = () => {
         <ScrollContainer style={{paddingTop: addCardHeight}}>
           <View style={styles.cardsContainer}>
             {players.map(player => (
-              <ScoreCard
+              <DraxView
                 key={player.id}
-                id={player.id}
-                color={player.color}
-                name={player.name}
-              />
+                receiverPayload={player.id}
+                dragPayload={player.id}
+                onDragDrop={e => {
+                  dispatch(
+                    setNewPlayersOrder({
+                      id1: e.dragged.payload,
+                      id2: e.receiver.payload,
+                    }),
+                  );
+                }}>
+                <ScoreCard
+                  id={player.id}
+                  color={player.color}
+                  name={player.name}
+                />
+              </DraxView>
             ))}
           </View>
         </ScrollContainer>

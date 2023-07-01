@@ -2,6 +2,7 @@ import React, {useEffect, useRef} from 'react';
 import {ScrollView, StyleProp, StyleSheet, ViewStyle} from 'react-native';
 import {useAppDispatch, useAppSelector} from '../hooks/redux-hooks';
 import {setShouldScrollToEnd} from '../store/service';
+import {DraxScrollView} from 'react-native-drax';
 
 type ScrollContainerProps = {
   children: React.ReactNode;
@@ -20,7 +21,10 @@ const ScrollContainer = ({children, style}: ScrollContainerProps) => {
   }, [shouldScrollToEnd, displatch]);
 
   return (
-    <ScrollView style={{margin: 1}} contentContainerStyle={[styles.container, style]} ref={ref}>
+    <ScrollView
+      style={{margin: 1}}
+      contentContainerStyle={[styles.container, style]}
+      ref={ref}>
       {children}
     </ScrollView>
   );

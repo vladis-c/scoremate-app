@@ -12,6 +12,7 @@ import {store} from './src/store/store';
 import {NavigationTheme, PaperTheme} from './src/theme';
 import MainNavigator from './src/navigation/MainNavigator';
 import {useStart} from './src/hooks/useStart';
+import {DraxProvider} from 'react-native-drax';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -33,13 +34,15 @@ const App = () => {
   }
   return (
     <SafeAreaProvider onLayout={hideSplashScreen}>
+      <StatusBar translucent={true} />
       <Provider store={store}>
         <PaperProvider theme={PaperTheme}>
           <NavigationContainer theme={NavigationTheme}>
-            <StatusBar translucent={true} />
-            <ClickOutsideProvider>
-              <MainNavigator />
-            </ClickOutsideProvider>
+            <DraxProvider>
+              <ClickOutsideProvider>
+                <MainNavigator />
+              </ClickOutsideProvider>
+            </DraxProvider>
           </NavigationContainer>
         </PaperProvider>
       </Provider>

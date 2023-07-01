@@ -112,3 +112,22 @@ export const handleSplitArray = <T extends Record<string, any>>(
   }, undefined);
   return result;
 };
+
+export const swapArrayItems = <T extends Record<string, any>>(
+  arr: T[],
+  id1: number,
+  id2: number,
+): T[] => {
+  const newArray = [...arr]; // Create a new array to avoid modifying the original array
+  // Find the indices of the objects with the provided ids
+  const index1 = newArray.findIndex(obj => obj.id === id1);
+  const index2 = newArray.findIndex(obj => obj.id === id2);
+  // If either of the ids is not found, return the original array
+  if (index1 === -1 || index2 === -1) {
+    return newArray;
+  }
+  // Swap the objects at the found indices
+  [newArray[index1], newArray[index2]] = [newArray[index2], newArray[index1]];
+
+  return newArray;
+};
