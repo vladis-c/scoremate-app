@@ -31,6 +31,26 @@ const score = createSlice({
   name: 'score',
   initialState: initialState,
   reducers: {
+    setPlayerScore: (
+      state,
+      action: PayloadAction<{increment: number; id: Player['id']}>,
+    ) => {
+      const {id, increment} = action.payload;
+      const objIndex = state.players.findIndex(el => el.id === id);
+      if (objIndex === -1) {
+        return;
+      }
+      const found = state.players[objIndex];
+      state.players.splice(objIndex, 1, {
+        ...found,
+        score: found.score + increment,
+      });
+    },
+    resetPlayersScores: state => {
+      state.players.forEach(player => {
+        player.score = 0;
+      });
+    },
     setNewPlayer: (state, action: PayloadAction<Player>) => {
       const newPlayer = action.payload;
       const objIndex = state.players.findIndex(el => el.id === newPlayer.id);
@@ -123,6 +143,8 @@ const score = createSlice({
 });
 
 export const {
+  setPlayerScore,
+  resetPlayersScores,
   setPlayerSettings,
   setNewPlayer,
   removePlayer,

@@ -2,14 +2,21 @@ import React, {useState} from 'react';
 import {StyleSheet, View} from 'react-native';
 import {Card, IconButton, Text} from 'react-native-paper';
 import {useAppDispatch, useAppSelector} from '../hooks/redux-hooks';
-import {removePlayer, setNewPlayer, setShuffledArray} from '../store/score';
+import {
+  removePlayer,
+  resetPlayersScores,
+  setNewPlayer,
+  setShuffledArray,
+} from '../store/score';
 import {getRandomColor} from '../helpers';
 import ScoreSettingsModal from './ScoreSettingsModal';
+import {setScoreCardsDraggable} from '../store/service';
 
 const AddCard = () => {
   const dispatch = useAppDispatch();
   const [settingsModal, setSettingsModal] = useState(false);
   const players = useAppSelector(({score: {players}}) => players);
+  const {scoreCardsDraggable} = useAppSelector(({service}) => service);
   const amountOfPlayers = players.length;
   const appliedColors = players.map(player => player.color);
 
@@ -17,9 +24,14 @@ const AddCard = () => {
     <Card style={styles.container}>
       <Card.Content style={styles.content}>
         <IconButton
+          size={24}
+          icon={scoreCardsDraggable ? 'pan-vertical' : 'pan'}
+          onPress={() => dispatch(setScoreCardsDraggable(!scoreCardsDraggable))}
+        />
+        <IconButton
           disabled={players.length === 0 || players.length === 1}
           size={24}
-          icon="refresh"
+          icon="shuffle"
           onPress={() => {
             // shuffles the array of players in random order
             dispatch(setShuffledArray());
@@ -51,6 +63,11 @@ const AddCard = () => {
             }}
           />
         </View>
+        <IconButton
+          size={24}
+          icon="refresh"
+          onPress={() => dispatch(resetPlayersScores())}
+        />
         <IconButton
           size={24}
           icon="cog"
