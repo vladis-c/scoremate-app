@@ -7,17 +7,19 @@ import {SafeAreaProvider} from 'react-native-safe-area-context';
 import {Provider} from 'react-redux';
 import * as SplashScreen from 'expo-splash-screen';
 import {ClickOutsideProvider} from 'react-native-click-outside';
+import {DraxProvider} from 'react-native-drax';
 
 import {store} from './src/store/store';
 import {NavigationTheme, PaperTheme} from './src/theme';
 import MainNavigator from './src/navigation/MainNavigator';
 import {useStart} from './src/hooks/useStart';
-import {DraxProvider} from 'react-native-drax';
+import {useUpdate} from './src/hooks/useUpdate';
 
 SplashScreen.preventAutoHideAsync();
 
 const App = () => {
   const {appIsReady} = useStart();
+  useUpdate(appIsReady);
 
   const hideSplashScreen = useCallback(async () => {
     try {
