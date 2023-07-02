@@ -6,32 +6,26 @@ import {ThemeProp} from 'react-native-paper/lib/typescript/src/types';
 export const fonts = {
   BigHeading: {
     fontFamily: 'Quicksand_700Bold',
-    fontWeight: '700' as any,
     fontSize: 30,
   },
   SmallHeading: {
     fontFamily: 'Quicksand_700Bold',
-    fontWeight: '700' as any,
     fontSize: 20,
   },
   HugeText:  {
     fontFamily: 'Quicksand_700Bold',
-    fontWeight: '700' as any,
     fontSize: 144,
   },
   BigText: {
     fontFamily: 'Quicksand_700Bold',
-    fontWeight: '700' as any,
     fontSize: 72,
   },
   BasicText: {
     fontFamily: 'Quicksand_500Medium',
-    fontWeight: '500' as any,
     fontSize: 16,
   },
   SmallText: {
     fontFamily: 'Quicksand_500Medium',
-    fontWeight: '400' as any,
     fontSize: 11,
   },
   SmallLightText: {

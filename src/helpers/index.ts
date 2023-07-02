@@ -86,7 +86,11 @@ export const handleCreateDropdownArray = (
       label: value.toString(),
     };
   });
-  return newArray.reverse();
+  const removeZeroIndex = newArray.findIndex(i => i.value === '0');
+  if (removeZeroIndex !== -1) {
+    newArray.splice(removeZeroIndex, 1);
+  }
+  return newArray;
 };
 
 export const handleSplitArray = <T extends Record<string, any>>(
