@@ -7,7 +7,7 @@ import {colors} from '../theme';
 import ColorPalette from './ColorPalette';
 import {Player} from '../types';
 import {useAppDispatch, useAppSelector} from '../hooks/redux-hooks';
-import {removePlayer, setPlayerSettings} from '../store/score';
+import {removePlayer, setPlayerScore, setPlayerSettings} from '../store/score';
 import {
   getRandomColor,
   handleSplitArray,
@@ -35,7 +35,6 @@ const ScoreCard = ({id, color, name}: ScoreCardProps) => {
     return null;
   }
 
-  const [count, setCount] = useState<number>(0);
   const [isEditState, setIsEditState] = useState(false);
   const [colorPaletteIsOpen, setColorPaletteIsOpen] = useState(false);
   const [textModalIsOpen, setTextModalIsOpen] = useState(false);
@@ -121,18 +120,16 @@ const ScoreCard = ({id, color, name}: ScoreCardProps) => {
       return negativeValues.map(v => (
         <Button
           key={v}
-          textColor={colors.Black}
-          onPress={() => setCount(prev => prev + +v)}>
-          {v}
+          onPress={() => dispatch(setPlayerScore({id, increment: +v}))}>
+          <Text variant="bodySmall">{v}</Text>
         </Button>
       ));
     }
     return positiveValues.map(v => (
       <Button
         key={v}
-        textColor={colors.Black}
-        onPress={() => setCount(prev => prev + +v)}>
-        +{v}
+        onPress={() => dispatch(setPlayerScore({id, increment: +v}))}>
+        <Text variant="bodySmall">+{v}</Text>
       </Button>
     ));
   };
@@ -143,7 +140,7 @@ const ScoreCard = ({id, color, name}: ScoreCardProps) => {
         <View style={styles.topContainer}>
           <IconButton
             icon="minus"
-            onPress={() => setCount(prev => prev - 1)}
+            onPress={() => dispatch(setPlayerScore({id, increment: -1}))}
             iconColor={secondaryColor}
           />
           <View style={styles.center}>
@@ -152,13 +149,13 @@ const ScoreCard = ({id, color, name}: ScoreCardProps) => {
                 {name}
               </Text>
             ) : null}
-            <Text variant="headlineLarge" style={{color: secondaryColor}}>
-              {count}
+            <Text variant="bodyMedium" style={{color: secondaryColor}}>
+              {currentPlayer.score}
             </Text>
           </View>
           <IconButton
             icon="plus"
-            onPress={() => setCount(prev => prev + 1)}
+            onPress={() => dispatch(setPlayerScore({id, increment: 1}))}
             iconColor={secondaryColor}
           />
         </View>
@@ -186,15 +183,15 @@ const ScoreCard = ({id, color, name}: ScoreCardProps) => {
       }}>
       <Card style={[styles.container, {backgroundColor: color}]}>
         {isEditState ? renderEditState() : renderNonEditState()}
-        <IconButton
-          icon="pencil"
-          size={12}
-          iconColor={colors.White}
-          onPress={() => setIsEditState(prev => !prev)}
-          style={styles.edit}
-          containerColor={colors.Blue}
-        />
       </Card>
+      <IconButton
+        icon="pencil"
+        size={12}
+        iconColor={colors.White}
+        onPress={() => setIsEditState(prev => !prev)}
+        style={styles.edit}
+        containerColor={colors.Blue}
+      />
     </View>
   );
 };
@@ -202,12 +199,14 @@ const ScoreCard = ({id, color, name}: ScoreCardProps) => {
 export default ScoreCard;
 
 const styles = StyleSheet.create({
-  container: {width: '100%', marginVertical: 10},
+  container: {
+    width: '100%',
+    marginVertical: 10,
+  },
   content: {
     alignItems: 'center',
     justifyContent: 'center',
-    paddingTop: 2,
-    height: 100,
+    minHeight: 125,
   },
   contentIsEditMode: {
     flexDirection: 'row',
@@ -222,7 +221,8 @@ const styles = StyleSheet.create({
   buttonsContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between',
+    justifyContent: 'center',
+    flexWrap: 'wrap',
   },
   leftInEdit: {
     flexDirection: 'row',
@@ -235,7 +235,6 @@ const styles = StyleSheet.create({
   },
   edit: {
     position: 'absolute',
-    bottom: 70,
     right: -10,
     elevation: 5,
     shadowOffset: {

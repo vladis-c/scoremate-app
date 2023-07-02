@@ -2,7 +2,6 @@ import React, {useEffect, useRef} from 'react';
 import {ScrollView, StyleProp, StyleSheet, ViewStyle} from 'react-native';
 import {useAppDispatch, useAppSelector} from '../hooks/redux-hooks';
 import {setShouldScrollToEnd} from '../store/service';
-import {DraxScrollView} from 'react-native-drax';
 
 type ScrollContainerProps = {
   children: React.ReactNode;
