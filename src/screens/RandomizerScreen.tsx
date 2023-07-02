@@ -36,22 +36,18 @@ const RandomizerScreen = () => {
               autoComplete="off"
             />
           </View>
-          <View style={styles.textContainer}>
+          <TouchableOpacity
+            style={styles.textContainer}
+            onPress={() => dispatch(setRandomNumber())}>
             {randomNumber !== null ? (
               <Text variant="bodySmall">
                 Press on number to randomize again
               </Text>
             ) : null}
-            <TouchableOpacity
-              onPress={() => dispatch(setRandomNumber())}
-              style={styles.touchable}>
-              <Text variant={randomNumber !== null ? 'bodyLarge' : 'bodySmall'}>
-                {randomNumber !== null
-                  ? randomNumber
-                  : 'Press here to randomize'}
-              </Text>
-            </TouchableOpacity>
-          </View>
+            <Text variant={randomNumber !== null ? 'bodyLarge' : 'bodySmall'}>
+              {randomNumber !== null ? randomNumber : 'Press here to randomize'}
+            </Text>
+          </TouchableOpacity>
         </Card.Content>
       </Card>
     </View>
@@ -73,6 +69,7 @@ const styles = StyleSheet.create({
     marginBottom: 100,
   },
   content: {
+    height: '100%',
     alignItems: 'center',
     justifyContent: 'flex-start',
   },
@@ -85,6 +82,8 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   textContainer: {
+    width: '100%',
+    minHeight: '50%',
     marginTop: 10,
     alignItems: 'center',
     justifyContent: 'center',
@@ -92,8 +91,5 @@ const styles = StyleSheet.create({
   input: {
     width: '40%',
     textAlign: 'center',
-  },
-  touchable: {
-    padding: 20,
   },
 });
