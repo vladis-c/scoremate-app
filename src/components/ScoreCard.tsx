@@ -206,7 +206,7 @@ const styles = StyleSheet.create({
   content: {
     alignItems: 'center',
     justifyContent: 'center',
-    minHeight: 135,
+    minHeight: 160,
   },
   contentIsEditMode: {
     flexDirection: 'row',
