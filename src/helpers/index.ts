@@ -11,9 +11,10 @@ type Options<U> = {
 export const getRandomColor = <
   A extends string[] | undefined,
   U extends boolean | undefined,
+  P extends Props<A, U> | A | undefined,
 >(
-  props?: Props<A, U> | A,
-  options?: A extends string[] ? Options<U> : never,
+  props?: P,
+  options?: P extends Props<A, U> ? never : Options<U>,
 ): string => {
   const appliedColors = Array.isArray(props) ? props : undefined;
   const useDefault = options
