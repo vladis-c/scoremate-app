@@ -23,11 +23,12 @@ const AddCard = () => {
   return (
     <Card style={styles.container}>
       <Card.Content style={styles.content}>
-        <IconButton
+        {/* <IconButton
           size={24}
           icon={scoreCardsDraggable ? 'pan-vertical' : 'pan'}
           onPress={() => dispatch(setScoreCardsDraggable(!scoreCardsDraggable))}
-        />
+        /> */}
+        <View style={{width: 24, height: 24}} />
         <IconButton
           disabled={players.length === 0 || players.length === 1}
           size={24}

@@ -5,7 +5,9 @@ export default ({config}: ConfigContext): ExpoConfig => ({
   name: 'Scoremate',
   slug: 'scoremate',
   version: '1.0.0',
-  runtimeVersion: process.env.NODE_ENV === 'production' ? '1.0.0' : undefined,
+  runtimeVersion: {
+    policy: 'nativeVersion',
+  },
   orientation: 'portrait',
   icon: './assets/icon.png',
   userInterfaceStyle: 'light',

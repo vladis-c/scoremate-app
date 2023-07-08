@@ -121,7 +121,9 @@ const ScoreCard = ({id, color, name}: ScoreCardProps) => {
         <Button
           key={v}
           onPress={() => dispatch(setPlayerScore({id, increment: +v}))}>
-          <Text variant="bodySmall">{v}</Text>
+          <Text variant="bodySmall" style={{color: secondaryColor}}>
+            {v}
+          </Text>
         </Button>
       ));
     }
@@ -129,7 +131,9 @@ const ScoreCard = ({id, color, name}: ScoreCardProps) => {
       <Button
         key={v}
         onPress={() => dispatch(setPlayerScore({id, increment: +v}))}>
-        <Text variant="bodySmall">+{v}</Text>
+        <Text variant="bodySmall" style={{color: secondaryColor}}>
+          +{v}
+        </Text>
       </Button>
     ));
   };
