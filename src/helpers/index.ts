@@ -1,6 +1,27 @@
 import {colors} from '../theme';
 
-export const getRandomColor = (appliedColors?: string[]): string => {
+type Props<A, U> = {
+  useDefault?: A extends string[] ? never : U;
+};
+
+type Options<U> = {
+  useDefault?: U;
+};
+
+export const getRandomColor = <
+  A extends string[] | undefined,
+  U extends boolean | undefined,
+>(
+  props?: Props<A, U> | A,
+  options?: A extends string[] ? Options<U> : never,
+): string => {
+  const appliedColors = Array.isArray(props) ? props : undefined;
+  const useDefault = options
+    ? options.useDefault
+    : !Array.isArray(props)
+    ? props?.useDefault
+    : undefined;
+
   const commonColors: string[] = [
     '#c26e73', // Soft Red
     '#728cb9', // Soft Blue
@@ -12,8 +33,14 @@ export const getRandomColor = (appliedColors?: string[]): string => {
     '#a994b8', // Soft Purple
   ];
 
-  // it first returns a color from commonColors list
+  // use default colors from common colors array
+  if (useDefault) {
+    const randomNumber = getRandomNumber(0, commonColors.length);
+    return commonColors[randomNumber];
+  }
+
   if (appliedColors !== undefined) {
+    // it first returns a color from commonColors list
     for (const color of commonColors) {
       if (!appliedColors.includes(color)) {
         return color;
