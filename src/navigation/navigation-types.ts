@@ -16,8 +16,8 @@ export const MAIN_NAV = {
 export type MainNavProps = ObjectValues<typeof MAIN_NAV>;
 
 export const DRAWER_NAV = {
+  CUSTOMS: 'Customs',
   SCORE: 'Score',
-  SETTINGS: 'Settings',
   RANDOM: 'Randomizer',
   DICE: 'Dice',
   COIN: 'Coin',
@@ -33,8 +33,8 @@ export type MainNavParamList = {
 };
 
 export type DrawerNavParamList = {
+  [DRAWER_NAV.CUSTOMS]: {fromStart: boolean};
   [DRAWER_NAV.SCORE]: undefined;
-  [DRAWER_NAV.SETTINGS]: undefined;
   [DRAWER_NAV.RANDOM]: undefined;
   [DRAWER_NAV.DICE]: undefined;
   [DRAWER_NAV.COIN]: undefined;
@@ -48,6 +48,10 @@ export type StartScreenProps = NativeStackScreenProps<
 export type ScoreScreenProps = NativeStackScreenProps<
   DrawerNavParamList,
   'Score'
+>;
+export type CustomsScreenProps = NativeStackScreenProps<
+  DrawerNavParamList,
+  'Customs'
 >;
 // Navigation props with useNavigation hook
 

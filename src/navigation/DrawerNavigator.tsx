@@ -7,6 +7,7 @@ import ScoreScreen from '../screens/ScoreScreen';
 import {fonts} from '../theme';
 import RandomizerScreen from '../screens/RandomizerScreen';
 import DiceScreen from '../screens/DiceScreen';
+import CustomsScreen from '../screens/CustomsScreen';
 
 const Drawer = createDrawerNavigator<DrawerNavParamList>();
 
@@ -50,6 +51,15 @@ const DrawerNavigator = () => {
         options={{
           drawerIcon: () => <IconButton icon="dice-6" />,
         }}
+      />
+      <Drawer.Screen
+        name={DRAWER_NAV.CUSTOMS}
+        component={CustomsScreen}
+        options={{
+          headerTitle: 'Amazing custom settings',
+          drawerIcon: () => <IconButton icon="cog" />,
+        }}
+        initialParams={{fromStart: false}}
       />
     </Drawer.Navigator>
   );

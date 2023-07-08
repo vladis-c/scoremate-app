@@ -19,17 +19,18 @@ const StartScreen = ({navigation}: StartScreenProps) => {
   useEffect(() => {
     const newColors: BtnColorsProps[] = [];
     const bg1 = getRandomColor({useDefault: true});
-    const text1 = handleTextColorForBackground(bg1);
-    newColors.push({bg: bg1, text: text1});
+    if (bg1) {
+      const text1 = handleTextColorForBackground(bg1);
+      newColors.push({bg: bg1, text: text1});
+    }
     const bg2 = getRandomColor({useDefault: true});
-    const text2 = handleTextColorForBackground(bg2);
-    newColors.push({bg: bg2, text: text2});
+    if (bg2) {
+      const text2 = handleTextColorForBackground(bg2);
+      newColors.push({bg: bg2, text: text2});
+    }
     setBtnColors(newColors);
   }, []);
-
-  const handleOpenStartScreen = () => {
-    navigation.navigate(MAIN_NAV.DRAWER, {screen: DRAWER_NAV.SCORE});
-  };
+  
   return (
     <ScrollContainer>
       {btnColors ? (
@@ -39,19 +40,26 @@ const StartScreen = ({navigation}: StartScreenProps) => {
             following options.
           </Text>
           <Button
-            buttonColor={btnColors[0]?.bg}
-            textColor={btnColors[0]?.text}
+            buttonColor={btnColors[0]?.bg ?? colors.White}
+            textColor={btnColors[0]?.text ?? colors.Black}
             style={styles.button}
             mode="elevated"
-            onPress={handleOpenStartScreen}>
-            Perfect Scoremate settings
+            onPress={() =>
+              navigation.navigate(MAIN_NAV.DRAWER, {screen: DRAWER_NAV.SCORE})
+            }>
+            Fine Scoremate settings
           </Button>
           <Button
-            buttonColor={btnColors[1]?.bg}
-            textColor={btnColors[1]?.text}
+            buttonColor={btnColors[1]?.bg ?? colors.White}
+            textColor={btnColors[1]?.text ?? colors.Black}
             style={styles.button}
             mode="elevated"
-            onPress={handleOpenStartScreen}>
+            onPress={() =>
+              navigation.navigate(MAIN_NAV.DRAWER, {
+                screen: DRAWER_NAV.CUSTOMS,
+                params: {fromStart: true},
+              })
+            }>
             My amazing custom settings
           </Button>
         </>
