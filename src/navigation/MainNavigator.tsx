@@ -1,57 +1,28 @@
 import React from 'react';
-import {IconButton} from 'react-native-paper';
-import {createDrawerNavigator} from '@react-navigation/drawer';
 
 import {MAIN_NAV, MainNavParamList} from './navigation-types';
-import ScoreScreen from '../screens/ScoreScreen';
-import {fonts} from '../theme';
-import RandomizerScreen from '../screens/RandomizerScreen';
-import DiceScreen from '../screens/DiceScreen';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import DrawerNavigator from './DrawerNavigator';
+import StartScreen from '../screens/StartScreen';
 
-const MainStack = createDrawerNavigator<MainNavParamList>();
+const Main = createNativeStackNavigator<MainNavParamList>();
 
 const MainNavigator = () => {
   return (
-    <MainStack.Navigator
-      screenOptions={({navigation}) => ({
-        headerShown: true,
-        drawerType: 'front',
-        headerTitleStyle: {
-          ...fonts.SmallHeading,
-        },
-        drawerLabelStyle: {
-          ...fonts.BasicText,
-        },
-        headerLeft: () => (
-          <IconButton
-            icon="menu"
-            size={20}
-            onPress={() => navigation.toggleDrawer()}
-          />
-        ),
-      })}>
-      <MainStack.Screen
-        name={MAIN_NAV.SCORE}
-        component={ScoreScreen}
+    <Main.Navigator screenOptions={{headerShown: true}}>
+      <Main.Screen
+        name={MAIN_NAV.START}
+        component={StartScreen}
+        options={{headerTitle: 'Scoremate'}}
+      />
+      <Main.Screen
+        name={MAIN_NAV.DRAWER}
+        component={DrawerNavigator}
         options={{
-          drawerIcon: () => <IconButton icon="star" />,
+          headerShown: false,
         }}
       />
-      <MainStack.Screen
-        name={MAIN_NAV.RANDOM}
-        component={RandomizerScreen}
-        options={{
-          drawerIcon: () => <IconButton icon="refresh" />,
-        }}
-      />
-      <MainStack.Screen
-        name={MAIN_NAV.DICE}
-        component={DiceScreen}
-        options={{
-          drawerIcon: () => <IconButton icon="dice-6" />,
-        }}
-      />
-    </MainStack.Navigator>
+    </Main.Navigator>
   );
 };
 

@@ -11,9 +11,9 @@ import {DraxProvider} from 'react-native-drax';
 
 import {store} from './src/store/store';
 import {NavigationTheme, PaperTheme, colors} from './src/theme';
-import MainNavigator from './src/navigation/MainNavigator';
 import {useStart} from './src/hooks/useStart';
 import {useUpdate} from './src/hooks/useUpdate';
+import MainNavigator from './src/navigation/MainNavigator';
 
 SplashScreen.preventAutoHideAsync();
 
