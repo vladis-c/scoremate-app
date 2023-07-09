@@ -15,14 +15,12 @@ const MainNavigator = () => {
       <Main.Screen
         name={MAIN_NAV.START}
         component={StartScreen}
-        options={{headerTitle: 'Scoremate'}}
+        options={{headerShown: false, statusBarTranslucent: true}}
       />
       <Main.Screen
         name={MAIN_NAV.DRAWER}
         component={DrawerNavigator}
-        options={{
-          headerShown: false,
-        }}
+        options={{headerShown: false}}
       />
     </Main.Navigator>
   );

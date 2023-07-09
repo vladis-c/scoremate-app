@@ -56,10 +56,9 @@ const DrawerNavigator = () => {
         name={DRAWER_NAV.CUSTOMS}
         component={CustomsScreen}
         options={{
-          headerTitle: 'Amazing custom settings',
           drawerIcon: () => <IconButton icon="cog" />,
         }}
-        initialParams={{fromStart: false}}
+        initialParams={{fromStart: false, label: 'Amazing custom settings'}}
       />
     </Drawer.Navigator>
   );

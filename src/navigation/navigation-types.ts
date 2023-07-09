@@ -33,7 +33,7 @@ export type MainNavParamList = {
 };
 
 export type DrawerNavParamList = {
-  [DRAWER_NAV.CUSTOMS]: {fromStart: boolean};
+  [DRAWER_NAV.CUSTOMS]: {fromStart: boolean, label: string};
   [DRAWER_NAV.SCORE]: undefined;
   [DRAWER_NAV.RANDOM]: undefined;
   [DRAWER_NAV.DICE]: undefined;

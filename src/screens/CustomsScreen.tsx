@@ -12,8 +12,9 @@ import {
 
 const CustomsScreen = ({navigation, route}: CustomsScreenProps) => {
   useLayoutEffect(() => {
-    const fromStart = route.params.fromStart;
+    const {fromStart, label} = route.params;
     navigation.setOptions({
+      headerTitle: label,
       headerLeft: () => (
         <IconButton
           icon="arrow-left"
@@ -29,7 +30,7 @@ const CustomsScreen = ({navigation, route}: CustomsScreenProps) => {
         />
       ),
     });
-  }, [navigation, route]);
+  }, [navigation, route.params]);
 
   return (
     <>
