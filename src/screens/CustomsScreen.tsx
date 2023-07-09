@@ -23,9 +23,11 @@ const CustomsScreen = ({navigation, route}: CustomsScreenProps) => {
           icon="arrow-left"
           onPress={() => {
             if (fromStart) {
+              // TODO: check the types
               //@ts-ignore
               navigation.navigate(MAIN_NAV.START);
             } else {
+              // TODO: check the types
               //@ts-ignore
               navigation.goBack();
             }
@@ -70,6 +72,11 @@ const CustomsScreen = ({navigation, route}: CustomsScreenProps) => {
           title={rowsTitle[1]}
           onChange={() => console.log('sw 2 change')}
           value={false}
+        />
+        <SettingRow
+          type="player"
+          onChange={e => console.log('input ', e)}
+          value={'Vladislav'}
         />
       </ScrollContainer>
       <Button
