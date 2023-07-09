@@ -26,7 +26,7 @@ export const getRandomColor = <
 
   // use default colors from common colors array
   if (useDefault) {
-    const randomNumber = getRandomNumber(0, commonColors.length);
+    const randomNumber = getRandomNumber(0, commonColors.length - 1);
     return commonColors[randomNumber];
   }
 

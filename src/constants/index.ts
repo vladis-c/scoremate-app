@@ -82,3 +82,11 @@ export const startButton2Lables: string[] = [
   "Embrace the power of customization",
   // "Curate your ideal Scoremate adventure"
 ];
+
+export const desireWords: string[] = [
+  "I wish to",
+  "I would like to",
+  "I want to",
+  "My desire is to",
+  "I would love to"
+]

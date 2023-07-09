@@ -28,14 +28,14 @@ const StartScreen = ({navigation}: StartScreenProps) => {
     if (bg1) {
       const textColor1 = handleTextColorForBackground(bg1);
       const label1 =
-        startButton1Lables[getRandomNumber(0, startButton1Lables.length)];
+        startButton1Lables[getRandomNumber(0, startButton1Lables.length - 1)];
       newProps.push({bgColor: bg1, textColor: textColor1, label: label1});
     }
     const bg2 = getRandomColor({useDefault: true});
     if (bg2) {
       const textColor2 = handleTextColorForBackground(bg2);
       const label2 =
-        startButton2Lables[getRandomNumber(0, startButton2Lables.length)];
+        startButton2Lables[getRandomNumber(0, startButton2Lables.length - 1)];
       newProps.push({bgColor: bg2, textColor: textColor2, label: label2});
     }
     setBtnProps(newProps);

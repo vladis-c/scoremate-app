@@ -58,6 +58,7 @@ export const NavigationTheme: Theme = {
     background: colors.BGWhite,
     text: colors.Black,
     card: colors.LightBlue,
+    border: colors.LightBlue,
   },
 };
 
@@ -105,7 +106,7 @@ export const PaperTheme: ThemeProp = {
     onSurface: 'rgb(27, 27, 31)',
     surfaceVariant: 'rgb(225, 226, 236)',
     onSurfaceVariant: 'rgb(68, 70, 79)',
-    outline: 'rgb(117, 119, 128)',
+    outline: 'rgb(137, 207, 240)',
     outlineVariant: 'rgb(197, 198, 208)',
     shadow: 'rgb(0, 0, 0)',
     scrim: 'rgb(0, 0, 0)',
