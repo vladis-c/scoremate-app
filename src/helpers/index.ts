@@ -1,3 +1,4 @@
+import {commonColors} from '../constants';
 import {colors} from '../theme';
 
 type Props<A, U> = {
@@ -22,17 +23,6 @@ export const getRandomColor = <
     : !Array.isArray(props)
     ? props?.useDefault
     : undefined;
-
-  const commonColors: string[] = [
-    '#c26e73', // Soft Red
-    '#728cb9', // Soft Blue
-    '#89a77f', // Soft Green
-    '#d5c87d', // Soft Yellow
-    '#f0f0f0', // Whitish
-    '#1a1a1a', // Blackish
-    '#db8f6c', // Soft Orange
-    '#a994b8', // Soft Purple
-  ];
 
   // use default colors from common colors array
   if (useDefault) {
