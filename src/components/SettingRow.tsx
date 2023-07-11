@@ -1,10 +1,13 @@
 import React, {useState} from 'react';
-import {View, StyleSheet, KeyboardTypeOptions} from 'react-native';
-import {Text, Switch, IconButton, Button, TextInput} from 'react-native-paper';
+import {
+  View,
+  StyleSheet,
+  KeyboardTypeOptions,
+  TouchableOpacity,
+} from 'react-native';
+import {Text, Switch, TextInput} from 'react-native-paper';
 
 import {colors} from '../theme';
-import {getRandomColor} from '../helpers';
-import {TouchableOpacity} from 'react-native-gesture-handler';
 import ColorPalette from './ColorPalette';
 
 type SettingType = 'input' | 'switch' | 'player';
@@ -17,7 +20,9 @@ type SettingRowProps<S> = {
     : S extends 'player'
     ? (v: string) => void
     : () => void;
-  onChangeColor?: S extends 'player' ? string : never;
+  onBlur?: S extends 'input' ? () => void : never;
+  onChangeColor?: S extends 'player' ? (c: string) => void : never;
+  color?: S extends 'player' ? string : never;
   title?: S extends 'player' ? never : string;
   keyboardType?: S extends 'input' ? KeyboardTypeOptions : never;
 };
@@ -26,7 +31,10 @@ const SettingRow = <T extends SettingType>({
   type,
   title,
   onChange,
+  onBlur,
+  onChangeColor,
   value,
+  color,
   keyboardType,
 }: SettingRowProps<T>) => {
   const [colorOpen, setColorOpen] = useState(false);
@@ -36,12 +44,13 @@ const SettingRow = <T extends SettingType>({
       <View style={styles.row}>
         <Text>{title}</Text>
         <TextInput
+          onBlur={onBlur}
           style={styles.input}
           mode="outlined"
           value={value as string}
           onChangeText={e => {
-            if (keyboardType === 'numeric' && !isNaN(+e) && +e > 0) {
-              onChange(e);
+            if (keyboardType === 'numeric') {
+              !isNaN(+e) && +e > 0 && onChange(e);
             } else {
               onChange(e);
             }
@@ -52,7 +61,6 @@ const SettingRow = <T extends SettingType>({
     );
   }
   if (type === 'player') {
-    const backgroundColor = getRandomColor();
     return (
       <>
         <View style={styles.row}>
@@ -61,15 +69,16 @@ const SettingRow = <T extends SettingType>({
             mode="outlined"
             value={value as string}
             onChangeText={e => onChange(e)}
+            label={'Name'}
           />
           <TouchableOpacity
-            style={[styles.colorBox, {backgroundColor}]}
+            style={[styles.colorBox, {backgroundColor: color}]}
             onPress={() => setColorOpen(true)}
           />
         </View>
         <ColorPalette
-          color={backgroundColor}
-          onColorChangeComplete={() => {}}
+          color={color as string}
+          onColorChangeComplete={c => onChangeColor?.(c)}
           visible={colorOpen}
           onDismiss={() => setColorOpen(false)}
         />
@@ -102,9 +111,9 @@ const styles = StyleSheet.create({
   },
   input: {
     width: '15%',
-    paddingVertical: -10,
     height: 35,
     textAlign: 'center',
+    marginTop: -5,
   },
   nameInput: {
     width: '40%',

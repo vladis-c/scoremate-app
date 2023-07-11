@@ -10,8 +10,11 @@ import {
   MAIN_NAV,
 } from '../navigation/navigation-types';
 import SettingRow from '../components/SettingRow';
-import {getRandomNumber} from '../helpers';
+import {getRandomColor, getRandomNumber} from '../helpers';
 import {desireWords} from '../constants';
+import {useAppDispatch, useAppSelector} from '../hooks/redux-hooks';
+import {removePlayer, setNewPlayer, setPlayerSettings} from '../store/score';
+import {Player} from '../types';
 
 const CustomsScreen = ({navigation, route}: CustomsScreenProps) => {
   useLayoutEffect(() => {
@@ -37,7 +40,12 @@ const CustomsScreen = ({navigation, route}: CustomsScreenProps) => {
     });
   }, [navigation, route.params]);
 
+  const dispatch = useAppDispatch();
   const [rowsTitle, setRowsTitle] = useState<string[]>([]);
+  const players = useAppSelector(({score}) => score.players);
+  const [amountOfPlayers, setAmountOfPlayers] = useState<number>(
+    players.length,
+  );
 
   useEffect(() => {
     const newRows: string[] = [];
@@ -52,15 +60,70 @@ const CustomsScreen = ({navigation, route}: CustomsScreenProps) => {
     setRowsTitle(newRows);
   }, []);
 
+  const handleSetNewPlayers = () => {
+    const difference = amountOfPlayers - players.length;
+    if (difference > 0) {
+      const newIds = Array.from(
+        {length: difference},
+        (_, i) => players.length + i + 1,
+      );
+      const allIds = players.map(player => player.id).concat(newIds);
+      allIds.forEach(i => {
+        dispatch(
+          setNewPlayer({
+            id: i,
+            score: 0,
+            name: '',
+          }),
+        );
+      });
+      return;
+    }
+    if (difference < 0) {
+      const slicedPlayers = players.slice(amountOfPlayers, players.length);
+      slicedPlayers.forEach(player => {
+        dispatch(removePlayer(player.id));
+      });
+      return;
+    }
+  };
+
   return (
     <>
       <ScrollContainer style={styles.container}>
         <SettingRow
           type="input"
           title="Amount of players"
-          onChange={e => console.log('input ', e)}
-          value={'1'}
+          onChange={e => setAmountOfPlayers(+e)}
+          onBlur={handleSetNewPlayers}
+          value={amountOfPlayers.toString()}
         />
+        {players.map(player => (
+          <SettingRow
+            key={player.id}
+            type="player"
+            onChange={e => {
+              dispatch(
+                setPlayerSettings({
+                  key: 'name',
+                  value: e,
+                  id: player.id,
+                }),
+              );
+            }}
+            onChangeColor={c => {
+              dispatch(
+                setPlayerSettings({
+                  key: 'color',
+                  value: c,
+                  id: player.id,
+                }),
+              );
+            }}
+            value={player.name}
+            color={player.color}
+          />
+        ))}
         <SettingRow
           type="switch"
           title={rowsTitle[0]}
@@ -72,11 +135,6 @@ const CustomsScreen = ({navigation, route}: CustomsScreenProps) => {
           title={rowsTitle[1]}
           onChange={() => console.log('sw 2 change')}
           value={false}
-        />
-        <SettingRow
-          type="player"
-          onChange={e => console.log('input ', e)}
-          value={'Vladislav'}
         />
       </ScrollContainer>
       <Button

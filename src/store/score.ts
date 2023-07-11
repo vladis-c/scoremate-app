@@ -51,11 +51,16 @@ const score = createSlice({
         player.score = 0;
       });
     },
-    setNewPlayer: (state, action: PayloadAction<Player>) => {
+    setNewPlayer: (
+      state,
+      action: PayloadAction<MakeOptional<Player, 'color'>>,
+    ) => {
       const newPlayer = action.payload;
       const objIndex = state.players.findIndex(el => el.id === newPlayer.id);
       if (objIndex === -1) {
-        state.players.push(newPlayer);
+        const appliedColors = state.players.map(player => player.color);
+        const newColor = newPlayer?.color ?? getRandomColor(appliedColors);
+        state.players.push({...newPlayer, color: newColor});
       }
     },
     removePlayer: (state, action: PayloadAction<Player['id']>) => {
