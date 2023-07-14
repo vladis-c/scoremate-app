@@ -1,6 +1,7 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {StyleSheet, View} from 'react-native';
 import {Card, IconButton, Text} from 'react-native-paper';
+
 import {useAppDispatch, useAppSelector} from '../hooks/redux-hooks';
 import {
   removePlayer,
@@ -9,12 +10,9 @@ import {
   setShuffledArray,
 } from '../store/score';
 import {getRandomColor} from '../helpers';
-import ScoreSettingsModal from './ScoreSettingsModal';
-import {setScoreCardsDraggable} from '../store/service';
 
 const AddCard = () => {
   const dispatch = useAppDispatch();
-  const [settingsModal, setSettingsModal] = useState(false);
   const players = useAppSelector(({score: {players}}) => players);
   const {scoreCardsDraggable} = useAppSelector(({service}) => service);
   const amountOfPlayers = players.length;
@@ -28,7 +26,6 @@ const AddCard = () => {
           icon={scoreCardsDraggable ? 'pan-vertical' : 'pan'}
           onPress={() => dispatch(setScoreCardsDraggable(!scoreCardsDraggable))}
         /> */}
-        <View style={{width: 24, height: 24}} />
         <IconButton
           disabled={players.length === 0 || players.length === 1}
           size={24}
@@ -68,15 +65,6 @@ const AddCard = () => {
           size={24}
           icon="refresh"
           onPress={() => dispatch(resetPlayersScores())}
-        />
-        <IconButton
-          size={24}
-          icon="cog"
-          onPress={() => setSettingsModal(true)}
-        />
-        <ScoreSettingsModal
-          visible={settingsModal}
-          onDismiss={() => setSettingsModal(false)}
         />
       </Card.Content>
     </Card>

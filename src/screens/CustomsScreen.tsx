@@ -191,8 +191,13 @@ const CustomsScreen = ({navigation, route}: CustomsScreenProps) => {
         style={styles.continue}
         buttonColor={colors.LightBlue}
         textColor={colors.Black}
-        onPress={() => navigation.navigate(DRAWER_NAV.SCORE)}>
-        Continue
+        onPress={() => {
+          navigation.setParams({
+            fromStart: false,
+          });
+          navigation.navigate(DRAWER_NAV.SCORE);
+        }}>
+        {fromStart ? 'Continue' : 'Apply'}
       </Button>
     </>
   );

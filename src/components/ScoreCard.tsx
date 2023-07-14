@@ -24,10 +24,8 @@ type ScoreCardProps = {
 
 const ScoreCard = ({id, color, name}: ScoreCardProps) => {
   const dispatch = useAppDispatch();
-  const {
-    players,
-    scoreSettings: {customScore},
-  } = useAppSelector(({score}) => score);
+  const players = useAppSelector(({score}) => score.players);
+  const customScore = useAppSelector(({score}) => score.customScore);
   const currentPlayer = players.find(player => player.id === id);
   const [secondaryColor, setSecondaryColor] = useState(colors.Black);
 
@@ -47,9 +45,6 @@ const ScoreCard = ({id, color, name}: ScoreCardProps) => {
   }, [color]);
 
   const renderEditState = () => {
-    const deletePlayer = () => {
-      dispatch(removePlayer(id));
-    };
     return (
       <Card.Content style={[styles.content, styles.contentIsEditMode]}>
         <View style={styles.leftInEdit}>
@@ -101,7 +96,7 @@ const ScoreCard = ({id, color, name}: ScoreCardProps) => {
           </>
           <IconButton
             icon="delete"
-            onPress={deletePlayer}
+            onPress={() => dispatch(removePlayer(id))}
             iconColor={secondaryColor}
           />
         </View>

@@ -25,26 +25,6 @@ const score = createSlice({
   name: 'score',
   initialState: initialState,
   reducers: {
-    setCustomScore: (
-      state,
-      action: PayloadAction<Omit<CustomScore, 'label'>>,
-    ) => {
-      const {id, value} = action.payload;
-      const newScoreObj = state.customScore.findIndex(el => el.id === id);
-      if (newScoreObj !== -1) {
-        state.customScore[newScoreObj].value = value;
-      }
-    },
-    addNewCustomScore: state => {
-      state.customScore.push({
-        label: '',
-        value: '0',
-        id: state.customScore.length + 1,
-      });
-    },
-    removeCustomScore: state => {
-      state.customScore.pop();
-    },
     setPlayerScore: (
       state,
       action: PayloadAction<{increment: number; id: Player['id']}>,
@@ -117,13 +97,31 @@ const score = createSlice({
     toggleCustomScoreIsShown: state => {
       state.customScoreIsShown = !state.customScoreIsShown;
     },
+    setCustomScore: (
+      state,
+      action: PayloadAction<Omit<CustomScore, 'label'>>,
+    ) => {
+      const {id, value} = action.payload;
+      const newScoreObj = state.customScore.findIndex(el => el.id === id);
+      if (newScoreObj !== -1) {
+        state.customScore[newScoreObj].value = value;
+        state.customScore[newScoreObj].label = value;
+      }
+    },
+    addNewCustomScore: state => {
+      state.customScore.push({
+        label: '',
+        value: '0',
+        id: state.customScore.length + 1,
+      });
+    },
+    removeCustomScore: state => {
+      state.customScore.pop();
+    },
   },
 });
 
 export const {
-  addNewCustomScore,
-  setCustomScore,
-  removeCustomScore,
   setPlayerScore,
   resetPlayersScores,
   setPlayerSettings,
@@ -132,5 +130,8 @@ export const {
   setShuffledArray,
   setNewPlayersOrder,
   toggleCustomScoreIsShown,
+  addNewCustomScore,
+  setCustomScore,
+  removeCustomScore,
 } = score.actions;
 export default score;
