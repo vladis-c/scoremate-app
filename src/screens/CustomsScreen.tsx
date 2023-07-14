@@ -10,7 +10,7 @@ import {
   MAIN_NAV,
 } from '../navigation/navigation-types';
 import SettingRow from '../components/SettingRow';
-import {getRandomNumber} from '../helpers';
+import {getRandomColor, getRandomNumber} from '../helpers';
 import {desireWords} from '../constants';
 import {useAppDispatch, useAppSelector} from '../hooks/redux-hooks';
 import {
@@ -21,6 +21,7 @@ import {
   setNewPlayer,
   setPlayerSettings,
   toggleCustomScoreIsShown,
+  toggleRandomizeColorIsSet,
 } from '../store/score';
 
 const CustomsScreen = ({navigation, route}: CustomsScreenProps) => {
@@ -56,9 +57,28 @@ const CustomsScreen = ({navigation, route}: CustomsScreenProps) => {
   const customScoreIsShown = useAppSelector(
     ({score}) => score.customScoreIsShown,
   );
-  const [amountOfPlayers, setAmountOfPlayers] = useState<number>(
-    players.length,
+  const randomizeColorIsSet = useAppSelector(
+    ({score}) => score.randomizeColorIsSet,
   );
+  const [amountOfPlayers, setAmountOfPlayers] = useState(0);
+
+  useEffect(() => {
+    setAmountOfPlayers(players.length);
+  }, [players.length]);
+
+  useEffect(() => {
+    if (randomizeColorIsSet) {
+      players.forEach(player => {
+        dispatch(
+          setPlayerSettings({
+            id: player.id,
+            key: 'color',
+            value: getRandomColor(),
+          }),
+        );
+      });
+    }
+  }, [randomizeColorIsSet]);
 
   useEffect(() => {
     const newRows: string[] = [];
@@ -105,6 +125,12 @@ const CustomsScreen = ({navigation, route}: CustomsScreenProps) => {
     <>
       <ScrollContainer style={styles.container}>
         <SettingRow
+          type="switch"
+          title={rowsTitle[0]}
+          onChange={() => dispatch(toggleRandomizeColorIsSet())}
+          value={randomizeColorIsSet}
+        />
+        <SettingRow
           type="input"
           title="Amount of players"
           onChange={e => setAmountOfPlayers(+e)}
@@ -147,12 +173,6 @@ const CustomsScreen = ({navigation, route}: CustomsScreenProps) => {
               />
             ))
           : null}
-        <SettingRow
-          type="switch"
-          title={rowsTitle[0]}
-          onChange={() => console.log('sw 1 change')}
-          value={true}
-        />
         <SettingRow
           type="switch"
           title={rowsTitle[1]}

@@ -55,7 +55,6 @@ const AddCard = () => {
                   id: amountOfPlayers + 1,
                   score: 0,
                   name: '',
-                  color: getRandomColor(appliedColors),
                 }),
               );
             }}

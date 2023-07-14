@@ -6,6 +6,7 @@ type ScoreInitialStateProps = {
   players: Player[];
   customScore: CustomScore[];
   customScoreIsShown: boolean;
+  randomizeColorIsSet: boolean;
 };
 
 const initialState: ScoreInitialStateProps = {
@@ -19,6 +20,7 @@ const initialState: ScoreInitialStateProps = {
   ],
   customScore: [],
   customScoreIsShown: false,
+  randomizeColorIsSet: false,
 };
 
 const score = createSlice({
@@ -53,7 +55,10 @@ const score = createSlice({
       const objIndex = state.players.findIndex(el => el.id === newPlayer.id);
       if (objIndex === -1) {
         const appliedColors = state.players.map(player => player.color);
-        const newColor = newPlayer?.color ?? getRandomColor(appliedColors);
+        const randomizeColorIsSet = state.randomizeColorIsSet;
+        const newColor =
+          newPlayer?.color ??
+          getRandomColor(randomizeColorIsSet ? undefined : appliedColors);
         state.players.push({...newPlayer, color: newColor});
       }
     },
@@ -115,6 +120,9 @@ const score = createSlice({
         id: state.customScore.length + 1,
       });
     },
+    toggleRandomizeColorIsSet: state => {
+      state.randomizeColorIsSet = !state.randomizeColorIsSet;
+    },
     removeCustomScore: state => {
       state.customScore.pop();
     },
@@ -133,5 +141,6 @@ export const {
   addNewCustomScore,
   setCustomScore,
   removeCustomScore,
+  toggleRandomizeColorIsSet,
 } = score.actions;
 export default score;
