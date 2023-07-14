@@ -13,7 +13,15 @@ import SettingRow from '../components/SettingRow';
 import {getRandomNumber} from '../helpers';
 import {desireWords} from '../constants';
 import {useAppDispatch, useAppSelector} from '../hooks/redux-hooks';
-import {removePlayer, setNewPlayer, setPlayerSettings} from '../store/score';
+import {
+  addNewCustomScore,
+  removeCustomScore,
+  removePlayer,
+  setCustomScore,
+  setNewPlayer,
+  setPlayerSettings,
+  toggleCustomScoreIsShown,
+} from '../store/score';
 
 const CustomsScreen = ({navigation, route}: CustomsScreenProps) => {
   const {fromStart, label} = route.params;
@@ -44,6 +52,10 @@ const CustomsScreen = ({navigation, route}: CustomsScreenProps) => {
   const [playerListCollapsed, setPlayerListCollapsed] = useState(false);
   const [rowsTitle, setRowsTitle] = useState<string[]>([]);
   const players = useAppSelector(({score}) => score.players);
+  const customScore = useAppSelector(({score}) => score.customScore);
+  const customScoreIsShown = useAppSelector(
+    ({score}) => score.customScoreIsShown,
+  );
   const [amountOfPlayers, setAmountOfPlayers] = useState<number>(
     players.length,
   );
@@ -144,32 +156,35 @@ const CustomsScreen = ({navigation, route}: CustomsScreenProps) => {
         <SettingRow
           type="switch"
           title={rowsTitle[1]}
-          onChange={() => console.log('sw 2 change')}
-          value={true}
+          onChange={() => dispatch(toggleCustomScoreIsShown())}
+          value={customScoreIsShown}
         />
-        <SettingRow
-          type="score"
-          title="Add custom score count"
-          onChange={v => {
-            const value = v as '+' | '-';
-            if (value === '+') {
-              console.log(value);
-            } else {
-              console.log(value);
-            }
-          }}
-          value={1}
-        />
-        {[1, 2].map((el, i) => (
-          <SettingRow
-            key={el + i}
-            type="input"
-            title={`Custom score ${i+1}`}
-            onChange={e => console.log(e)}
-            onBlur={() => {}}
-            value={el.toString()}
-          />
-        ))}
+        {customScoreIsShown ? (
+          <>
+            <SettingRow
+              type="score"
+              title="Add custom score count"
+              onChange={v => {
+                const value = v as '+' | '-';
+                if (value === '+') {
+                  dispatch(addNewCustomScore());
+                } else {
+                  dispatch(removeCustomScore());
+                }
+              }}
+              value={customScore.length}
+            />
+            {customScore.map((el, i) => (
+              <SettingRow
+                key={el.id + i}
+                type="input"
+                title={`Custom score ${i + 1}`}
+                onChange={e => dispatch(setCustomScore({value: e, id: el.id}))}
+                value={el.value}
+              />
+            ))}
+          </>
+        ) : null}
       </ScrollContainer>
       <Button
         mode="elevated"

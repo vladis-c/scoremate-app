@@ -1,15 +1,11 @@
 import {PayloadAction, createSlice} from '@reduxjs/toolkit';
-import type {CustomScore, Player, ScoreSettings} from '../types';
-import {
-  getRandomColor,
-  handleCreateDropdownArray,
-  shuffleArray,
-  swapArrayItems,
-} from '../helpers';
+import type {CustomScore, Player} from '../types';
+import {getRandomColor, shuffleArray, swapArrayItems} from '../helpers';
 
 type ScoreInitialStateProps = {
   players: Player[];
-  scoreSettings: ScoreSettings;
+  customScore: CustomScore[];
+  customScoreIsShown: boolean;
 };
 
 const initialState: ScoreInitialStateProps = {
@@ -21,16 +17,34 @@ const initialState: ScoreInitialStateProps = {
       score: 0,
     },
   ],
-  scoreSettings: {
-    customScore: [{label: '', value: '0', isShown: false, id: 1}],
-    availableScore: handleCreateDropdownArray(-10, 20, 1),
-  },
+  customScore: [],
+  customScoreIsShown: false,
 };
 
 const score = createSlice({
   name: 'score',
   initialState: initialState,
   reducers: {
+    setCustomScore: (
+      state,
+      action: PayloadAction<Omit<CustomScore, 'label'>>,
+    ) => {
+      const {id, value} = action.payload;
+      const newScoreObj = state.customScore.findIndex(el => el.id === id);
+      if (newScoreObj !== -1) {
+        state.customScore[newScoreObj].value = value;
+      }
+    },
+    addNewCustomScore: state => {
+      state.customScore.push({
+        label: '',
+        value: '0',
+        id: state.customScore.length + 1,
+      });
+    },
+    removeCustomScore: state => {
+      state.customScore.pop();
+    },
     setPlayerScore: (
       state,
       action: PayloadAction<{increment: number; id: Player['id']}>,
@@ -71,12 +85,6 @@ const score = createSlice({
       }
       state.players.splice(objIndex, 1);
     },
-    setNewScore: (state, action) => {
-      
-    },
-    removeScore: (state, action) => {
-
-    },
     setPlayerSettings: (
       state,
       action: PayloadAction<{
@@ -98,51 +106,6 @@ const score = createSlice({
       const shuffled = shuffleArray([...state.players]);
       state.players = shuffled;
     },
-    //TODO: DEPRICATE
-    setAddNewCustomScore: (
-      state,
-      action: PayloadAction<CustomScore | number>,
-    ) => {
-      if (typeof action.payload === 'number') {
-        const cusIndex = state.scoreSettings.customScore.findIndex(
-          cs => cs.id === action.payload,
-        );
-        if (state.scoreSettings.customScore.length === 1) {
-          state.scoreSettings.customScore.splice(
-            cusIndex,
-            1,
-            initialState.scoreSettings.customScore[0],
-          );
-          console.log(state.scoreSettings.customScore);
-          return;
-        }
-        state.scoreSettings.customScore.splice(cusIndex, 1);
-        return;
-      }
-      state.scoreSettings.customScore.push(action.payload);
-    },
-    setCustomScore: (state, action: PayloadAction<CustomScore>) => {
-      const {id} = action.payload;
-      const cusIndex = state.scoreSettings.customScore.findIndex(
-        cs => cs.id === id,
-      );
-      if (cusIndex !== -1) {
-        state.scoreSettings.customScore[cusIndex] = action.payload;
-      }
-    },
-    setCustomScoreDropdownIsShown: (
-      state,
-      action: PayloadAction<{id: number; isShown: boolean}>,
-    ) => {
-      const {id, isShown} = action.payload;
-      const cusIndex = state.scoreSettings.customScore.findIndex(
-        cs => cs.id === id,
-      );
-      if (cusIndex === -1) {
-        return;
-      }
-      state.scoreSettings.customScore[cusIndex].isShown = isShown;
-    },
     setNewPlayersOrder: (
       state,
       action: PayloadAction<{id1: number; id2: number}>,
@@ -151,19 +114,23 @@ const score = createSlice({
       const newPlayers = swapArrayItems([...state.players], id1, id2);
       state.players = newPlayers;
     },
+    toggleCustomScoreIsShown: state => {
+      state.customScoreIsShown = !state.customScoreIsShown;
+    },
   },
 });
 
 export const {
+  addNewCustomScore,
+  setCustomScore,
+  removeCustomScore,
   setPlayerScore,
   resetPlayersScores,
   setPlayerSettings,
   setNewPlayer,
   removePlayer,
   setShuffledArray,
-  setCustomScore,
-  setCustomScoreDropdownIsShown,
-  setAddNewCustomScore,
   setNewPlayersOrder,
+  toggleCustomScoreIsShown,
 } = score.actions;
 export default score;
