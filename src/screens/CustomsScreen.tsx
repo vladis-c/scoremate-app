@@ -10,15 +10,15 @@ import {
   MAIN_NAV,
 } from '../navigation/navigation-types';
 import SettingRow from '../components/SettingRow';
-import {getRandomColor, getRandomNumber} from '../helpers';
+import {getRandomNumber} from '../helpers';
 import {desireWords} from '../constants';
 import {useAppDispatch, useAppSelector} from '../hooks/redux-hooks';
 import {removePlayer, setNewPlayer, setPlayerSettings} from '../store/score';
-import {Player} from '../types';
 
 const CustomsScreen = ({navigation, route}: CustomsScreenProps) => {
+  const {fromStart, label} = route.params;
+
   useLayoutEffect(() => {
-    const {fromStart, label} = route.params;
     navigation.setOptions({
       headerTitle: label,
       headerLeft: () => (
@@ -88,6 +88,8 @@ const CustomsScreen = ({navigation, route}: CustomsScreenProps) => {
     }
   };
 
+  const [playerListCollapsed, setPlayerListCollapsed] = useState(false);
+
   return (
     <>
       <ScrollContainer style={styles.container}>
@@ -97,33 +99,43 @@ const CustomsScreen = ({navigation, route}: CustomsScreenProps) => {
           onChange={e => setAmountOfPlayers(+e)}
           onBlur={handleSetNewPlayers}
           value={amountOfPlayers.toString()}
+          collapse={
+            fromStart
+              ? {
+                  collapsed: playerListCollapsed,
+                  onCollapse: () => setPlayerListCollapsed(prev => !prev),
+                }
+              : undefined
+          }
         />
-        {players.map(player => (
-          <SettingRow
-            key={player.id}
-            type="player"
-            onChange={e => {
-              dispatch(
-                setPlayerSettings({
-                  key: 'name',
-                  value: e,
-                  id: player.id,
-                }),
-              );
-            }}
-            onChangeColor={c => {
-              dispatch(
-                setPlayerSettings({
-                  key: 'color',
-                  value: c,
-                  id: player.id,
-                }),
-              );
-            }}
-            value={player.name}
-            color={player.color}
-          />
-        ))}
+        {!playerListCollapsed
+          ? players.map(player => (
+              <SettingRow
+                key={player.id}
+                type="player"
+                onChange={e => {
+                  dispatch(
+                    setPlayerSettings({
+                      key: 'name',
+                      value: e,
+                      id: player.id,
+                    }),
+                  );
+                }}
+                onChangeColor={c => {
+                  dispatch(
+                    setPlayerSettings({
+                      key: 'color',
+                      value: c,
+                      id: player.id,
+                    }),
+                  );
+                }}
+                value={player.name}
+                color={player.color}
+              />
+            ))
+          : null}
         <SettingRow
           type="switch"
           title={rowsTitle[0]}

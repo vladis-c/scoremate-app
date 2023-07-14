@@ -5,7 +5,7 @@ import {
   KeyboardTypeOptions,
   TouchableOpacity,
 } from 'react-native';
-import {Text, Switch, TextInput} from 'react-native-paper';
+import {Text, Switch, TextInput, IconButton} from 'react-native-paper';
 
 import {colors} from '../theme';
 import ColorPalette from './ColorPalette';
@@ -25,6 +25,12 @@ type SettingRowProps<S> = {
   color?: S extends 'player' ? string : never;
   title?: S extends 'player' ? never : string;
   keyboardType?: S extends 'input' ? KeyboardTypeOptions : never;
+  collapse?:
+    | {
+        collapsed: boolean;
+        onCollapse: () => void;
+      }
+    | undefined;
 };
 
 const SettingRow = <T extends SettingType>({
@@ -36,6 +42,7 @@ const SettingRow = <T extends SettingType>({
   value,
   color,
   keyboardType,
+  collapse,
 }: SettingRowProps<T>) => {
   const [colorOpen, setColorOpen] = useState(false);
 
@@ -43,20 +50,28 @@ const SettingRow = <T extends SettingType>({
     return (
       <View style={styles.row}>
         <Text>{title}</Text>
-        <TextInput
-          onBlur={onBlur}
-          style={styles.input}
-          mode="outlined"
-          value={value as string}
-          onChangeText={e => {
-            if (keyboardType === 'numeric') {
-              !isNaN(+e) && +e > 0 && onChange(e);
-            } else {
-              onChange(e);
-            }
-          }}
-          keyboardType={keyboardType ?? 'numeric'}
-        />
+        <View style={styles.right}>
+          <TextInput
+            onBlur={onBlur}
+            style={styles.input}
+            mode="outlined"
+            value={value as string}
+            onChangeText={e => {
+              if (keyboardType === 'numeric') {
+                !isNaN(+e) && +e > 0 && onChange(e);
+              } else {
+                onChange(e);
+              }
+            }}
+            keyboardType={keyboardType ?? 'numeric'}
+          />
+          {collapse !== undefined ? (
+            <IconButton
+              icon={collapse.collapsed ? 'arrow-expand' : 'arrow-collapse'}
+              onPress={collapse.onCollapse}
+            />
+          ) : null}
+        </View>
       </View>
     );
   }
@@ -110,7 +125,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
   },
   input: {
-    width: '15%',
+    width: '50%',
     height: 35,
     textAlign: 'center',
     marginTop: -5,
@@ -118,6 +133,12 @@ const styles = StyleSheet.create({
   nameInput: {
     width: '40%',
     textAlign: 'left',
+  },
+  right: {
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+    width: '30%',
   },
   colorBox: {
     width: 32,
