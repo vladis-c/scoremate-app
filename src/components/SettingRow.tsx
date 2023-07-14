@@ -10,16 +10,12 @@ import {Text, Switch, TextInput, IconButton} from 'react-native-paper';
 import {colors} from '../theme';
 import ColorPalette from './ColorPalette';
 
-type SettingType = 'input' | 'switch' | 'player';
+type SettingType = 'input' | 'switch' | 'player' | 'score';
 
 type SettingRowProps<S> = {
   type: S;
-  value: S extends 'input' ? string : S extends 'player' ? string : boolean;
-  onChange: S extends 'input'
-    ? (v: string) => void
-    : S extends 'player'
-    ? (v: string) => void
-    : () => void;
+  value: S extends 'switch' ? boolean : S extends 'score' ? number : string;
+  onChange: S extends 'switch' ? () => void : (v: string) => void;
   onBlur?: S extends 'input' ? () => void : never;
   onChangeColor?: S extends 'player' ? (c: string) => void : never;
   color?: S extends 'player' ? string : never;
@@ -31,6 +27,10 @@ type SettingRowProps<S> = {
         onCollapse: () => void;
       }
     | undefined;
+};
+
+const ViewWrapper = ({children}: {children: React.ReactNode}) => {
+  return <View style={styles.row}>{children}</View>;
 };
 
 const SettingRow = <T extends SettingType>({
@@ -46,10 +46,35 @@ const SettingRow = <T extends SettingType>({
 }: SettingRowProps<T>) => {
   const [colorOpen, setColorOpen] = useState(false);
 
+  const Title = <Text>{title}</Text>;
+
+  if (type === 'score') {
+    return (
+      <ViewWrapper>
+        {Title}
+        <View style={styles.right}>
+          <IconButton
+            disabled={value === 0}
+            size={18}
+            icon="minus"
+            onPress={() => onChange('-')}
+            style={styles.iconButton}
+          />
+          <IconButton
+            size={18}
+            icon="plus"
+            onPress={() => onChange('+')}
+            style={styles.iconButton}
+          />
+        </View>
+      </ViewWrapper>
+    );
+  }
+
   if (type === 'input') {
     return (
-      <View style={styles.row}>
-        <Text>{title}</Text>
+      <ViewWrapper>
+        {Title}
         <View style={styles.right}>
           <TextInput
             onBlur={onBlur}
@@ -72,13 +97,13 @@ const SettingRow = <T extends SettingType>({
             />
           ) : null}
         </View>
-      </View>
+      </ViewWrapper>
     );
   }
   if (type === 'player') {
     return (
       <>
-        <View style={styles.row}>
+        <ViewWrapper>
           <TextInput
             style={[styles.input, styles.nameInput]}
             mode="outlined"
@@ -90,7 +115,7 @@ const SettingRow = <T extends SettingType>({
             style={[styles.colorBox, {backgroundColor: color}]}
             onPress={() => setColorOpen(true)}
           />
-        </View>
+        </ViewWrapper>
         <ColorPalette
           color={color as string}
           onColorChangeComplete={c => onChangeColor?.(c)}
@@ -101,14 +126,14 @@ const SettingRow = <T extends SettingType>({
     );
   }
   return (
-    <View style={styles.row}>
-      <Text>{title}</Text>
+    <ViewWrapper>
+      {Title}
       <Switch
         value={value as boolean}
         color={colors.LightBlue}
         onChange={onChange as () => void}
       />
-    </View>
+    </ViewWrapper>
   );
 };
 
@@ -147,5 +172,12 @@ const styles = StyleSheet.create({
     borderRadius: 6,
     borderWidth: 1,
     marginRight: 10,
+  },
+  iconButton: {
+    backgroundColor: colors.White,
+    borderWidth: 1,
+    borderColor: colors.LightBlue,
+    borderRadius: 4,
+    marginRight: 0
   },
 });

@@ -71,6 +71,12 @@ const score = createSlice({
       }
       state.players.splice(objIndex, 1);
     },
+    setNewScore: (state, action) => {
+      
+    },
+    removeScore: (state, action) => {
+
+    },
     setPlayerSettings: (
       state,
       action: PayloadAction<{
@@ -92,6 +98,7 @@ const score = createSlice({
       const shuffled = shuffleArray([...state.players]);
       state.players = shuffled;
     },
+    //TODO: DEPRICATE
     setAddNewCustomScore: (
       state,
       action: PayloadAction<CustomScore | number>,

@@ -41,6 +41,7 @@ const CustomsScreen = ({navigation, route}: CustomsScreenProps) => {
   }, [navigation, route.params]);
 
   const dispatch = useAppDispatch();
+  const [playerListCollapsed, setPlayerListCollapsed] = useState(false);
   const [rowsTitle, setRowsTitle] = useState<string[]>([]);
   const players = useAppSelector(({score}) => score.players);
   const [amountOfPlayers, setAmountOfPlayers] = useState<number>(
@@ -88,8 +89,6 @@ const CustomsScreen = ({navigation, route}: CustomsScreenProps) => {
     }
   };
 
-  const [playerListCollapsed, setPlayerListCollapsed] = useState(false);
-
   return (
     <>
       <ScrollContainer style={styles.container}>
@@ -100,7 +99,7 @@ const CustomsScreen = ({navigation, route}: CustomsScreenProps) => {
           onBlur={handleSetNewPlayers}
           value={amountOfPlayers.toString()}
           collapse={
-            fromStart
+            !fromStart
               ? {
                   collapsed: playerListCollapsed,
                   onCollapse: () => setPlayerListCollapsed(prev => !prev),
@@ -146,8 +145,31 @@ const CustomsScreen = ({navigation, route}: CustomsScreenProps) => {
           type="switch"
           title={rowsTitle[1]}
           onChange={() => console.log('sw 2 change')}
-          value={false}
+          value={true}
         />
+        <SettingRow
+          type="score"
+          title="Add custom score count"
+          onChange={v => {
+            const value = v as '+' | '-';
+            if (value === '+') {
+              console.log(value);
+            } else {
+              console.log(value);
+            }
+          }}
+          value={1}
+        />
+        {[1, 2].map((el, i) => (
+          <SettingRow
+            key={el + i}
+            type="input"
+            title={`Custom score ${i+1}`}
+            onChange={e => console.log(e)}
+            onBlur={() => {}}
+            value={el.toString()}
+          />
+        ))}
       </ScrollContainer>
       <Button
         mode="elevated"

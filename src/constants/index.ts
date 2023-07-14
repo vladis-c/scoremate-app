@@ -71,14 +71,14 @@ export const startButton1Lables: string[] = [
 ];
 
 export const startButton2Lables: string[] = [
-  "Craft your unique experience",
-  "Unleash your creativity",
+  "Craft my unique experience",
+  "Unleash my creativity",
   "Unravel limitless customization",
-  "Forge your personalized path",
+  "Forge my personalized path",
   // "Unlock a realm of possibilities",
   // "Tailor-made for your preferences",
   // "Embark on a customization journey",
-  "Define your own Scoremate style",
+  "Define my own Scoremate style",
   "Embrace the power of customization",
   // "Curate your ideal Scoremate adventure"
 ];
