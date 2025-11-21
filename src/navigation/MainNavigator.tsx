@@ -9,10 +9,11 @@ const Main = createNativeStackNavigator<MainNavParamList>();
 
 const MainNavigator = () => {
   return (
-    <Main.Navigator >
+    <Main.Navigator>
       <Main.Screen
         name={MAIN_NAV.START}
         component={StartScreen}
+        options={{headerShown: false}}
       />
       <Main.Screen
         name={MAIN_NAV.DRAWER}
