@@ -4,11 +4,7 @@ import {IconButton, Button} from 'react-native-paper';
 
 import ScrollContainer from '../components/ScrollContaner';
 import {colors} from '../theme';
-import {
-  CustomsScreenProps,
-  DRAWER_NAV,
-  MAIN_NAV,
-} from '../navigation/navigation-types';
+import {CustomsScreenProps, DRAWER_NAV} from '../navigation/navigation-types';
 import SettingRow from '../components/SettingRow';
 import {getRandomColor, getRandomNumber} from '../helpers';
 import {desireWords} from '../constants';
@@ -31,20 +27,7 @@ const CustomsScreen = ({navigation, route}: CustomsScreenProps) => {
     navigation.setOptions({
       headerTitle: label,
       headerLeft: () => (
-        <IconButton
-          icon="arrow-left"
-          onPress={() => {
-            if (fromStart) {
-              // TODO: check the types
-              //@ts-ignore
-              navigation.navigate(MAIN_NAV.START);
-            } else {
-              // TODO: check the types
-              //@ts-ignore
-              navigation.goBack();
-            }
-          }}
-        />
+        <IconButton icon="arrow-left" onPress={navigation.goBack} />
       ),
     });
   }, [navigation, route.params]);

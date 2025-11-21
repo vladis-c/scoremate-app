@@ -24,7 +24,7 @@ export const DRAWER_NAV = {
 } as const;
 export type DrawerNavProps = ObjectValues<typeof DRAWER_NAV>;
 
-// Navigatior Params List
+// Navigator Params List
 
 /** Main navigator, which holds all the navigators inside */
 export type MainNavParamList = {

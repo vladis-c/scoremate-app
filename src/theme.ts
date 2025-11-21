@@ -1,7 +1,7 @@
 import {Theme} from '@react-navigation/native';
 import {DefaultTheme} from '@react-navigation/native';
 import {MD3LightTheme as PaperDefaultTheme} from 'react-native-paper';
-import {ThemeProp} from 'react-native-paper/lib/typescript/src/types';
+import {ThemeProp} from 'react-native-paper/lib/typescript/types';
 
 export const fonts = {
   BigHeading: {
@@ -12,7 +12,7 @@ export const fonts = {
     fontFamily: 'Quicksand_700Bold',
     fontSize: 20,
   },
-  HugeText:  {
+  HugeText: {
     fontFamily: 'Quicksand_700Bold',
     fontSize: 144,
   },
@@ -30,7 +30,7 @@ export const fonts = {
   },
   SmallLightText: {
     fontFamily: 'Quicksand_300Light',
-    fontWeight: '300' as any,
+    fontWeight: '300',
     fontSize: 11,
   },
 };
@@ -47,7 +47,7 @@ export const colors = {
   LightGrey: '#F6F6F5',
   Red: '#D23535',
   Green: '#108045',
-  Wooden: '#F5DEB3'
+  Wooden: '#F5DEB3',
 };
 
 export const NavigationTheme: Theme = {
@@ -59,6 +59,24 @@ export const NavigationTheme: Theme = {
     text: colors.Black,
     card: colors.LightBlue,
     border: colors.LightBlue,
+  },
+  fonts: {
+    heavy: {
+      fontFamily: fonts.BigText.fontFamily,
+      fontWeight: '900',
+    },
+    bold: {
+      fontFamily: fonts.BigText.fontFamily,
+      fontWeight: '700',
+    },
+    medium: {
+      fontFamily: fonts.BasicText.fontFamily,
+      fontWeight: '500',
+    },
+    regular: {
+      fontFamily: fonts.SmallLightText.fontFamily,
+      fontWeight: '300',
+    },
   },
 };
 
@@ -80,7 +98,7 @@ export const PaperTheme: ThemeProp = {
     titleSmall: fonts.SmallText,
     labelLarge: fonts.SmallHeading,
     labelMedium: fonts.BasicText,
-    labelSmall: fonts.SmallText
+    labelSmall: fonts.SmallText,
   },
   dark: false,
   colors: {
