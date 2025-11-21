@@ -21,7 +21,7 @@ const ScrollContainer = ({children, style}: ScrollContainerProps) => {
 
   return (
     <ScrollView
-      style={{margin: 1}}
+      style={{margin: 1, marginBottom: 90}}
       contentContainerStyle={[styles.container, style]}
       ref={ref}>
       {children}
