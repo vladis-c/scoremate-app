@@ -33,7 +33,6 @@ const CustomsScreen = ({navigation, route}: CustomsScreenProps) => {
 
   const dispatch = useAppDispatch();
   const [playerListCollapsed, setPlayerListCollapsed] = useState(false);
-  const [rowsTitle, setRowsTitle] = useState<string[]>([]);
   const players = useAppSelector(({score}) => score.players);
   const customScore = useAppSelector(({score}) => score.customScore);
   const customScoreIsShown = useAppSelector(
@@ -61,19 +60,6 @@ const CustomsScreen = ({navigation, route}: CustomsScreenProps) => {
       });
     }
   }, [randomizeColorIsSet]);
-
-  useEffect(() => {
-    const newRows: string[] = [];
-    const row1 =
-      desireWords[getRandomNumber(0, desireWords.length - 1)] +
-      ' get random colors';
-    newRows.push(row1);
-    const row2 =
-      desireWords[getRandomNumber(0, desireWords.length - 1)] +
-      ' set my own scores';
-    newRows.push(row2);
-    setRowsTitle(newRows);
-  }, []);
 
   const handleSetNewPlayers = () => {
     const difference = amountOfPlayers - players.length;
@@ -108,7 +94,10 @@ const CustomsScreen = ({navigation, route}: CustomsScreenProps) => {
       <ScrollContainer style={styles.container}>
         <SettingRow
           type="switch"
-          title={rowsTitle[0]}
+          title={
+            desireWords[getRandomNumber(0, desireWords.length - 1)] +
+            ' get random colors'
+          }
           onChange={() => dispatch(toggleRandomizeColorIsSet())}
           value={randomizeColorIsSet}
         />
@@ -157,7 +146,10 @@ const CustomsScreen = ({navigation, route}: CustomsScreenProps) => {
           : null}
         <SettingRow
           type="switch"
-          title={rowsTitle[1]}
+          title={
+            desireWords[getRandomNumber(0, desireWords.length - 1)] +
+            ' set my own scores'
+          }
           onChange={() => dispatch(toggleCustomScoreIsShown())}
           value={customScoreIsShown}
         />
