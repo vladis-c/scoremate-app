@@ -60,22 +60,21 @@ export const handleTextColorForBackground = (bgcolor: string) => {
     bgcolor = handleHexToRgb(bgcolor);
   }
 
-  let r, g, b;
+  let luminance: number;
+
   if (bgcolor.startsWith('rgb')) {
-    [r, g, b] = bgcolor
+    const [r, g, b] = bgcolor
       .replace(/rgba?\(|\s+|\)/g, '')
       .split(',')
       .map(Number);
-  }
+    luminance = (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255;
 
-  //@ts-ignore
-  const luminance = (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255;
-
-  if (luminance > 0.5) {
-    return colors.Black;
-  } else {
+    if (luminance > 0.5) {
+      return colors.Black;
+    }
     return colors.White;
   }
+  return colors.White;
 };
 
 export const shuffleArray = <T>(array: T[]): T[] => {
