@@ -1,14 +1,12 @@
 import React, {useEffect, useLayoutEffect, useState} from 'react';
 import {StyleSheet} from 'react-native';
-import {IconButton, Button} from 'react-native-paper';
-
-import ScrollContainer from '../components/ScrollContaner';
-import {colors} from '../theme';
-import {CustomsScreenProps, DRAWER_NAV} from '../navigation/navigation-types';
+import {Button, IconButton} from 'react-native-paper';
+import ScrollContainer from '../components/ScrollContainer';
 import SettingRow from '../components/SettingRow';
-import {getRandomColor, getRandomNumber} from '../helpers';
 import {desireWords} from '../constants';
+import {getRandomColor, getRandomNumber} from '../helpers';
 import {useAppDispatch, useAppSelector} from '../hooks/redux-hooks';
+import {CustomsScreenProps, DRAWER_NAV} from '../navigation/navigation-types';
 import {
   addNewCustomScore,
   removeCustomScore,
@@ -19,6 +17,7 @@ import {
   toggleCustomScoreIsShown,
   toggleRandomizeColorIsSet,
 } from '../store/score';
+import {colors} from '../theme';
 
 const CustomsScreen = ({navigation, route}: CustomsScreenProps) => {
   const {fromStart, label} = route.params;

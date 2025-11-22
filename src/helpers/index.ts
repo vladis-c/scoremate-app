@@ -21,8 +21,8 @@ export const getRandomColor = <
   const useDefault = options
     ? options.useDefault
     : !Array.isArray(props)
-    ? props?.useDefault
-    : undefined;
+      ? props?.useDefault
+      : undefined;
 
   // use default colors from common colors array
   if (useDefault) {

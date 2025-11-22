@@ -8,16 +8,16 @@ type ScrollContainerProps = {
   style?: StyleProp<ViewStyle>;
 };
 const ScrollContainer = ({children, style}: ScrollContainerProps) => {
-  const displatch = useAppDispatch();
+  const dispatch = useAppDispatch();
   const {shouldScrollToEnd} = useAppSelector(({service}) => service);
   const ref = useRef<ScrollView | null>(null);
 
   useEffect(() => {
     if (shouldScrollToEnd && ref.current) {
       ref.current.scrollToEnd();
-      displatch(setShouldScrollToEnd(false));
+      dispatch(setShouldScrollToEnd(false));
     }
-  }, [shouldScrollToEnd, displatch]);
+  }, [shouldScrollToEnd]);
 
   return (
     <ScrollView

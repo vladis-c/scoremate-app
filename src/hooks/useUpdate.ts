@@ -4,7 +4,7 @@ import {Alert} from 'react-native';
 
 /**
  * Custom React Hook. Checks for Expo updates. OTA updates
- * Either pass "appIsReady?: boolean", or invoke a funcion "checkForAvailableUpdates()".
+ * Either pass "appIsReady?: boolean", or invoke a function "checkForAvailableUpdates()".
  * Vladislav Cherkasheninov 13.10.2022
  */
 export const useUpdate = (appIsReady?: boolean, manualCall?: boolean) => {
@@ -48,7 +48,7 @@ export const useUpdate = (appIsReady?: boolean, manualCall?: boolean) => {
       }
     } catch (error) {
       setLoadingUpdate(false);
-      console.log('checkForAvailableUpodatess [useCheckForUpdates]', error);
+      console.log('checkForAvailableUpdates [useCheckForUpdates]', error);
     }
   };
 
@@ -58,7 +58,7 @@ export const useUpdate = (appIsReady?: boolean, manualCall?: boolean) => {
       if (result) {
         Alert.alert(
           'App has been successfully updated.',
-          'App has been updated to the newest versio. App will restart.',
+          'App has been updated to the newest version. App will restart.',
           [
             {
               text: 'Ok',

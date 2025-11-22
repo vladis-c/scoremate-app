@@ -1,12 +1,11 @@
-import React, {useEffect} from 'react';
-import {View, StyleSheet, TouchableOpacity} from 'react-native';
-import {Card, IconButton, Text} from 'react-native-paper';
 import {Accelerometer, AccelerometerMeasurement} from 'expo-sensors';
-
-import {useAppDispatch, useAppSelector} from '../hooks/redux-hooks';
-import {removeDie, setAddDie, setRollDice} from '../store/dice';
+import React, {useEffect} from 'react';
+import {StyleSheet, TouchableOpacity, View} from 'react-native';
+import {Card, IconButton, Text} from 'react-native-paper';
 import Die from '../components/Dice/Die';
 import {addDiceButtons} from '../constants';
+import {useAppDispatch, useAppSelector} from '../hooks/redux-hooks';
+import {removeDie, setAddDie, setRollDice} from '../store/dice';
 
 const DiceScreen = () => {
   const dispatch = useAppDispatch();
@@ -29,8 +28,8 @@ const DiceScreen = () => {
     diceArray.length === 0
       ? 'Add dice with buttons below'
       : diceArray.length === 1
-      ? 'Press a die to roll'
-      : 'Press any die to roll the dice';
+        ? 'Press a die to roll'
+        : 'Press any die to roll the dice';
 
   return (
     <View style={styles.container}>

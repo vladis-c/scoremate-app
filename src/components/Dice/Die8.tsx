@@ -1,8 +1,7 @@
 import React from 'react';
-import {Text} from 'react-native-paper';
 import {StyleSheet, View} from 'react-native';
-
-import Square from './Sqare';
+import {Text} from 'react-native-paper';
+import Square from './Square';
 
 type Die8Props = {
   dots: number;

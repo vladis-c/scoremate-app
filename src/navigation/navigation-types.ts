@@ -2,7 +2,7 @@ import {NavigatorScreenParams} from '@react-navigation/native';
 import type {NativeStackScreenProps} from '@react-navigation/native-stack';
 
 /**
- * The followng constant-type pairs are analogue of Typescript Enums.
+ * The following constant-type pairs are analogue of Typescript Enums.
  * For the navigation:
  * the constants in CAPITAL letters are the names of screens to be set in the navigation;
  * the type pair is for use if you create other type or interface with it to reference.
@@ -33,7 +33,7 @@ export type MainNavParamList = {
 };
 
 export type DrawerNavParamList = {
-  [DRAWER_NAV.CUSTOMS]: {fromStart: boolean, label: string};
+  [DRAWER_NAV.CUSTOMS]: {fromStart: boolean; label: string};
   [DRAWER_NAV.SCORE]: undefined;
   [DRAWER_NAV.RANDOM]: undefined;
   [DRAWER_NAV.DICE]: undefined;

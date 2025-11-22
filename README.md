@@ -13,7 +13,6 @@ NOTE! This app was only tested on Android, however it should be possible to run 
 ### Installation
 
 - Make sure you have Node v20.\*+ installed.
-
   - Do not use any version younger, the dependencies won't work (package.json locks it).
 
 - Make sure you have latest Android Studio and Java 17 on your machine.

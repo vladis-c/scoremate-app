@@ -1,13 +1,12 @@
 import React from 'react';
 import {
-  View,
+  Keyboard,
   StyleSheet,
   TouchableOpacity,
   TouchableWithoutFeedback,
-  Keyboard,
+  View,
 } from 'react-native';
 import {Card, Text, TextInput} from 'react-native-paper';
-
 import {useAppDispatch, useAppSelector} from '../hooks/redux-hooks';
 import {setRandomNumber, setRandomizerLimit} from '../store/random';
 

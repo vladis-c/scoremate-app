@@ -1,6 +1,6 @@
 import React from 'react';
 import {StyleSheet} from 'react-native';
-import {Modal, Portal, Card, Button} from 'react-native-paper';
+import {Button, Card, Modal, Portal} from 'react-native-paper';
 import ColorPicker from 'react-native-wheel-color-picker';
 
 type ColorPaletteProps = {

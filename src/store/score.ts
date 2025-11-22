@@ -1,6 +1,6 @@
 import {PayloadAction, createSlice} from '@reduxjs/toolkit';
-import type {CustomScore, Player} from '../types';
 import {getRandomColor, shuffleArray, swapArrayItems} from '../helpers';
+import type {CustomScore, Player} from '../types';
 
 type ScoreInitialStateProps = {
   players: Player[];

@@ -1,20 +1,19 @@
 import React, {useEffect, useState} from 'react';
 import {Dimensions, StyleSheet, View} from 'react-native';
-import {Button, Card, IconButton, Text} from 'react-native-paper';
 import {useClickOutside} from 'react-native-click-outside';
-
-import {colors} from '../theme';
-import ColorPalette from './ColorPalette';
-import {Player} from '../types';
-import {useAppDispatch, useAppSelector} from '../hooks/redux-hooks';
-import {removePlayer, setPlayerScore, setPlayerSettings} from '../store/score';
+import {Button, Card, IconButton, Text} from 'react-native-paper';
 import {
   getRandomColor,
   handleSplitArray,
   handleTextColorForBackground,
 } from '../helpers';
-import TextModal from './TextModal';
+import {useAppDispatch, useAppSelector} from '../hooks/redux-hooks';
+import {removePlayer, setPlayerScore, setPlayerSettings} from '../store/score';
 import {setShouldScrollToEnd} from '../store/service';
+import {colors} from '../theme';
+import {Player} from '../types';
+import ColorPalette from './ColorPalette';
+import TextModal from './TextModal';
 
 type ScoreCardProps = {
   id: Player['id'];

@@ -1,7 +1,7 @@
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
 import {Card, IconButton, Text} from 'react-native-paper';
-
+import {getRandomColor} from '../helpers';
 import {useAppDispatch, useAppSelector} from '../hooks/redux-hooks';
 import {
   removePlayer,
@@ -9,7 +9,6 @@ import {
   setNewPlayer,
   setShuffledArray,
 } from '../store/score';
-import {getRandomColor} from '../helpers';
 
 const AddCard = () => {
   const dispatch = useAppDispatch();

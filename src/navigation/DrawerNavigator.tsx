@@ -1,13 +1,12 @@
+import {createDrawerNavigator} from '@react-navigation/drawer';
 import React from 'react';
 import {IconButton} from 'react-native-paper';
-import {createDrawerNavigator} from '@react-navigation/drawer';
-
-import {DRAWER_NAV, DrawerNavParamList} from './navigation-types';
+import CustomsScreen from '../screens/CustomsScreen';
+import DiceScreen from '../screens/DiceScreen';
+import RandomizerScreen from '../screens/RandomizerScreen';
 import ScoreScreen from '../screens/ScoreScreen';
 import {fonts} from '../theme';
-import RandomizerScreen from '../screens/RandomizerScreen';
-import DiceScreen from '../screens/DiceScreen';
-import CustomsScreen from '../screens/CustomsScreen';
+import {DRAWER_NAV, DrawerNavParamList} from './navigation-types';
 
 const Drawer = createDrawerNavigator<DrawerNavParamList>();
 

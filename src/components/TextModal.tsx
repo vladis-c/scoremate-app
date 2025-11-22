@@ -1,6 +1,6 @@
 import React from 'react';
 import {StyleSheet} from 'react-native';
-import {Modal, Portal, Card, Button, TextInput} from 'react-native-paper';
+import {Button, Card, Modal, Portal, TextInput} from 'react-native-paper';
 
 type TextModalProps = {
   value: string;

@@ -1,6 +1,6 @@
 import React from 'react';
-import {View, StyleSheet} from 'react-native';
-import Square from './Sqare';
+import {StyleSheet, View} from 'react-native';
+import Square from './Square';
 
 type Die6Props = {
   dots: number;

@@ -56,37 +56,37 @@ export const commonColors: string[] = [
   '#a994b8', // Soft Purple
 ];
 
-export const startButton1Lables: string[] = [
-  "Optimal Scoremate experience",
+export const startButton1Labels: string[] = [
+  'Optimal Scoremate experience',
   // "Enhanced settings for you",
-  "Finest Scoremate settings",
+  'Finest Scoremate settings',
   // "Elevate your gameplay",
-  "Supercharged defaults",
-  "Masterful Scoremate presets",
+  'Supercharged defaults',
+  'Masterful Scoremate presets',
   // "Unleash the power of defaults",
-  "Seamless default configuration",
-  "Sync with Scoremate defaults",
-  "Empowering default settings",
+  'Seamless default configuration',
+  'Sync with Scoremate defaults',
+  'Empowering default settings',
   // "Immerse yourself in default excellence"
 ];
 
-export const startButton2Lables: string[] = [
-  "Craft my unique experience",
-  "Unleash my creativity",
-  "Unravel limitless customization",
-  "Forge my personalized path",
+export const startButton2Labels: string[] = [
+  'Craft my unique experience',
+  'Unleash my creativity',
+  'Unravel limitless customization',
+  'Forge my personalized path',
   // "Unlock a realm of possibilities",
   // "Tailor-made for your preferences",
   // "Embark on a customization journey",
-  "Define my own Scoremate style",
-  "Embrace the power of customization",
+  'Define my own Scoremate style',
+  'Embrace the power of customization',
   // "Curate your ideal Scoremate adventure"
 ];
 
 export const desireWords: string[] = [
-  "I wish to",
-  "I would like to",
-  "I want to",
-  "My desire is to",
-  "I would love to"
-]
+  'I wish to',
+  'I would like to',
+  'I want to',
+  'My desire is to',
+  'I would love to',
+];

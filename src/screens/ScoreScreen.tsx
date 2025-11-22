@@ -1,16 +1,15 @@
 import React, {useState} from 'react';
-import {View, StyleSheet} from 'react-native';
-
-import ScoreCard from '../components/ScoreCard';
-import {useAppDispatch, useAppSelector} from '../hooks/redux-hooks';
+import {StyleSheet, View} from 'react-native';
 import AddCard from '../components/AddCard';
-import ScrollContainer from '../components/ScrollContaner';
+import ScoreCard from '../components/ScoreCard';
+import ScrollContainer from '../components/ScrollContainer';
 import ViewContainer from '../components/ViewContainer';
+import {useAppDispatch, useAppSelector} from '../hooks/redux-hooks';
 import {setNewPlayersOrder} from '../store/score';
 
 const ScoreScreen = () => {
   const players = useAppSelector(({score: {players}}) => players);
-  const [addCardHeight, setAddCardHeigth] = useState<number | null>(null);
+  const [addCardHeight, setAddCardHeight] = useState<number | null>(null);
   const dispatch = useAppDispatch();
   const {scoreCardsDraggable} = useAppSelector(({service}) => service);
 
@@ -18,7 +17,7 @@ const ScoreScreen = () => {
     <>
       <View
         style={styles.add}
-        onLayout={e => setAddCardHeigth(e.nativeEvent.layout.height)}>
+        onLayout={e => setAddCardHeight(e.nativeEvent.layout.height)}>
         <AddCard />
       </View>
       {addCardHeight !== null ? (

@@ -1,12 +1,11 @@
 import React, {useState} from 'react';
 import {
-  View,
-  StyleSheet,
   KeyboardTypeOptions,
+  StyleSheet,
   TouchableOpacity,
+  View,
 } from 'react-native';
-import {Text, Switch, TextInput, IconButton} from 'react-native-paper';
-
+import {IconButton, Switch, Text, TextInput} from 'react-native-paper';
 import {colors} from '../theme';
 import ColorPalette from './ColorPalette';
 
@@ -178,6 +177,6 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: colors.LightBlue,
     borderRadius: 4,
-    marginRight: 0
+    marginRight: 0,
   },
 });

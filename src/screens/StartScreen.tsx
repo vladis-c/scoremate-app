@@ -1,21 +1,20 @@
+import {Image} from 'expo-image';
 import React, {useEffect, useState} from 'react';
 import {StyleSheet} from 'react-native';
 import {ActivityIndicator, Button, Text} from 'react-native-paper';
-
-import ScrollContainer from '../components/ScrollContaner';
+import ScrollContainer from '../components/ScrollContainer';
+import {startButton1Labels, startButton2Labels} from '../constants';
+import {
+  getRandomColor,
+  getRandomNumber,
+  handleTextColorForBackground,
+} from '../helpers';
 import {
   DRAWER_NAV,
   MAIN_NAV,
   StartScreenProps,
 } from '../navigation/navigation-types';
 import {colors} from '../theme';
-import {
-  getRandomColor,
-  getRandomNumber,
-  handleTextColorForBackground,
-} from '../helpers';
-import {startButton1Lables, startButton2Lables} from '../constants';
-import {Image} from 'expo-image';
 
 type BtnProps = {bgColor: string; textColor: string; label: string};
 
@@ -28,14 +27,14 @@ const StartScreen = ({navigation}: StartScreenProps) => {
     if (bg1) {
       const textColor1 = handleTextColorForBackground(bg1);
       const label1 =
-        startButton1Lables[getRandomNumber(0, startButton1Lables.length - 1)];
+        startButton1Labels[getRandomNumber(0, startButton1Labels.length - 1)];
       newProps.push({bgColor: bg1, textColor: textColor1, label: label1});
     }
     const bg2 = getRandomColor({useDefault: true});
     if (bg2) {
       const textColor2 = handleTextColorForBackground(bg2);
       const label2 =
-        startButton2Lables[getRandomNumber(0, startButton2Lables.length - 1)];
+        startButton2Labels[getRandomNumber(0, startButton2Labels.length - 1)];
       newProps.push({bgColor: bg2, textColor: textColor2, label: label2});
     }
     setBtnProps(newProps);
