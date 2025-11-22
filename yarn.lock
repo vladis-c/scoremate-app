@@ -2798,13 +2798,6 @@ expo-modules-core@3.0.26:
   dependencies:
     invariant "^2.2.4"
 
-expo-sensors@~15.0.7:
-  version "15.0.7"
-  resolved "https://registry.yarnpkg.com/expo-sensors/-/expo-sensors-15.0.7.tgz#31897bfeaa3ebb4a679ff97b54e1e67470903665"
-  integrity sha512-TGUxRx/Ss7KGgfWo453YF64ENucw6oYryPiu/8I3ZZuf114xQPRxAbsZohPLaVUUGuaUyWbDsb0eRsmuKUzBnQ==
-  dependencies:
-    invariant "^2.2.4"
-
 expo-server@^1.0.4:
   version "1.0.4"
   resolved "https://registry.yarnpkg.com/expo-server/-/expo-server-1.0.4.tgz#cb90f23272257f8cb0c9dceaade26bb169d8a3f7"

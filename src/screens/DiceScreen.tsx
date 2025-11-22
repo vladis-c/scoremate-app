@@ -1,5 +1,4 @@
-import {Accelerometer, AccelerometerMeasurement} from 'expo-sensors';
-import React, {useEffect} from 'react';
+import React from 'react';
 import {StyleSheet, TouchableOpacity, View} from 'react-native';
 import {Card, IconButton, Text} from 'react-native-paper';
 import Die from '../components/Dice/Die';
@@ -11,19 +10,6 @@ const DiceScreen = () => {
   const dispatch = useAppDispatch();
   const {diceArray} = useAppSelector(({dice}) => dice);
 
-  // useEffect(() => {
-  //   Accelerometer.addListener(handleShake);
-  //   return () => {
-  //     Accelerometer.removeAllListeners();
-  //   };
-  // }, []);
-
-  // const handleShake = (data: AccelerometerMeasurement) => {
-  //   const acceleration = Math.abs(data.x) + Math.abs(data.y) + Math.abs(data.z);
-  //   if (acceleration > 3) {
-  //     console.log('Device shook');
-  //   }
-  // };
   const text =
     diceArray.length === 0
       ? 'Add dice with buttons below'

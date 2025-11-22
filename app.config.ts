@@ -5,9 +5,6 @@ export default ({config}: ConfigContext): ExpoConfig => ({
   name: 'Scoremate',
   slug: 'scoremate',
   version: '1.0.0',
-  // runtimeVersion: {
-  //   policy: 'nativeVersion',
-  // },
   orientation: 'portrait',
   icon: './assets/icon.png',
   userInterfaceStyle: 'light',
@@ -39,16 +36,7 @@ export default ({config}: ConfigContext): ExpoConfig => ({
   web: {
     favicon: './assets/favicon.png',
   },
-  plugins: [
-    ['expo-updates', {username: 'vladis-c'}],
-    [
-      'expo-sensors',
-      {
-        motionPermission:
-          'Allow $(PRODUCT_NAME) to access your device motion to play a dice game.',
-      },
-    ],
-  ],
+  plugins: [['expo-updates', {username: 'vladis-c'}]],
   extra: {
     eas: {
       projectId: '69a8df95-80e3-4607-b290-ceefe88aa3b7',
