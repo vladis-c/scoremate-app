@@ -1,7 +1,7 @@
 import {Image} from 'expo-image';
-import React, {useEffect, useState} from 'react';
+import React from 'react';
 import {StyleSheet} from 'react-native';
-import {ActivityIndicator, Button, Text} from 'react-native-paper';
+import {Button, Text} from 'react-native-paper';
 import ScrollContainer from '../components/ScrollContainer';
 import {startButton1Labels, startButton2Labels} from '../constants';
 import {
@@ -19,26 +19,24 @@ import {colors} from '../theme';
 type BtnProps = {bgColor: string; textColor: string; label: string};
 
 const StartScreen = ({navigation}: StartScreenProps) => {
-  const [btnProps, setBtnProps] = useState<BtnProps[]>([]);
-
-  useEffect(() => {
+  const getBtnProps = (): BtnProps[] => {
     const newProps: BtnProps[] = [];
+
     const bg1 = getRandomColor({useDefault: true});
-    if (bg1) {
-      const textColor1 = handleTextColorForBackground(bg1);
-      const label1 =
-        startButton1Labels[getRandomNumber(0, startButton1Labels.length - 1)];
-      newProps.push({bgColor: bg1, textColor: textColor1, label: label1});
-    }
+    const textColor1 = handleTextColorForBackground(bg1);
+    const label1 =
+      startButton1Labels[getRandomNumber(0, startButton1Labels.length - 1)];
+    newProps.push({bgColor: bg1, textColor: textColor1, label: label1});
+
     const bg2 = getRandomColor({useDefault: true});
-    if (bg2) {
-      const textColor2 = handleTextColorForBackground(bg2);
-      const label2 =
-        startButton2Labels[getRandomNumber(0, startButton2Labels.length - 1)];
-      newProps.push({bgColor: bg2, textColor: textColor2, label: label2});
-    }
-    setBtnProps(newProps);
-  }, []);
+    const textColor2 = handleTextColorForBackground(bg2);
+    const label2 =
+      startButton2Labels[getRandomNumber(0, startButton2Labels.length - 1)];
+    newProps.push({bgColor: bg2, textColor: textColor2, label: label2});
+    return newProps;
+  };
+
+  const btnProps = getBtnProps();
 
   return (
     <>
@@ -49,41 +47,35 @@ const StartScreen = ({navigation}: StartScreenProps) => {
         transition={100}
       />
       <ScrollContainer style={styles.container}>
-        {btnProps ? (
-          <>
-            <Text style={styles.text}>
-              Embark on an extraordinary Scoremate experience by choosing one of
-              the following options.
-            </Text>
-            <Button
-              labelStyle={{fontSize: 16}}
-              buttonColor={btnProps[0]?.bgColor ?? colors.White}
-              textColor={btnProps[0]?.textColor ?? colors.Black}
-              style={styles.button}
-              mode="elevated"
-              onPress={() =>
-                navigation.navigate(MAIN_NAV.DRAWER, {screen: DRAWER_NAV.SCORE})
-              }>
-              {btnProps[0]?.label}
-            </Button>
-            <Button
-              labelStyle={{fontSize: 16}}
-              buttonColor={btnProps[1]?.bgColor ?? colors.White}
-              textColor={btnProps[1]?.textColor ?? colors.Black}
-              style={styles.button}
-              mode="elevated"
-              onPress={() =>
-                navigation.navigate(MAIN_NAV.DRAWER, {
-                  screen: DRAWER_NAV.CUSTOMS,
-                  params: {fromStart: true, label: btnProps[1]?.label},
-                })
-              }>
-              {btnProps[1]?.label}
-            </Button>
-          </>
-        ) : (
-          <ActivityIndicator size={40} color={colors.LightBlue} />
-        )}
+        <Text style={styles.text}>
+          Embark on an extraordinary Scoremate experience by choosing one of the
+          following options.
+        </Text>
+        <Button
+          labelStyle={{fontSize: 16}}
+          buttonColor={btnProps[0]?.bgColor ?? colors.White}
+          textColor={btnProps[0]?.textColor ?? colors.Black}
+          style={styles.button}
+          mode="elevated"
+          onPress={() =>
+            navigation.navigate(MAIN_NAV.DRAWER, {screen: DRAWER_NAV.SCORE})
+          }>
+          {btnProps[0]?.label}
+        </Button>
+        <Button
+          labelStyle={{fontSize: 16}}
+          buttonColor={btnProps[1]?.bgColor ?? colors.White}
+          textColor={btnProps[1]?.textColor ?? colors.Black}
+          style={styles.button}
+          mode="elevated"
+          onPress={() =>
+            navigation.navigate(MAIN_NAV.DRAWER, {
+              screen: DRAWER_NAV.CUSTOMS,
+              params: {fromStart: true, label: btnProps[1]?.label},
+            })
+          }>
+          {btnProps[1]?.label}
+        </Button>
       </ScrollContainer>
     </>
   );
