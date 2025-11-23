@@ -3,7 +3,6 @@ import * as SplashScreen from 'expo-splash-screen';
 import {StatusBar} from 'expo-status-bar';
 import {useCallback} from 'react';
 import {ClickOutsideProvider} from 'react-native-click-outside';
-import {DraxProvider} from 'react-native-drax';
 import 'react-native-gesture-handler';
 import {PaperProvider} from 'react-native-paper';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
@@ -39,11 +38,9 @@ const App = () => {
       <Provider store={store}>
         <PaperProvider theme={PaperTheme}>
           <NavigationContainer theme={NavigationTheme}>
-            <DraxProvider>
-              <ClickOutsideProvider>
-                <MainNavigator />
-              </ClickOutsideProvider>
-            </DraxProvider>
+            <ClickOutsideProvider>
+              <MainNavigator />
+            </ClickOutsideProvider>
           </NavigationContainer>
         </PaperProvider>
       </Provider>

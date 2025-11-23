@@ -1,7 +1,6 @@
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
 import {Card, IconButton, Text} from 'react-native-paper';
-import {getRandomColor} from '../helpers';
 import {useAppDispatch, useAppSelector} from '../hooks/redux-hooks';
 import {
   removePlayer,
@@ -13,18 +12,11 @@ import {
 const AddCard = () => {
   const dispatch = useAppDispatch();
   const players = useAppSelector(({score: {players}}) => players);
-  const {scoreCardsDraggable} = useAppSelector(({service}) => service);
   const amountOfPlayers = players.length;
-  const appliedColors = players.map(player => player.color);
 
   return (
     <Card style={styles.container}>
       <Card.Content style={styles.content}>
-        {/* <IconButton
-          size={24}
-          icon={scoreCardsDraggable ? 'pan-vertical' : 'pan'}
-          onPress={() => dispatch(setScoreCardsDraggable(!scoreCardsDraggable))}
-        /> */}
         <IconButton
           disabled={players.length === 0 || players.length === 1}
           size={24}

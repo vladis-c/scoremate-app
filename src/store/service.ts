@@ -2,12 +2,10 @@ import {PayloadAction, createSlice} from '@reduxjs/toolkit';
 
 type ServiceInitialStateProps = {
   shouldScrollToEnd: boolean;
-  scoreCardsDraggable: boolean;
 };
 
 const initialState: ServiceInitialStateProps = {
   shouldScrollToEnd: false,
-  scoreCardsDraggable: false,
 };
 
 const service = createSlice({
@@ -20,12 +18,8 @@ const service = createSlice({
     setShouldScrollToEnd: (state, action: PayloadAction<boolean>) => {
       state.shouldScrollToEnd = action.payload;
     },
-    setScoreCardsDraggable: (state, action: PayloadAction<boolean>) => {
-      state.scoreCardsDraggable = action.payload;
-    },
   },
 });
 
-export const {clearService, setShouldScrollToEnd, setScoreCardsDraggable} =
-  service.actions;
+export const {clearService, setShouldScrollToEnd} = service.actions;
 export default service;
