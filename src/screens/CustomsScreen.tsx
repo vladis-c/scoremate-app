@@ -109,7 +109,12 @@ const CustomsScreen = ({navigation, route}: CustomsScreenProps) => {
         <SettingRow
           type="input"
           title="Amount of players"
-          onChange={e => setAmountOfPlayers(+e)}
+          onChange={e => {
+            const amount = +e;
+            if (!isNaN(amount)) {
+              setAmountOfPlayers(+e);
+            }
+          }}
           onBlur={handleSetNewPlayers}
           value={amountOfPlayers.toString()}
           collapse={
