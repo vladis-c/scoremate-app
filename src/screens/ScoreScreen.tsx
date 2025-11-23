@@ -1,13 +1,18 @@
-import React, {useState} from 'react';
-import {StyleSheet, View} from 'react-native';
+import React, {useEffect, useRef, useState} from 'react';
+import {ScrollView, StyleSheet, View} from 'react-native';
 import AddCard from '../components/AddCard';
 import ScoreCard from '../components/ScoreCard';
 import ScrollContainer from '../components/ScrollContainer';
 import {useAppSelector} from '../hooks/redux-hooks';
 
 const ScoreScreen = () => {
+  const ref = useRef<ScrollView | null>(null);
   const players = useAppSelector(({score: {players}}) => players);
   const [addCardHeight, setAddCardHeight] = useState<number | null>(null);
+
+  useEffect(() => {
+    ref.current?.scrollToEnd();
+  }, [players.length]);
 
   return (
     <>
@@ -17,7 +22,7 @@ const ScoreScreen = () => {
         <AddCard />
       </View>
       {addCardHeight !== null ? (
-        <ScrollContainer style={{paddingTop: addCardHeight}}>
+        <ScrollContainer style={{paddingTop: addCardHeight}} ref={ref}>
           <View style={styles.cardsContainer}>
             {players.map(player => (
               <View key={player.id}>

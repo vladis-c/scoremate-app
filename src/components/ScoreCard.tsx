@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Dimensions, StyleSheet, View} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import {useClickOutside} from 'react-native-click-outside';
 import {Button, Card, IconButton, Text} from 'react-native-paper';
 import {
@@ -9,7 +9,6 @@ import {
 } from '../helpers';
 import {useAppDispatch, useAppSelector} from '../hooks/redux-hooks';
 import {removePlayer, setPlayerScore, setPlayerSettings} from '../store/score';
-import {setShouldScrollToEnd} from '../store/service';
 import {colors} from '../theme';
 import {Player} from '../types';
 import ColorPalette from './ColorPalette';
@@ -168,17 +167,7 @@ const ScoreCard = ({id, color, name}: ScoreCardProps) => {
   };
 
   return (
-    <View
-      ref={ref}
-      onLayout={e => {
-        const height = Dimensions.get('screen').height;
-        const currentY = e.nativeEvent.layout.y;
-        if (currentY > height * 0.7) {
-          dispatch(setShouldScrollToEnd(true));
-        } else {
-          dispatch(setShouldScrollToEnd(false));
-        }
-      }}>
+    <View ref={ref}>
       <Card style={[styles.container, {backgroundColor: color}]}>
         {isEditState ? renderEditState() : renderNonEditState()}
       </Card>

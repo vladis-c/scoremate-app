@@ -1,4 +1,4 @@
-import React, {useEffect, useRef} from 'react';
+import React, {useRef} from 'react';
 import {
   KeyboardAvoidingView,
   Platform,
@@ -7,25 +7,14 @@ import {
   StyleSheet,
   ViewStyle,
 } from 'react-native';
-import {useAppDispatch, useAppSelector} from '../hooks/redux-hooks';
-import {setShouldScrollToEnd} from '../store/service';
 
 type ScrollContainerProps = {
   children: React.ReactNode;
   style?: StyleProp<ViewStyle>;
+  ref?: React.RefObject<ScrollView | null>;
 };
-const ScrollContainer = ({children, style}: ScrollContainerProps) => {
-  const dispatch = useAppDispatch();
-  const {shouldScrollToEnd} = useAppSelector(({service}) => service);
-  const ref = useRef<ScrollView | null>(null);
 
-  useEffect(() => {
-    if (shouldScrollToEnd && ref.current) {
-      ref.current.scrollToEnd();
-      dispatch(setShouldScrollToEnd(false));
-    }
-  }, [shouldScrollToEnd]);
-
+const ScrollContainer = ({children, style, ref}: ScrollContainerProps) => {
   return (
     <KeyboardAvoidingView
       style={{flex: 1}}

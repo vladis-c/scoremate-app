@@ -1,5 +1,5 @@
-import React, {useEffect, useLayoutEffect, useState} from 'react';
-import {StyleSheet} from 'react-native';
+import React, {useEffect, useLayoutEffect, useRef, useState} from 'react';
+import {ScrollView, StyleSheet} from 'react-native';
 import {Button, IconButton} from 'react-native-paper';
 import ScrollContainer from '../components/ScrollContainer';
 import SettingRow from '../components/SettingRow';
@@ -31,6 +31,7 @@ const CustomsScreen = ({navigation, route}: CustomsScreenProps) => {
     });
   }, [navigation, route.params]);
 
+  const ref = useRef<ScrollView | null>(null);
   const dispatch = useAppDispatch();
   const [playerListCollapsed, setPlayerListCollapsed] = useState(false);
   const players = useAppSelector(({score}) => score.players);
@@ -46,6 +47,10 @@ const CustomsScreen = ({navigation, route}: CustomsScreenProps) => {
   useEffect(() => {
     setAmountOfPlayers(players.length);
   }, [players.length]);
+
+  useEffect(() => {
+    ref.current?.scrollToEnd();
+  }, [players.length, customScoreIsShown, customScore.length]);
 
   useEffect(() => {
     if (randomizeColorIsSet) {
@@ -91,7 +96,7 @@ const CustomsScreen = ({navigation, route}: CustomsScreenProps) => {
 
   return (
     <>
-      <ScrollContainer style={styles.container}>
+      <ScrollContainer style={styles.container} ref={ref}>
         <SettingRow
           type="switch"
           title={
