@@ -1,5 +1,6 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {
+  Alert,
   Keyboard,
   StyleSheet,
   TouchableOpacity,
@@ -7,12 +8,39 @@ import {
   View,
 } from 'react-native';
 import {Card, Text, TextInput} from 'react-native-paper';
-import {useAppDispatch, useAppSelector} from '../hooks/redux-hooks';
-import {setRandomNumber, setRandomizerLimit} from '../store/random';
+import {getRandomNumber} from '../helpers';
 
 const RandomizerScreen = () => {
-  const dispatch = useAppDispatch();
-  const {randomNumber, from, to} = useAppSelector(({random}) => random);
+  const [random, setRandom] = useState<number | null>(null);
+  const [limits, setLimits] = useState<[number, number]>([1, 10]);
+
+  const handleValidateLimits = () => {
+    // validation of range of numbers and showing alert
+    if (limits[0] >= limits[1]) {
+      Alert.alert('Left limit cannot be equal or more than right limit');
+      setLimits([1, 10]);
+      return false;
+    }
+    return true;
+  };
+
+  const handleSetRandom = () => {
+    const valid = handleValidateLimits();
+    if (!valid) {
+      return;
+    }
+    setRandom(getRandomNumber(limits[0], limits[1]));
+  };
+
+  const handleSetLimits = (type: 'from' | 'to', value: number) => {
+    setLimits(prev => {
+      if (type === 'from') {
+        return [value, prev[1]];
+      }
+      return [prev[0], value];
+    });
+  };
+
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <View style={styles.container}>
@@ -20,22 +48,30 @@ const RandomizerScreen = () => {
           <Card.Content style={styles.content}>
             <View style={styles.inputs}>
               <TextInput
-                value={from}
+                value={limits[0].toString()}
                 keyboardType="numeric"
-                onChangeText={t =>
-                  dispatch(setRandomizerLimit({type: 'from', value: t}))
-                }
+                onChangeText={t => {
+                  const number = +t;
+                  if (!isNaN(number)) {
+                    handleSetLimits('from', number);
+                  }
+                }}
+                onBlur={handleValidateLimits}
                 mode="outlined"
                 label="From"
                 style={styles.input}
                 autoComplete="off"
               />
               <TextInput
-                value={to}
+                value={limits[1].toString()}
                 keyboardType="numeric"
-                onChangeText={t =>
-                  dispatch(setRandomizerLimit({type: 'to', value: t}))
-                }
+                onChangeText={t => {
+                  const number = +t;
+                  if (!isNaN(number)) {
+                    handleSetLimits('to', number);
+                  }
+                }}
+                onBlur={handleValidateLimits}
                 mode="outlined"
                 label="To"
                 style={styles.input}
@@ -44,16 +80,17 @@ const RandomizerScreen = () => {
             </View>
             <TouchableOpacity
               style={styles.textContainer}
-              onPress={() => dispatch(setRandomNumber())}>
-              {randomNumber !== null ? (
+              onPress={() => {
+                Keyboard.dismiss();
+                handleSetRandom();
+              }}>
+              {random !== null ? (
                 <Text variant="bodySmall">
                   Press on number to randomize again
                 </Text>
               ) : null}
-              <Text variant={randomNumber !== null ? 'bodyLarge' : 'bodySmall'}>
-                {randomNumber !== null
-                  ? randomNumber
-                  : 'Press here to randomize'}
+              <Text variant={random !== null ? 'bodyLarge' : 'bodySmall'}>
+                {random !== null ? random : 'Press here to randomize'}
               </Text>
             </TouchableOpacity>
           </Card.Content>
@@ -68,13 +105,11 @@ export default RandomizerScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingHorizontal: 20,
     alignItems: 'center',
-    justifyContent: 'center',
+    marginTop: 100,
+    marginHorizontal: 20,
   },
-  card: {
-    width: '100%',
-  },
+  card: {width: '100%'},
   content: {
     alignItems: 'center',
     justifyContent: 'flex-start',
@@ -89,7 +124,7 @@ const styles = StyleSheet.create({
   },
   textContainer: {
     width: '100%',
-    minHeight: 200,
+    minHeight: 300,
     marginTop: 10,
     alignItems: 'center',
     justifyContent: 'center',
