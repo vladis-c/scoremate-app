@@ -1,14 +1,33 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {StyleSheet, TouchableOpacity, View} from 'react-native';
 import {Card, IconButton, Text} from 'react-native-paper';
 import Die from '../components/Dice/Die';
 import {addDiceButtons} from '../constants';
-import {useAppDispatch, useAppSelector} from '../hooks/redux-hooks';
-import {removeDie, setAddDie, setRollDice} from '../store/dice';
+import {getRandomNumber} from '../helpers';
+import {Dice} from '../types';
 
 const DiceScreen = () => {
-  const dispatch = useAppDispatch();
-  const {diceArray} = useAppSelector(({dice}) => dice);
+  const [diceArray, setDiceArray] = useState<Dice[]>([]);
+  const handleRollDice = () => {
+    setDiceArray(prev => {
+      return prev.map(die => {
+        const randomNumber = getRandomNumber(die.from, die.to);
+        return {...die, randomNumber};
+      });
+    });
+  };
+
+  const handleAddDie = (die: Dice) => {
+    setDiceArray(prev => [...prev, die]);
+  };
+
+  const handleRemoveLastDie = () => {
+    setDiceArray(prev => {
+      const diceArray = prev;
+      diceArray.splice(-1);
+      return diceArray;
+    });
+  };
 
   const text =
     diceArray.length === 0
@@ -22,9 +41,7 @@ const DiceScreen = () => {
       <Card style={styles.card}>
         <Card.Content style={styles.content}>
           <Text variant="bodySmall">{text}</Text>
-          <TouchableOpacity
-            style={styles.dice}
-            onPress={() => dispatch(setRollDice())}>
+          <TouchableOpacity style={styles.dice} onPress={handleRollDice}>
             {diceArray.map(die => (
               <Die key={die.id} dots={die.randomNumber} type={die.type} />
             ))}
@@ -35,10 +52,7 @@ const DiceScreen = () => {
                 disabled={diceArray.length === 0}
                 size={24}
                 icon="minus"
-                onPress={() => {
-                  //Removing last die
-                  dispatch(removeDie(diceArray[diceArray.length - 1].id));
-                }}
+                onPress={handleRemoveLastDie}
               />
               {addDiceButtons.map(die => (
                 <IconButton
@@ -46,12 +60,10 @@ const DiceScreen = () => {
                   size={24}
                   icon={`dice-d${die.type}`}
                   onPress={() => {
-                    dispatch(
-                      setAddDie({
-                        ...die,
-                        id: diceArray.length + 1,
-                      }),
-                    );
+                    handleAddDie({
+                      ...die,
+                      id: diceArray.length + 1,
+                    });
                   }}
                 />
               ))}
