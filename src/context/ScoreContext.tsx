@@ -19,6 +19,7 @@ type ScoreContextType = {
   updateCustomScore: (score: Omit<CustomScore, 'label'>) => void;
   addCustomScore: () => void;
   removeCustomScore: () => void;
+  clearCustomScores: () => void;
   toggleRandomizeColorIsSet: () => void;
 };
 
@@ -136,6 +137,10 @@ export const ScoreProvider = ({children}: {children: React.ReactNode}) => {
     });
   };
 
+  const clearCustomScores = () => {
+    setCustomScore([]);
+  };
+
   const toggleRandomizeColorIsSet = () => {
     setRandomizeColorIsOn(prev => !prev);
   };
@@ -155,6 +160,7 @@ export const ScoreProvider = ({children}: {children: React.ReactNode}) => {
         updateCustomScore,
         addCustomScore,
         removeCustomScore,
+        clearCustomScores,
         toggleRandomizeColorIsSet,
       }}>
       {children}
