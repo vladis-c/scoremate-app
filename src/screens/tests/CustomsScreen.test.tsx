@@ -117,7 +117,8 @@ jest.mock('../../context/ScoreContext', () => {
 const {useScore} = require('../../context/ScoreContext');
 
 describe('CustomsScreen', () => {
-  const defaultPlayers = [{id: 1, name: 'P1', color: '#111'}];
+  const P1 = {id: 1, name: 'P1', color: '#FFF'};
+  const P2 = {id: 2, name: 'P2', color: '#000'};
 
   const navigationMock = {
     setOptions: jest.fn(),
@@ -131,7 +132,7 @@ describe('CustomsScreen', () => {
     jest.clearAllMocks();
     // default mock implementation for useScore
     useScore.mockReturnValue({
-      players: [...defaultPlayers],
+      players: [P1],
       customScore: [],
       randomizeColorIsOn: false,
       setPlayerSettings: jest.fn(),
@@ -159,10 +160,10 @@ describe('CustomsScreen', () => {
     expect(navigationMock.navigate).toHaveBeenCalledWith('Score');
   });
 
-  it.skip('increases player count on blur and calls setNewPlayer for each new id', async () => {
+  it('increases player count on blur and calls setNewPlayer for each new id', async () => {
     const setNewPlayer = jest.fn();
-    useScore.mockReturnValueOnce({
-      players: [...defaultPlayers], // length 1
+    useScore.mockReturnValue({
+      players: [P1],
       customScore: [],
       randomizeColorIsOn: false,
       setPlayerSettings: jest.fn(),
@@ -185,19 +186,16 @@ describe('CustomsScreen', () => {
     fireEvent(input, 'blur');
 
     await waitFor(() => {
-      expect(setNewPlayer).toHaveBeenCalledTimes(2);
+      expect(setNewPlayer).toHaveBeenCalledTimes(3);
       expect(setNewPlayer).toHaveBeenCalledWith({id: 2, score: 0, name: ''});
       expect(setNewPlayer).toHaveBeenCalledWith({id: 3, score: 0, name: ''});
     });
   });
 
-  it.skip('decreases player count on blur and calls removePlayer for removed players', async () => {
+  it('decreases player count on blur and calls removePlayer for removed players', async () => {
     const removePlayer = jest.fn();
-    useScore.mockReturnValueOnce({
-      players: [
-        {id: 1, name: 'P1', color: '#111'},
-        {id: 2, name: 'P2', color: '#222'},
-      ],
+    useScore.mockReturnValue({
+      players: [P1, P2],
       customScore: [],
       randomizeColorIsOn: false,
       setPlayerSettings: jest.fn(),
@@ -227,11 +225,8 @@ describe('CustomsScreen', () => {
 
   it('applies random colors to players when randomizeColorIsOn is true on mount', async () => {
     const setPlayerSettings = jest.fn();
-    useScore.mockReturnValueOnce({
-      players: [
-        {id: 1, name: 'P1', color: '#111'},
-        {id: 2, name: 'P2', color: '#222'},
-      ],
+    useScore.mockReturnValue({
+      players: [P1, P2],
       customScore: [],
       randomizeColorIsOn: true,
       setPlayerSettings,
@@ -253,10 +248,10 @@ describe('CustomsScreen', () => {
     });
   });
 
-  it.skip('toggles custom scores and shows score controls, calling clearCustomScores', async () => {
+  it('toggles custom scores and shows score controls, calling clearCustomScores', async () => {
     const clearCustomScores = jest.fn();
-    useScore.mockReturnValueOnce({
-      players: [...defaultPlayers],
+    useScore.mockReturnValue({
+      players: [P1],
       customScore: [],
       randomizeColorIsOn: false,
       setPlayerSettings: jest.fn(),
