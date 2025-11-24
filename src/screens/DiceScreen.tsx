@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {StyleSheet, TouchableOpacity, View} from 'react-native';
 import {Card, IconButton, Text} from 'react-native-paper';
 import Die from '../components/Dice/Die';
@@ -23,9 +23,10 @@ const DiceScreen = () => {
 
   const handleRemoveLastDie = () => {
     setDiceArray(prev => {
-      const diceArray = prev;
-      diceArray.splice(-1);
-      return diceArray;
+      if (prev.length === 0) {
+        return prev;
+      }
+      return prev.slice(0, -1);
     });
   };
 
@@ -49,6 +50,7 @@ const DiceScreen = () => {
           <View style={styles.addDice}>
             <View style={styles.buttons}>
               <IconButton
+                testID="icon-minus"
                 disabled={diceArray.length === 0}
                 size={24}
                 icon="minus"
