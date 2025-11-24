@@ -6,7 +6,6 @@ jest.mock('../../helpers', () => ({
   getRandomColor: jest.fn(() => '#abcdef'),
   getRandomNumber: jest.fn(() => 0),
 }));
-// const {getRandomColor, getRandomNumber} = require('../../helpers');
 
 jest.mock('../../constants', () => ({
   desireWords: ['Please', 'Kindly'],
@@ -16,12 +15,10 @@ jest.mock('../../navigation/navigation-types', () => ({
   DRAWER_NAV: {SCORE: 'Score'},
 }));
 
-// Minimal mock for ScrollContainer used by the screen
 jest.mock('../../components/ScrollContainer', () => {
   const React = require('react');
   const {View} = require('react-native');
   return React.forwardRef((props: any, ref: any) => {
-    // expose a scrollToEnd method so Consumers calling ref.current?.scrollToEnd() won't blow up
     React.useImperativeHandle(ref, () => ({
       scrollToEnd: () => {},
     }));
@@ -29,14 +26,12 @@ jest.mock('../../components/ScrollContainer', () => {
   });
 });
 
-// Mock SettingRow to expose testable controls based on `type`
 jest.mock('../../components/SettingRow', () => {
   const React = require('react');
   const {View, Text, TextInput, TouchableOpacity} = require('react-native');
   return (props: any) => {
     const {type, title, value, onChange, onBlur, onChangeColor} = props;
     if (type === 'switch') {
-      // call onChange asynchronously so the component's state updates propagate
       return React.createElement(
         TouchableOpacity,
         {
