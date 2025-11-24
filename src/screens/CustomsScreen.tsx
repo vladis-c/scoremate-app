@@ -24,8 +24,7 @@ const CustomsScreen = ({navigation, route}: CustomsScreenProps) => {
   const ref = useRef<ScrollView | null>(null);
   const scoreContext = useScore();
   const [playerListCollapsed, setPlayerListCollapsed] = useState(false);
-  const players = scoreContext.players;
-  const customScore = scoreContext.customScore;
+  const {players, customScore} = scoreContext;
   const [customScoreIsShown, setCustomScoreIsShown] = useState(false);
   const [amountOfPlayers, setAmountOfPlayers] = useState(0);
   const [randomColorsSettingTitle] = useState(
