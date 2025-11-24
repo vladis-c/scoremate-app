@@ -6,8 +6,8 @@ jest.mock('../../context/ScoreContext', () => ({useScore: jest.fn()}));
 const {useScore} = require('../../context/ScoreContext');
 
 jest.mock('../../helpers', () => ({
-  getRandomColor: jest.fn(() => '#rand'),
-  handleSplitArray: jest.fn(() => [[-2], [2]]),
+  getRandomColor: jest.fn(() => '#010101'),
+  handleSplitArray: jest.fn(() => [[-10], [10]]),
   handleTextColorForBackground: jest.fn(() => '#fff'),
 }));
 const {getRandomColor, handleSplitArray} = require('../../helpers');
@@ -118,7 +118,7 @@ describe('ScoreCard', () => {
 
   it('renders non-edit state and toggles edit/non-edit with pencil/check', async () => {
     const {getByTestId} = render(
-      <ScoreCard id={1} name="Alice" color="#123" />,
+      <ScoreCard id={1} name="Alice" color="#000" />,
     );
 
     // non-edit should show minus and plus icons
@@ -138,35 +138,33 @@ describe('ScoreCard', () => {
   });
 
   it('non-edit actions call setPlayerScore for minus/plus and for custom score buttons', async () => {
-    handleSplitArray.mockReturnValueOnce([[-2], [2]]);
+    handleSplitArray.mockReturnValueOnce([[-10], [10]]);
 
     useScore.mockReturnValue({
       players: [P1],
-      customScore: [{label: 'X', value: 2}],
+      customScore: [{label: '10', value: 10}],
       setPlayerScore,
       setPlayerSettings,
       removePlayer,
     });
 
     const {getByTestId, getByText} = render(
-      <ScoreCard id={1} name="Alice" color="#123" />,
+      <ScoreCard id={1} name="Alice" color="#000" />,
     );
 
-    // default minus/plus
     fireEvent.press(getByTestId('icon-minus'));
     fireEvent.press(getByTestId('icon-plus'));
     expect(setPlayerScore).toHaveBeenCalledWith(1, -1);
     expect(setPlayerScore).toHaveBeenCalledWith(1, 1);
 
-    // custom score buttons (rendered as Buttons with text '-2' and '+2')
-    expect(getByText('-2')).toBeTruthy();
-    expect(getByText('+2')).toBeTruthy();
+    expect(getByText('-10')).toBeTruthy();
+    expect(getByText('+10')).toBeTruthy();
 
-    fireEvent.press(getByText('-2'));
-    fireEvent.press(getByText('+2'));
+    fireEvent.press(getByText('-10'));
+    fireEvent.press(getByText('+10'));
 
-    expect(setPlayerScore).toHaveBeenCalledWith(1, -2);
-    expect(setPlayerScore).toHaveBeenCalledWith(1, 2);
+    expect(setPlayerScore).toHaveBeenCalledWith(1, -10);
+    expect(setPlayerScore).toHaveBeenCalledWith(1, 10);
   });
 
   it('edit actions: randomize color, palette select, name modal and delete call context methods', async () => {
@@ -179,7 +177,7 @@ describe('ScoreCard', () => {
     });
 
     const {getByTestId} = render(
-      <ScoreCard id={1} name="Alice" color="#123" />,
+      <ScoreCard id={1} name="Alice" color="#000" />,
     );
 
     // open edit state
@@ -192,7 +190,7 @@ describe('ScoreCard', () => {
     // random color
     fireEvent.press(getByTestId('icon-invert-colors'));
     expect(getRandomColor).toHaveBeenCalled();
-    expect(setPlayerSettings).toHaveBeenCalledWith('color', '#rand', 1);
+    expect(setPlayerSettings).toHaveBeenCalledWith('color', '#010101', 1);
 
     // open color palette then select color
     fireEvent.press(getByTestId('icon-palette'));
