@@ -1,17 +1,11 @@
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
 import {Card, IconButton, Text} from 'react-native-paper';
-import {useAppDispatch, useAppSelector} from '../hooks/redux-hooks';
-import {
-  removePlayer,
-  resetPlayersScores,
-  setNewPlayer,
-  setShuffledArray,
-} from '../store/score';
+import {useScore} from '../context/ScoreContext';
 
 const AddCard = () => {
-  const dispatch = useAppDispatch();
-  const players = useAppSelector(({score: {players}}) => players);
+  const scoreContext = useScore();
+  const {players} = scoreContext;
   const amountOfPlayers = players.length;
 
   return (
@@ -23,7 +17,7 @@ const AddCard = () => {
           icon="shuffle"
           onPress={() => {
             // shuffles the array of players in random order
-            dispatch(setShuffledArray());
+            scoreContext.shufflePlayerOrder();
           }}
         />
         <View style={styles.plusMinus}>
@@ -33,7 +27,7 @@ const AddCard = () => {
             icon="minus"
             onPress={() => {
               // removing last player
-              dispatch(removePlayer(players[players.length - 1].id));
+              scoreContext.removePlayer(players[players.length - 1].id);
             }}
           />
           <Text variant="headlineMedium">{amountOfPlayers}</Text>
@@ -41,20 +35,18 @@ const AddCard = () => {
             size={16}
             icon="plus"
             onPress={() => {
-              dispatch(
-                setNewPlayer({
-                  id: amountOfPlayers + 1,
-                  score: 0,
-                  name: '',
-                }),
-              );
+              scoreContext.setNewPlayer({
+                id: amountOfPlayers + 1,
+                score: 0,
+                name: '',
+              });
             }}
           />
         </View>
         <IconButton
           size={24}
           icon="refresh"
-          onPress={() => dispatch(resetPlayersScores())}
+          onPress={() => scoreContext.resetPlayersScores()}
         />
       </Card.Content>
     </Card>

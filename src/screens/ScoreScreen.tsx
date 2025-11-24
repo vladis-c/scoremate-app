@@ -3,11 +3,12 @@ import {ScrollView, StyleSheet, View} from 'react-native';
 import AddCard from '../components/AddCard';
 import ScoreCard from '../components/ScoreCard';
 import ScrollContainer from '../components/ScrollContainer';
-import {useAppSelector} from '../hooks/redux-hooks';
+import {useScore} from '../context/ScoreContext';
 
 const ScoreScreen = () => {
   const ref = useRef<ScrollView | null>(null);
-  const players = useAppSelector(({score: {players}}) => players);
+  const scoreContext = useScore();
+  const {players} = scoreContext;
   const [addCardHeight, setAddCardHeight] = useState<number | null>(null);
 
   useEffect(() => {

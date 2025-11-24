@@ -2,13 +2,12 @@ import React, {useEffect, useState} from 'react';
 import {StyleSheet, View} from 'react-native';
 import {useClickOutside} from 'react-native-click-outside';
 import {Button, Card, IconButton, Text} from 'react-native-paper';
+import {useScore} from '../context/ScoreContext';
 import {
   getRandomColor,
   handleSplitArray,
   handleTextColorForBackground,
 } from '../helpers';
-import {useAppDispatch, useAppSelector} from '../hooks/redux-hooks';
-import {removePlayer, setPlayerScore, setPlayerSettings} from '../store/score';
 import {colors} from '../theme';
 import {Player} from '../types';
 import ColorPalette from './ColorPalette';
@@ -21,16 +20,15 @@ type ScoreCardProps = {
 };
 
 const ScoreCard = ({id, color, name}: ScoreCardProps) => {
-  const dispatch = useAppDispatch();
-  const players = useAppSelector(({score}) => score.players);
-  const customScore = useAppSelector(({score}) => score.customScore);
+  const scoreContext = useScore();
+  const {players, customScore} = scoreContext;
   const currentPlayer = players.find(player => player.id === id);
-  const [secondaryColor, setSecondaryColor] = useState(colors.Black);
 
   if (!currentPlayer) {
     return null;
   }
 
+  const [secondaryColor, setSecondaryColor] = useState(colors.Black);
   const [isEditState, setIsEditState] = useState(false);
   const [colorPaletteIsOpen, setColorPaletteIsOpen] = useState(false);
   const [textModalIsOpen, setTextModalIsOpen] = useState(false);
@@ -50,9 +48,7 @@ const ScoreCard = ({id, color, name}: ScoreCardProps) => {
           <IconButton
             icon="invert-colors"
             onPress={() =>
-              dispatch(
-                setPlayerSettings({id, key: 'color', value: getRandomColor()}),
-              )
+              scoreContext.setPlayerSettings('color', getRandomColor(), id)
             }
             iconColor={secondaryColor}
           />
@@ -66,11 +62,9 @@ const ScoreCard = ({id, color, name}: ScoreCardProps) => {
             <ColorPalette
               color={color}
               onColorChangeComplete={color =>
-                dispatch(setPlayerSettings({id, key: 'color', value: color}))
+                scoreContext.setPlayerSettings('color', color, id)
               }
-              onDismiss={() => {
-                setColorPaletteIsOpen(false);
-              }}
+              onDismiss={() => setColorPaletteIsOpen(false)}
               visible={colorPaletteIsOpen}
             />
           </>
@@ -83,7 +77,7 @@ const ScoreCard = ({id, color, name}: ScoreCardProps) => {
             <TextModal
               value={name}
               onValueChange={value =>
-                dispatch(setPlayerSettings({id, key: 'name', value}))
+                scoreContext.setPlayerSettings('name', value, id)
               }
               visible={textModalIsOpen}
               onDismiss={() => {
@@ -94,7 +88,7 @@ const ScoreCard = ({id, color, name}: ScoreCardProps) => {
           </>
           <IconButton
             icon="delete"
-            onPress={() => dispatch(removePlayer(id))}
+            onPress={() => scoreContext.removePlayer(id)}
             iconColor={secondaryColor}
           />
         </View>
@@ -111,9 +105,7 @@ const ScoreCard = ({id, color, name}: ScoreCardProps) => {
     const [negativeValues, positiveValues] = handleSplitArray(customScore);
     if (sign === 'negative') {
       return negativeValues.map(v => (
-        <Button
-          key={v}
-          onPress={() => dispatch(setPlayerScore({id, increment: +v}))}>
+        <Button key={v} onPress={() => scoreContext.setPlayerScore(id, v)}>
           <Text variant="bodySmall" style={{color: secondaryColor}}>
             {v}
           </Text>
@@ -121,9 +113,7 @@ const ScoreCard = ({id, color, name}: ScoreCardProps) => {
       ));
     }
     return positiveValues.map(v => (
-      <Button
-        key={v}
-        onPress={() => dispatch(setPlayerScore({id, increment: +v}))}>
+      <Button key={v} onPress={() => scoreContext.setPlayerScore(id, v)}>
         <Text variant="bodySmall" style={{color: secondaryColor}}>
           +{v}
         </Text>
@@ -137,7 +127,7 @@ const ScoreCard = ({id, color, name}: ScoreCardProps) => {
         <View style={styles.topContainer}>
           <IconButton
             icon="minus"
-            onPress={() => dispatch(setPlayerScore({id, increment: -1}))}
+            onPress={() => scoreContext.setPlayerScore(id, -1)}
             iconColor={secondaryColor}
           />
           <View style={styles.center}>
@@ -152,7 +142,7 @@ const ScoreCard = ({id, color, name}: ScoreCardProps) => {
           </View>
           <IconButton
             icon="plus"
-            onPress={() => dispatch(setPlayerScore({id, increment: 1}))}
+            onPress={() => scoreContext.setPlayerScore(id, 1)}
             iconColor={secondaryColor}
           />
         </View>

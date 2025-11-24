@@ -112,8 +112,8 @@ export const handleCreateDropdownArray = (
 
 export const handleSplitArray = <T extends Record<string, any>>(
   arr: T[],
-): [string[], string[]] => {
-  const result: [string[], string[]] = [[], []];
+): [number[], number[]] => {
+  const result: [number[], number[]] = [[], []];
   arr.reduce((acc, {label}) => {
     if (label === '') {
       // Skip empty strings
@@ -125,11 +125,11 @@ export const handleSplitArray = <T extends Record<string, any>>(
       return acc;
     }
     if (numValue < 0) {
-      result[0].push(label); // Negative values
+      result[0].push(numValue); // Negative values
     } else {
-      result[1].push(label); // Positive values (includes zero)
+      result[1].push(numValue); // Positive values (includes zero)
     }
-    return acc; // Return the accumulated value
+    return acc;
   }, undefined);
   return result;
 };

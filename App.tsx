@@ -7,6 +7,7 @@ import 'react-native-gesture-handler';
 import {PaperProvider} from 'react-native-paper';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 import {Provider} from 'react-redux';
+import {ScoreProvider} from './src/context/ScoreContext';
 import {useStart} from './src/hooks/useStart';
 import {useUpdate} from './src/hooks/useUpdate';
 import MainNavigator from './src/navigation/MainNavigator';
@@ -33,18 +34,20 @@ const App = () => {
     return null;
   }
   return (
-    <SafeAreaProvider onLayout={hideSplashScreen}>
-      <StatusBar backgroundColor={colors.LightBlue} animated={true} />
-      <Provider store={store}>
-        <PaperProvider theme={PaperTheme}>
-          <NavigationContainer theme={NavigationTheme}>
-            <ClickOutsideProvider>
-              <MainNavigator />
-            </ClickOutsideProvider>
-          </NavigationContainer>
-        </PaperProvider>
-      </Provider>
-    </SafeAreaProvider>
+    <ScoreProvider>
+      <SafeAreaProvider onLayout={hideSplashScreen}>
+        <StatusBar backgroundColor={colors.LightBlue} animated={true} />
+        <Provider store={store}>
+          <PaperProvider theme={PaperTheme}>
+            <NavigationContainer theme={NavigationTheme}>
+              <ClickOutsideProvider>
+                <MainNavigator />
+              </ClickOutsideProvider>
+            </NavigationContainer>
+          </PaperProvider>
+        </Provider>
+      </SafeAreaProvider>
+    </ScoreProvider>
   );
 };
 

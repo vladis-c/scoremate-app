@@ -4,19 +4,9 @@ import {Button, IconButton} from 'react-native-paper';
 import ScrollContainer from '../components/ScrollContainer';
 import SettingRow from '../components/SettingRow';
 import {desireWords} from '../constants';
+import {useScore} from '../context/ScoreContext';
 import {getRandomColor, getRandomNumber} from '../helpers';
-import {useAppDispatch, useAppSelector} from '../hooks/redux-hooks';
 import {CustomsScreenProps, DRAWER_NAV} from '../navigation/navigation-types';
-import {
-  addNewCustomScore,
-  removeCustomScore,
-  removePlayer,
-  setCustomScore,
-  setNewPlayer,
-  setPlayerSettings,
-  toggleCustomScoreIsShown,
-  toggleRandomizeColorIsSet,
-} from '../store/score';
 import {colors} from '../theme';
 
 const CustomsScreen = ({navigation, route}: CustomsScreenProps) => {
@@ -32,16 +22,12 @@ const CustomsScreen = ({navigation, route}: CustomsScreenProps) => {
   }, [navigation, route.params]);
 
   const ref = useRef<ScrollView | null>(null);
-  const dispatch = useAppDispatch();
+  const scoreContext = useScore();
   const [playerListCollapsed, setPlayerListCollapsed] = useState(false);
-  const players = useAppSelector(({score}) => score.players);
-  const customScore = useAppSelector(({score}) => score.customScore);
-  const customScoreIsShown = useAppSelector(
-    ({score}) => score.customScoreIsShown,
-  );
-  const randomizeColorIsSet = useAppSelector(
-    ({score}) => score.randomizeColorIsSet,
-  );
+  const players = scoreContext.players;
+  const customScore = scoreContext.customScore;
+  const [customScoreIsShown, setCustomScoreIsShown] = useState(false);
+
   const [amountOfPlayers, setAmountOfPlayers] = useState(0);
 
   useEffect(() => {
@@ -53,18 +39,12 @@ const CustomsScreen = ({navigation, route}: CustomsScreenProps) => {
   }, [players.length, customScoreIsShown, customScore.length]);
 
   useEffect(() => {
-    if (randomizeColorIsSet) {
-      players.forEach(player => {
-        dispatch(
-          setPlayerSettings({
-            id: player.id,
-            key: 'color',
-            value: getRandomColor(),
-          }),
-        );
-      });
+    if (scoreContext.randomizeColorIsOn) {
+      players.forEach(player =>
+        scoreContext.setPlayerSettings('color', getRandomColor(), player.id),
+      );
     }
-  }, [randomizeColorIsSet]);
+  }, [scoreContext.randomizeColorIsOn]);
 
   const handleSetNewPlayers = () => {
     const difference = amountOfPlayers - players.length;
@@ -74,22 +54,18 @@ const CustomsScreen = ({navigation, route}: CustomsScreenProps) => {
         (_, i) => players.length + i + 1,
       );
       const allIds = players.map(player => player.id).concat(newIds);
-      allIds.forEach(i => {
-        dispatch(
-          setNewPlayer({
-            id: i,
-            score: 0,
-            name: '',
-          }),
-        );
-      });
+      allIds.forEach(i =>
+        scoreContext.setNewPlayer({
+          id: i,
+          score: 0,
+          name: '',
+        }),
+      );
       return;
     }
     if (difference < 0) {
       const slicedPlayers = players.slice(amountOfPlayers, players.length);
-      slicedPlayers.forEach(player => {
-        dispatch(removePlayer(player.id));
-      });
+      slicedPlayers.forEach(player => scoreContext.removePlayer(player.id));
       return;
     }
   };
@@ -103,8 +79,8 @@ const CustomsScreen = ({navigation, route}: CustomsScreenProps) => {
             desireWords[getRandomNumber(0, desireWords.length - 1)] +
             ' get random colors'
           }
-          onChange={() => dispatch(toggleRandomizeColorIsSet())}
-          value={randomizeColorIsSet}
+          onChange={() => scoreContext.toggleRandomizeColorIsSet()}
+          value={scoreContext.randomizeColorIsOn}
         />
         <SettingRow
           type="input"
@@ -131,24 +107,12 @@ const CustomsScreen = ({navigation, route}: CustomsScreenProps) => {
               <SettingRow
                 key={player.id}
                 type="player"
-                onChange={e => {
-                  dispatch(
-                    setPlayerSettings({
-                      key: 'name',
-                      value: e,
-                      id: player.id,
-                    }),
-                  );
-                }}
-                onChangeColor={c => {
-                  dispatch(
-                    setPlayerSettings({
-                      key: 'color',
-                      value: c,
-                      id: player.id,
-                    }),
-                  );
-                }}
+                onChange={e =>
+                  scoreContext.setPlayerSettings('name', e, player.id)
+                }
+                onChangeColor={c =>
+                  scoreContext.setPlayerSettings('color', c, player.id)
+                }
                 value={player.name}
                 color={player.color}
               />
@@ -160,7 +124,7 @@ const CustomsScreen = ({navigation, route}: CustomsScreenProps) => {
             desireWords[getRandomNumber(0, desireWords.length - 1)] +
             ' set my own scores'
           }
-          onChange={() => dispatch(toggleCustomScoreIsShown())}
+          onChange={() => setCustomScoreIsShown(prev => !prev)}
           value={customScoreIsShown}
         />
         {customScoreIsShown ? (
@@ -171,9 +135,9 @@ const CustomsScreen = ({navigation, route}: CustomsScreenProps) => {
               onChange={v => {
                 const value = v as '+' | '-';
                 if (value === '+') {
-                  dispatch(addNewCustomScore());
+                  scoreContext.addCustomScore();
                 } else {
-                  dispatch(removeCustomScore());
+                  scoreContext.removeCustomScore();
                 }
               }}
               value={customScore.length}
@@ -183,7 +147,9 @@ const CustomsScreen = ({navigation, route}: CustomsScreenProps) => {
                 key={el.id + i}
                 type="input"
                 title={`Custom score ${i + 1}`}
-                onChange={e => dispatch(setCustomScore({value: e, id: el.id}))}
+                onChange={e =>
+                  scoreContext.updateCustomScore({value: e, id: el.id})
+                }
                 value={el.value}
               />
             ))}
