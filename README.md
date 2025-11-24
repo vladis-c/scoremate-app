@@ -61,6 +61,14 @@ npx expo run:ios
 
 This action will create local `/ios` folder, which is added to git ignore. To run it on your device you will need an Apple Developer Subscription. You can use simulator, however some dependencies might work incorrectly there.
 
+## Tests
+
+Run Jest tests with
+
+```bash
+yarn test
+```
+
 ### Helpful links
 
 #### List of RN Paper icons
