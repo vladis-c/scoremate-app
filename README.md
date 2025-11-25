@@ -61,6 +61,14 @@ npx expo run:ios
 
 This action will create local `/ios` folder, which is added to git ignore. To run it on your device you will need an Apple Developer Subscription. You can use simulator, however some dependencies might work incorrectly there.
 
+### Build an app
+
+Android .apk file:
+
+```bash
+eas build -p android --profile internal-android
+```
+
 ## Tests
 
 Run Jest tests with
@@ -70,6 +78,12 @@ yarn test
 ```
 
 ### Helpful links
+
+### App Build is available to download on EAS
+
+Version 1.1.0 for Android
+
+[https://expo.dev/accounts/vladis-c/projects/scoremate/builds/f745e719-624a-4edb-9958-99ea97a9b920](https://expo.dev/accounts/vladis-c/projects/scoremate/builds/f745e719-624a-4edb-9958-99ea97a9b920)
 
 #### List of RN Paper icons
 
