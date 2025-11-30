@@ -3,6 +3,15 @@
 ScoreMate: A versatile score tracking and game utility app for board game enthusiasts.
 ScoreMate is the ultimate companion for board game enthusiasts and scorekeepers. With its intuitive and versatile features, ScoreMate simplifies score tracking and enhances your gaming experience. Easily keep track of scores for any board game with complex calculations, utilize the built-in randomizer for fair turns, and add excitement with dice randomizers and coin flippers. Say goodbye to manual score calculations and let ScoreMate do the work for you. Whether you need to detect the first player or manage multiple players' scores, ScoreMate has you covered. With its vibrant interface and customizable options, ScoreMate is the essential tool for every board game session. Download ScoreMate now and elevate your board gaming experience!
 
+
+![alt text](<assets/screenshots/Scoremate (1).png>)
+__Track score:__
+![alt text](<assets/screenshots/Scoremate (2).png>)
+__Customize experience:__
+![alt text](<assets/screenshots/Scoremate (3).png>)
+__Choose colors:__
+![alt text](<assets/screenshots/Scoremate (4).png>)
+
 ## Setup
 
 How to run this application on your device
@@ -63,7 +72,14 @@ This action will create local `/ios` folder, which is added to git ignore. To ru
 
 ### Build an app
 
-Android .apk file:
+To build an app, the EAS credentials are required. Only the owner can do it.
+However, if you are on MacOS, you can still build Android .apk file locally:
+
+```bash
+eas build -p android --profile internal-android --local
+```
+
+Otherwise, Android .apk file (not locally):
 
 ```bash
 eas build -p android --profile internal-android
