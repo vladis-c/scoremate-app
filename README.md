@@ -97,9 +97,9 @@ yarn test
 
 ### App Build is available to download on EAS
 
-Version 1.1.0 for Android
+Version 1.1.1 for Android
 
-[https://expo.dev/accounts/vladis-c/projects/scoremate/builds/f745e719-624a-4edb-9958-99ea97a9b920](https://expo.dev/accounts/vladis-c/projects/scoremate/builds/f745e719-624a-4edb-9958-99ea97a9b920)
+[https://expo.dev/accounts/vladis-c/projects/scoremate/builds/95f683cd-5e33-4dc8-b694-e115f8e4621f](https://expo.dev/accounts/vladis-c/projects/scoremate/builds/95f683cd-5e33-4dc8-b694-e115f8e4621f)
 
 #### List of RN Paper icons
 
