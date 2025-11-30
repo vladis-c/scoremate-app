@@ -57,30 +57,15 @@ export const commonColors: string[] = [
 ];
 
 export const startButton1Labels: string[] = [
-  'Optimal Scoremate experience',
-  // "Enhanced settings for you",
-  'Finest Scoremate settings',
-  // "Elevate your gameplay",
-  'Supercharged defaults',
-  'Masterful Scoremate presets',
-  // "Unleash the power of defaults",
-  'Seamless default configuration',
-  'Sync with Scoremate defaults',
-  'Empowering default settings',
-  // "Immerse yourself in default excellence"
+  'Use Scoremate experience',
+  'Use Scoremate settings',
+  'Use Scoremate preset',
+  'Use Scoremate defaults',
 ];
 
 export const startButton2Labels: string[] = [
-  'Craft my unique experience',
-  'Unleash my creativity',
-  'Unravel limitless customization',
-  'Forge my personalized path',
-  // "Unlock a realm of possibilities",
-  // "Tailor-made for your preferences",
-  // "Embark on a customization journey",
-  'Define my own Scoremate style',
-  'Embrace the power of customization',
-  // "Curate your ideal Scoremate adventure"
+  'Customize your experience',
+  'Custom settings',
 ];
 
 export const desireWords: string[] = [

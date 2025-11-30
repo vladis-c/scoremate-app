@@ -44,9 +44,10 @@ describe('StartScreen', () => {
       <StartScreen navigation={navigationMock} route={routeMock} />,
     );
     expect(
-      getByText(
-        /Embark on an extraordinary Scoremate experience by choosing one of the following options\./i,
-      ),
+      getByText(/Scoremate is your mate in tracking boardgames score\./i),
+    ).toBeTruthy();
+    expect(
+      getByText(/Choose between Scoremate preset and Custom experience:/i),
     ).toBeTruthy();
   });
 

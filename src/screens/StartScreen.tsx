@@ -1,6 +1,6 @@
 import {Image} from 'expo-image';
 import React from 'react';
-import {StyleSheet} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import {Button, Text} from 'react-native-paper';
 import ScrollContainer from '../components/ScrollContainer';
 import {startButton1Labels, startButton2Labels} from '../constants';
@@ -14,7 +14,7 @@ import {
   MAIN_NAV,
   StartScreenProps,
 } from '../navigation/navigation-types';
-import {colors} from '../theme';
+import {colors, fonts} from '../theme';
 
 type BtnProps = {bgColor: string; textColor: string; label: string};
 
@@ -47,10 +47,15 @@ const StartScreen = ({navigation}: StartScreenProps) => {
         transition={100}
       />
       <ScrollContainer style={styles.container}>
-        <Text style={styles.text}>
-          Embark on an extraordinary Scoremate experience by choosing one of the
-          following options.
-        </Text>
+        <View style={styles.textsContainer}>
+          <Text style={styles.title}>Scoremate</Text>
+          <Text style={styles.text}>
+            Scoremate is your mate in tracking boardgames score.
+          </Text>
+          <Text style={styles.text}>
+            Choose between Scoremate preset and Custom experience:
+          </Text>
+        </View>
         <Button
           labelStyle={{fontSize: 16}}
           buttonColor={btnProps[0]?.bgColor ?? colors.White}
@@ -87,8 +92,11 @@ const styles = StyleSheet.create({
   container: {
     justifyContent: 'center',
     flex: 1,
+    marginTop: 20,
   },
-  text: {marginVertical: 10},
+  title: {...fonts.BigHeading, textAlign: 'center'},
+  text: {...fonts.BasicText, textAlign: 'center'},
+  textsContainer: {gap: 10, alignItems: 'center', top: 10, marginBottom: 10},
   button: {width: '100%', marginVertical: 10},
   image: {
     position: 'absolute',
