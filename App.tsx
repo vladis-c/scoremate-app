@@ -10,7 +10,7 @@ import {ScoreProvider} from './src/context/ScoreContext';
 import {useStart} from './src/hooks/useStart';
 import {useUpdate} from './src/hooks/useUpdate';
 import MainNavigator from './src/navigation/MainNavigator';
-import {NavigationTheme, PaperTheme, colors} from './src/theme';
+import {NavigationTheme, PaperTheme} from './src/theme';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -34,7 +34,7 @@ const App = () => {
   return (
     <ScoreProvider>
       <SafeAreaProvider onLayout={hideSplashScreen}>
-        <StatusBar backgroundColor={colors.LightBlue} animated={true} />
+        <StatusBar animated={true} />
         <PaperProvider theme={PaperTheme}>
           <NavigationContainer theme={NavigationTheme}>
             <ClickOutsideProvider>

@@ -29,7 +29,12 @@ export default ({config}: ConfigContext): ExpoConfig => ({
   web: {
     favicon: './assets/favicon.png',
   },
-  plugins: [['expo-updates', {username: 'vladis-c'}]],
+  plugins: [
+    ['expo-updates', {username: 'vladis-c'}],
+    'expo-sqlite',
+    'expo-font',
+    'expo-image',
+  ],
   extra: {
     eas: {
       projectId: '69a8df95-80e3-4607-b290-ceefe88aa3b7',
