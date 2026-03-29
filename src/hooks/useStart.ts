@@ -5,9 +5,11 @@ import {
   useFonts,
 } from '@expo-google-fonts/quicksand';
 import {useEffect, useState} from 'react';
+import {createHistoryTable} from '../repository/history';
 
 export const useStart = () => {
   const [appIsReady, setAppIsReady] = useState(false);
+  const [dbReady, setDbReady] = useState(false);
 
   const [fontsLoaded] = useFonts({
     Quicksand_300Light,
@@ -16,10 +18,24 @@ export const useStart = () => {
   });
 
   useEffect(() => {
-    if (fontsLoaded) {
+    if (fontsLoaded && !dbReady) {
+      (async () => {
+        try {
+          await createHistoryTable();
+        } catch (error) {
+          console.error('Error initializing database:', error);
+        } finally {
+          setDbReady(true);
+        }
+      })();
+    }
+  }, [fontsLoaded, dbReady]);
+
+  useEffect(() => {
+    if (fontsLoaded && dbReady) {
       setAppIsReady(true);
     }
-  }, [fontsLoaded]);
+  }, [fontsLoaded, dbReady]);
 
   return {appIsReady};
 };

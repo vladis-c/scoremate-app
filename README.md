@@ -104,3 +104,11 @@ Version 1.1.1 for Android
 #### List of RN Paper icons
 
 [https://gist.github.com/lydongcanh/4350326c44a7d60738dbf6c07b9b4d35](https://gist.github.com/lydongcanh/4350326c44a7d60738dbf6c07b9b4d35)
+
+
+## Debugging
+
+### SQLite
+
+Open in the browser:
+[http://87.92.204.209:8081/_expo/plugins/expo-sqlite/](http://87.92.204.209:8081/_expo/plugins/expo-sqlite/)
