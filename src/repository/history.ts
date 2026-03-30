@@ -1,9 +1,8 @@
 import {getDB} from './db';
 
 const createHistoryTable = async () => {
-  try {
-    const db = await getDB();
-    await db.execAsync(`
+  const db = await getDB();
+  await db.execAsync(`
     CREATE TABLE IF NOT EXISTS HISTORY (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       gameName TEXT,
@@ -27,10 +26,6 @@ const createHistoryTable = async () => {
       FOREIGN KEY (historyId) REFERENCES HISTORY (id) ON DELETE CASCADE
     );
   `);
-    return true;
-  } catch (error) {
-    return false;
-  }
 };
 
 const createGame = async (
@@ -196,7 +191,7 @@ const getGameById = async (historyId: number) => {
   const history = await db.getFirstAsync<{
     id: number;
     gameName: string;
-    gameDescription: string | null;
+    gameDescription?: string;
     createdAt: string;
     amountOfPlayers: number;
   }>('SELECT * FROM HISTORY WHERE id = ?', [historyId]);

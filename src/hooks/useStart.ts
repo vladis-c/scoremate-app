@@ -5,7 +5,7 @@ import {
   useFonts,
 } from '@expo-google-fonts/quicksand';
 import {useEffect, useState} from 'react';
-import {createHistoryTable, getLastGame} from '../repository/history';
+import {createHistoryTable} from '../repository/history';
 
 export const useStart = () => {
   const [appIsReady, setAppIsReady] = useState(false);
@@ -21,11 +21,7 @@ export const useStart = () => {
     if (fontsLoaded && !dbReady) {
       (async () => {
         try {
-          const created = await createHistoryTable();
-          if (created) {
-            const lastGame = await getLastGame();
-            console.log('lastGame', lastGame);
-          }
+          await createHistoryTable();
         } catch (error) {
           console.error('Error initializing database:', error);
         } finally {

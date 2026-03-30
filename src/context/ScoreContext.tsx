@@ -1,5 +1,6 @@
-import React, {createContext, useContext, useState} from 'react';
+import React, {createContext, useContext, useEffect, useState} from 'react';
 import {getRandomColor, shuffleArray} from '../helpers';
+import {getLastGame} from '../repository/history';
 import {CustomScore, Game, Player} from '../types';
 
 type ScoreContextType = {
@@ -161,6 +162,32 @@ export const ScoreProvider = ({children}: {children: React.ReactNode}) => {
   const updateGame = (name: string) => {
     setCurrentGame(prev => (!prev ? prev : {...prev, name}));
   };
+
+  const fetchLastGame = async () => {
+    const lastGame = await getLastGame();
+    if (!lastGame) {
+      return;
+    }
+    setCurrentGame({
+      id: lastGame.id,
+      name: lastGame.gameName,
+      description: lastGame.gameDescription,
+    });
+  };
+
+  useEffect(() => {
+    (async () => {
+      const lastGame = await getLastGame();
+      if (!lastGame) {
+        return;
+      }
+      setCurrentGame({
+        id: lastGame.id,
+        name: lastGame.gameName,
+        description: lastGame.gameDescription,
+      });
+    })();
+  }, []);
 
   return (
     <ScoreContext.Provider
