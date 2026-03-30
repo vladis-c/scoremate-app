@@ -1,6 +1,6 @@
 import React, {createContext, useContext, useEffect, useState} from 'react';
 import {getRandomColor, shuffleArray} from '../helpers';
-import {createGame, getLastGame} from '../repository/history';
+import {createGame, getLastGame, updateScore} from '../repository/history';
 import {CustomScore, Game, Player} from '../types';
 
 type ScoreContextType = {
@@ -45,19 +45,20 @@ export const ScoreProvider = ({children}: {children: React.ReactNode}) => {
   ]);
   const [randomizeColorIsOn, setRandomizeColorIsOn] = useState(false);
 
-  const setPlayerScore = (id: Player['id'], increment: number) => {
-    setPlayers(prev => {
-      const prevPlayers = [...prev];
-      const objIndex = prevPlayers.findIndex(p => p.id === id);
-      if (objIndex !== -1) {
-        const found = prevPlayers[objIndex];
-        prevPlayers.splice(objIndex, 1, {
-          ...found,
-          score: found.score + increment,
-        });
-      }
-      return prevPlayers;
-    });
+  const setPlayerScore = async (id: Player['id'], increment: number) => {
+    const prevPlayers = [...players];
+    const objIndex = prevPlayers.findIndex(p => p.id === id);
+    if (objIndex !== -1) {
+      const found = prevPlayers[objIndex];
+
+      prevPlayers.splice(objIndex, 1, {
+        ...found,
+        score: found.score + increment,
+      });
+      await updateScore(id, prevPlayers[objIndex].score);
+    }
+
+    setPlayers(prevPlayers);
   };
 
   const resetPlayersScores = () => {
@@ -155,7 +156,7 @@ export const ScoreProvider = ({children}: {children: React.ReactNode}) => {
 
   const createNewGame = async () => {
     try {
-      const gameId = await createGame({
+      const createdGame = await createGame({
         gameName: '',
         gameDescription: '',
         createdAt: new Date().toISOString(),
@@ -164,7 +165,15 @@ export const ScoreProvider = ({children}: {children: React.ReactNode}) => {
           color: player.color,
         })),
       });
-      setCurrentGame({id: gameId ?? 0, name: '', description: ''});
+      setCurrentGame({
+        id: createdGame.historyId ?? 0,
+        name: '',
+        description: '',
+      });
+      setPlayers(prev =>
+        prev.map((p, i) => ({...p, id: createdGame.playerIds[i]})),
+      );
+      setCustomScore(prev => [{...prev[0], id: createdGame.customScoringId}]);
     } catch (error) {
       setCurrentGame({id: 0, name: '', description: ''});
     }

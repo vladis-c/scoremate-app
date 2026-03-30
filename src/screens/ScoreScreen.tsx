@@ -19,25 +19,34 @@ const ScoreScreen = ({navigation, route}: ScoreScreenProps) => {
   const scoreContext = useScore();
   const [addCardHeight, setAddCardHeight] = useState<number | null>(null);
 
-  useLayoutEffect(() => {
-    navigation.setOptions({
-      headerTitle: '',
-      headerLeft: () => (
-        <TextInput
-          mode="outlined"
-          value={scoreContext.currentGame?.name}
-          onChangeText={scoreContext.updateGame}
-        />
-      ),
-    });
-  }, [navigation]);
+  // useLayoutEffect(() => {
+  //   navigation.setOptions({
+  //     headerTitle: '',
+  //     headerLeft: () => (
+  //       <TextInput
+  //         mode="outlined"
+  //         value={scoreContext.currentGame?.name}
+  //         onChangeText={scoreContext.updateGame}
+  //       />
+  //     ),
+  //   });
+  // }, [navigation]);
 
   useFocusEffect(
     useCallback(() => {
-      if (route.params.isNew) {
+      if (route.params?.isNew) {
         scoreContext.createNewGame();
       }
     }, [route.params]),
+  );
+
+  // resetting the navigation param state when moving away from the screen
+  useEffect(
+    () =>
+      navigation.addListener('blur', () => {
+        navigation.setParams({isNew: false});
+      }),
+    [navigation],
   );
 
   useEffect(() => {
