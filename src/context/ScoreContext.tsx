@@ -1,6 +1,11 @@
 import React, {createContext, useContext, useEffect, useState} from 'react';
 import {getRandomColor, shuffleArray} from '../helpers';
-import {createGame, getLastGame, updateScore} from '../repository/history';
+import {
+  addPlayer,
+  createGame,
+  getLastGame,
+  updateScore,
+} from '../repository/history';
 import {CustomScore, Game, Player} from '../types';
 
 type ScoreContextType = {
@@ -40,9 +45,7 @@ export const ScoreProvider = ({children}: {children: React.ReactNode}) => {
       score: 0,
     },
   ]);
-  const [customScore, setCustomScore] = useState<CustomScore[]>([
-    {id: 0, label: '+1', value: 1},
-  ]);
+  const [customScore, setCustomScore] = useState<CustomScore[]>([]);
   const [randomizeColorIsOn, setRandomizeColorIsOn] = useState(false);
 
   const setPlayerScore = async (id: Player['id'], increment: number) => {
@@ -65,19 +68,29 @@ export const ScoreProvider = ({children}: {children: React.ReactNode}) => {
     setPlayers(prev => prev.map(p => ({...p, score: 0})));
   };
 
-  const setNewPlayer = (newPlayer: MakeOptional<Player, 'color'>) => {
-    setPlayers(prev => {
-      const prevPlayers = [...prev];
-      const objIndex = prevPlayers.findIndex(p => p.id === newPlayer.id);
-      if (objIndex === -1) {
-        const appliedColors = prevPlayers.map(p => p.color);
-        const newColor =
-          newPlayer?.color ??
-          getRandomColor(randomizeColorIsOn ? undefined : appliedColors);
+  const setNewPlayer = async (newPlayer: MakeOptional<Player, 'color'>) => {
+    const prevPlayers = [...players];
+    const objIndex = prevPlayers.findIndex(p => p.id === newPlayer.id);
+    if (objIndex === -1) {
+      const appliedColors = prevPlayers.map(p => p.color);
+      const newColor =
+        newPlayer?.color ??
+        getRandomColor(randomizeColorIsOn ? undefined : appliedColors);
+
+      try {
+        if (!currentGame) {
+          return;
+        }
+        newPlayer.id = await addPlayer({
+          historyId: currentGame.id,
+          color: newColor,
+          playerName: newPlayer.name,
+        });
+      } finally {
         prevPlayers.push({...newPlayer, color: newColor});
+        setPlayers(prevPlayers);
       }
-      return prevPlayers;
-    });
+    }
   };
 
   const removePlayer = (id: Player['id']) => {
@@ -173,7 +186,7 @@ export const ScoreProvider = ({children}: {children: React.ReactNode}) => {
       setPlayers(prev =>
         prev.map((p, i) => ({...p, id: createdGame.playerIds[i]})),
       );
-      setCustomScore(prev => [{...prev[0], id: createdGame.customScoringId}]);
+      // setCustomScore(prev => [{...prev[0], id: createdGame.customScoringId}]);
     } catch (error) {
       setCurrentGame({id: 0, name: '', description: ''});
     }
@@ -194,6 +207,22 @@ export const ScoreProvider = ({children}: {children: React.ReactNode}) => {
         name: lastGame.gameName,
         description: lastGame.gameDescription,
       });
+      setPlayers(
+        lastGame.players.map(player => ({
+          color: player.color,
+          id: player.id,
+          name: player.playerName,
+          score: player.score,
+        })),
+      );
+      setCustomScore(
+        lastGame.customScoring.map(cs => ({
+          id: cs.id,
+          label:
+            cs.value > 0 ? '+' + cs.value : cs.value < 0 ? '-' + cs.value : '0',
+          value: cs.value,
+        })),
+      );
     } catch (error) {
       setCurrentGame({id: 0, name: '', description: ''});
     }

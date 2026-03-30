@@ -12,7 +12,7 @@ const AddCard = () => {
     <Card style={styles.container}>
       <Card.Content style={styles.content}>
         <IconButton
-          disabled={players.length === 0 || players.length === 1}
+          disabled={amountOfPlayers === 0 || amountOfPlayers === 1}
           size={24}
           icon="shuffle"
           onPress={() => {
@@ -22,12 +22,12 @@ const AddCard = () => {
         />
         <View style={styles.plusMinus}>
           <IconButton
-            disabled={players.length === 0}
+            disabled={amountOfPlayers === 0}
             size={16}
             icon="minus"
             onPress={() => {
               // removing last player
-              scoreContext.removePlayer(players[players.length - 1].id);
+              scoreContext.removePlayer(players[amountOfPlayers - 1].id);
             }}
           />
           <Text variant="headlineMedium">{amountOfPlayers}</Text>

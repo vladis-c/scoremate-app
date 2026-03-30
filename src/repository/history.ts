@@ -54,27 +54,23 @@ const createGame = async ({
     playerIds.push(playerResult.lastInsertRowId);
   }
 
-  // preset default +1 custom scoring for quick increments (and anchor option)
-  const customScoringResult = await db.runAsync(
-    'INSERT INTO HISTORY_CUSTOM_SCORING (historyId, value) VALUES (?, ?)',
-    [historyId, 1],
-  );
-  const customScoringId = customScoringResult.lastInsertRowId;
-
   return {
     historyId,
     playerIds,
-    customScoringId,
   };
 };
 
-const addPlayer = async (
-  historyId: number,
-  playerName: string,
-  color: string,
-) => {
+const addPlayer = async ({
+  historyId,
+  playerName,
+  color,
+}: {
+  historyId: number;
+  playerName: string;
+  color: string;
+}) => {
   const db = await getDB();
-  await db.runAsync(
+  const playerResult = await db.runAsync(
     'INSERT INTO HISTORY_PLAYERS (historyId, playerName, score, color) VALUES (?, ?, 0, ?)',
     [historyId, playerName, color],
   );
@@ -82,6 +78,8 @@ const addPlayer = async (
     'UPDATE HISTORY SET amountOfPlayers = amountOfPlayers + 1 WHERE id = ?',
     [historyId],
   );
+
+  return playerResult.lastInsertRowId;
 };
 
 const deletePlayer = async (playerId: number) => {
