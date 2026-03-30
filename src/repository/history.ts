@@ -28,11 +28,16 @@ const createHistoryTable = async () => {
   `);
 };
 
-const createGame = async (
-  gameName: string,
-  createdAt: string,
-  players: {playerName: string; color: string}[],
-) => {
+const createGame = async ({
+  gameName,
+  createdAt,
+  players,
+}: {
+  gameName: string;
+  gameDescription: string;
+  createdAt: string;
+  players: {playerName: string; color: string}[];
+}) => {
   const db = await getDB();
   const result = await db.runAsync(
     'INSERT INTO HISTORY (gameName, createdAt, amountOfPlayers) VALUES (?, ?, ?)',

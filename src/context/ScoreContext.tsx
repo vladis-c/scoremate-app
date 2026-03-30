@@ -1,11 +1,11 @@
 import React, {createContext, useContext, useEffect, useState} from 'react';
 import {getRandomColor, shuffleArray} from '../helpers';
-import {getLastGame} from '../repository/history';
+import {createGame, getLastGame} from '../repository/history';
 import {CustomScore, Game, Player} from '../types';
 
 type ScoreContextType = {
   currentGame: Game | null;
-  createNewGame: () => void;
+  createNewGame: (type: 'default' | 'custom') => void;
   updateGame: (name: string) => void;
   players: Player[];
   customScore: CustomScore[];
@@ -153,10 +153,29 @@ export const ScoreProvider = ({children}: {children: React.ReactNode}) => {
     setRandomizeColorIsOn(prev => !prev);
   };
 
-  const createNewGame = () => {
+  const createNewGame = async (type: 'default' | 'custom') => {
     // SQL call to crete new game
-    console.log('** Creating new game **');
-    setCurrentGame(prev => prev);
+    // const currentGameProps =
+    //   type === 'default'
+    //     ? {
+    //         gameName: currentGame?.name ?? '',
+    //         createdAt: new Date().toISOString(),
+    //         players: players.map(player => ({
+    //           playerName: player.name,
+    //           color: player.color,
+    //         })),
+    //       }
+    //     : {};
+    const gameId = await createGame({
+      gameName: '',
+      gameDescription: '',
+      createdAt: new Date().toISOString(),
+      players: players.map(player => ({
+        playerName: player.name,
+        color: player.color,
+      })),
+    });
+    setCurrentGame({id: gameId ?? 0, name: '', description: ''});
   };
 
   const updateGame = (name: string) => {

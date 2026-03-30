@@ -21,7 +21,7 @@ const ScoreScreen = ({navigation, route}: ScoreScreenProps) => {
 
   useLayoutEffect(() => {
     navigation.setOptions({
-      headerTitle: "",
+      headerTitle: '',
       headerLeft: () => (
         <TextInput
           mode="outlined"
@@ -35,7 +35,7 @@ const ScoreScreen = ({navigation, route}: ScoreScreenProps) => {
   useFocusEffect(
     useCallback(() => {
       if (route.params.isNew) {
-        scoreContext.createNewGame();
+        scoreContext.createNewGame('default');
       }
     }, [route.params]),
   );

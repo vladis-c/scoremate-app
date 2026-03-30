@@ -69,7 +69,7 @@ const StartScreen = ({navigation}: StartScreenProps) => {
             onPress={() => {
               navigation.navigate(MAIN_NAV.DRAWER, {
                 screen: DRAWER_NAV.SCORE,
-                params: {isNew: true},
+                params: {isNew: false},
               });
             }}>
             {'Continue your last game ' + scoreContext.currentGame.name}
@@ -84,7 +84,7 @@ const StartScreen = ({navigation}: StartScreenProps) => {
           onPress={() => {
             navigation.navigate(MAIN_NAV.DRAWER, {
               screen: DRAWER_NAV.SCORE,
-              params: {isNew: false},
+              params: {isNew: true},
             });
           }}>
           {btnProps[0]?.label}
