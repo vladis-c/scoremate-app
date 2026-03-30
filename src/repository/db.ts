@@ -8,6 +8,5 @@ export const getDB = async () => {
   if (!db) {
     db = await SQLite.openDatabaseAsync(DB_NAME);
   }
-  console.log("db", db)
   return db;
 };
