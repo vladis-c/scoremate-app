@@ -6,6 +6,7 @@ import {
   deletePlayer,
   getLastGame,
   resetGameScores,
+  updatePlayer,
   updateScore,
 } from '../repository/history';
 import {CustomScore, Game, Player} from '../types';
@@ -21,11 +22,8 @@ type ScoreContextType = {
   resetPlayersScores: () => void;
   setNewPlayer: (newPlayer: MakeOptional<Player, 'color'>) => void;
   removePlayer: (id: Player['id']) => void;
-  setPlayerSettings: (
-    key: keyof Player,
-    value: Player[keyof Player],
-    id: number,
-  ) => void;
+  setPlayerSettings: (player: Omit<Player, 'score'>) => void;
+  savePlayerSettings: (player: Player) => void;
   shufflePlayerOrder: () => void;
   updateCustomScore: (score: Omit<CustomScore, 'label'>) => void;
   addCustomScore: () => void;
@@ -114,20 +112,24 @@ export const ScoreProvider = ({children}: {children: React.ReactNode}) => {
     }
   };
 
-  const setPlayerSettings = (
-    key: keyof Player,
-    value: Player[keyof Player],
-    id: number,
-  ) => {
+  const setPlayerSettings = (player: Omit<Player, 'score'>) => {
     setPlayers(prev => {
       const prevPlayers = [...prev];
-      const foundPlayerIndex = prevPlayers.findIndex(p => p.id === id);
+      const foundPlayerIndex = prevPlayers.findIndex(p => p.id === player.id);
       if (foundPlayerIndex !== -1) {
         const foundPlayer = prevPlayers[foundPlayerIndex];
-        const updatedPlayer = {...foundPlayer, [key]: value};
+        const updatedPlayer = {...foundPlayer, ...player};
         prevPlayers.splice(foundPlayerIndex, 1, updatedPlayer);
       }
       return prevPlayers;
+    });
+  };
+
+  const savePlayerSettings = async (player: Player) => {
+    await updatePlayer({
+      playerId: player.id,
+      playerName: player.name,
+      color: player.color,
     });
   };
 
@@ -255,6 +257,7 @@ export const ScoreProvider = ({children}: {children: React.ReactNode}) => {
         setNewPlayer,
         removePlayer,
         setPlayerSettings,
+        savePlayerSettings,
         shufflePlayerOrder,
         updateCustomScore,
         addCustomScore,

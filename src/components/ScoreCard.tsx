@@ -32,7 +32,10 @@ const ScoreCard = ({id, color, name}: ScoreCardProps) => {
   const [isEditState, setIsEditState] = useState(false);
   const [colorPaletteIsOpen, setColorPaletteIsOpen] = useState(false);
   const [textModalIsOpen, setTextModalIsOpen] = useState(false);
-  const ref = useClickOutside<View>(() => setIsEditState(false));
+  const ref = useClickOutside<View>(() => {
+    setIsEditState(false);
+    scoreContext.savePlayerSettings(currentPlayer);
+  });
 
   useEffect(() => {
     // setting new color for the text and icons based on background
@@ -48,7 +51,10 @@ const ScoreCard = ({id, color, name}: ScoreCardProps) => {
           <IconButton
             icon="invert-colors"
             onPress={() =>
-              scoreContext.setPlayerSettings('color', getRandomColor(), id)
+              scoreContext.setPlayerSettings({
+                ...currentPlayer,
+                color: getRandomColor(),
+              })
             }
             iconColor={secondaryColor}
           />
@@ -62,9 +68,15 @@ const ScoreCard = ({id, color, name}: ScoreCardProps) => {
             <ColorPalette
               color={color}
               onColorChangeComplete={color =>
-                scoreContext.setPlayerSettings('color', color, id)
+                scoreContext.setPlayerSettings({
+                  ...currentPlayer,
+                  color,
+                })
               }
-              onDismiss={() => setColorPaletteIsOpen(false)}
+              onDismiss={() => {
+                setColorPaletteIsOpen(false);
+                scoreContext.savePlayerSettings(currentPlayer);
+              }}
               visible={colorPaletteIsOpen}
             />
           </>
@@ -77,7 +89,10 @@ const ScoreCard = ({id, color, name}: ScoreCardProps) => {
             <TextModal
               value={name}
               onValueChange={value =>
-                scoreContext.setPlayerSettings('name', value, id)
+                scoreContext.setPlayerSettings({
+                  ...currentPlayer,
+                  name: value,
+                })
               }
               visible={textModalIsOpen}
               onDismiss={() => {

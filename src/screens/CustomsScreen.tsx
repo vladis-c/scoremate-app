@@ -1,4 +1,11 @@
-import React, {useCallback, useEffect, useLayoutEffect, useRef, useState} from 'react';
+import {useFocusEffect} from '@react-navigation/native';
+import React, {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from 'react';
 import {ScrollView, StyleSheet} from 'react-native';
 import {Button, IconButton} from 'react-native-paper';
 import ScrollContainer from '../components/ScrollContainer';
@@ -8,7 +15,6 @@ import {useScore} from '../context/ScoreContext';
 import {getRandomColor, getRandomNumber} from '../helpers';
 import {CustomsScreenProps, DRAWER_NAV} from '../navigation/navigation-types';
 import {colors} from '../theme';
-import { useFocusEffect } from '@react-navigation/native';
 
 const CustomsScreen = ({navigation, route}: CustomsScreenProps) => {
   const {fromStart, label} = route.params;
@@ -23,11 +29,11 @@ const CustomsScreen = ({navigation, route}: CustomsScreenProps) => {
     });
   }, [navigation, route.params]);
 
-    useFocusEffect(
-      useCallback(() => {
-       scoreContext.createNewGame()
-      }, []),
-    );
+  useFocusEffect(
+    useCallback(() => {
+      scoreContext.createNewGame();
+    }, []),
+  );
 
   const ref = useRef<ScrollView | null>(null);
   const [playerListCollapsed, setPlayerListCollapsed] = useState(false);
@@ -55,7 +61,7 @@ const CustomsScreen = ({navigation, route}: CustomsScreenProps) => {
   useEffect(() => {
     if (scoreContext.randomizeColorIsOn) {
       players.forEach(player =>
-        scoreContext.setPlayerSettings('color', getRandomColor(), player.id),
+        scoreContext.setPlayerSettings({...player, color: getRandomColor()}),
       );
     }
   }, [scoreContext.randomizeColorIsOn]);
@@ -119,10 +125,16 @@ const CustomsScreen = ({navigation, route}: CustomsScreenProps) => {
                 key={player.id}
                 type="player"
                 onChange={e =>
-                  scoreContext.setPlayerSettings('name', e, player.id)
+                  scoreContext.setPlayerSettings({
+                    ...player,
+                    name: e,
+                  })
                 }
                 onChangeColor={c =>
-                  scoreContext.setPlayerSettings('color', c, player.id)
+                  scoreContext.setPlayerSettings({
+                    ...player,
+                    color: c,
+                  })
                 }
                 value={player.name}
                 color={player.color}

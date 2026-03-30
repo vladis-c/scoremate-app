@@ -111,11 +111,15 @@ const updateGame = async (
   );
 };
 
-const updatePlayer = async (
-  playerId: number,
-  playerName: string,
-  color: string,
-) => {
+const updatePlayer = async ({
+  playerName,
+  color,
+  playerId,
+}: {
+  playerId: number;
+  playerName: string;
+  color: string;
+}) => {
   const db = await getDB();
   await db.runAsync(
     'UPDATE HISTORY_PLAYERS SET playerName = ?, color = ? WHERE id = ?',
@@ -133,9 +137,10 @@ const updateScore = async (playerId: number, score: number) => {
 
 const resetGameScores = async (historyId: number) => {
   const db = await getDB();
-  await db.runAsync('UPDATE HISTORY_PLAYERS SET score = 0 WHERE historyId = ?', [
-    historyId,
-  ]);
+  await db.runAsync(
+    'UPDATE HISTORY_PLAYERS SET score = 0 WHERE historyId = ?',
+    [historyId],
+  );
 };
 
 const addCustomScoring = async (historyId: number, value: number) => {
