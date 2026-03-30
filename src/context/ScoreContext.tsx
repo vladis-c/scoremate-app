@@ -5,7 +5,7 @@ import {CustomScore, Game, Player} from '../types';
 
 type ScoreContextType = {
   currentGame: Game | null;
-  createNewGame: (type: 'default' | 'custom') => void;
+  createNewGame: () => void;
   updateGame: (name: string) => void;
   players: Player[];
   customScore: CustomScore[];
@@ -153,29 +153,21 @@ export const ScoreProvider = ({children}: {children: React.ReactNode}) => {
     setRandomizeColorIsOn(prev => !prev);
   };
 
-  const createNewGame = async (type: 'default' | 'custom') => {
-    // SQL call to crete new game
-    // const currentGameProps =
-    //   type === 'default'
-    //     ? {
-    //         gameName: currentGame?.name ?? '',
-    //         createdAt: new Date().toISOString(),
-    //         players: players.map(player => ({
-    //           playerName: player.name,
-    //           color: player.color,
-    //         })),
-    //       }
-    //     : {};
-    const gameId = await createGame({
-      gameName: '',
-      gameDescription: '',
-      createdAt: new Date().toISOString(),
-      players: players.map(player => ({
-        playerName: player.name,
-        color: player.color,
-      })),
-    });
-    setCurrentGame({id: gameId ?? 0, name: '', description: ''});
+  const createNewGame = async () => {
+    try {
+      const gameId = await createGame({
+        gameName: '',
+        gameDescription: '',
+        createdAt: new Date().toISOString(),
+        players: players.map(player => ({
+          playerName: player.name,
+          color: player.color,
+        })),
+      });
+      setCurrentGame({id: gameId ?? 0, name: '', description: ''});
+    } catch (error) {
+      setCurrentGame({id: 0, name: '', description: ''});
+    }
   };
 
   const updateGame = (name: string) => {
@@ -183,19 +175,7 @@ export const ScoreProvider = ({children}: {children: React.ReactNode}) => {
   };
 
   const fetchLastGame = async () => {
-    const lastGame = await getLastGame();
-    if (!lastGame) {
-      return;
-    }
-    setCurrentGame({
-      id: lastGame.id,
-      name: lastGame.gameName,
-      description: lastGame.gameDescription,
-    });
-  };
-
-  useEffect(() => {
-    (async () => {
+    try {
       const lastGame = await getLastGame();
       if (!lastGame) {
         return;
@@ -205,7 +185,13 @@ export const ScoreProvider = ({children}: {children: React.ReactNode}) => {
         name: lastGame.gameName,
         description: lastGame.gameDescription,
       });
-    })();
+    } catch (error) {
+      setCurrentGame({id: 0, name: '', description: ''});
+    }
+  };
+
+  useEffect(() => {
+    fetchLastGame();
   }, []);
 
   return (

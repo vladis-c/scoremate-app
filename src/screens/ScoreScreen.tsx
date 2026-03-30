@@ -35,7 +35,7 @@ const ScoreScreen = ({navigation, route}: ScoreScreenProps) => {
   useFocusEffect(
     useCallback(() => {
       if (route.params.isNew) {
-        scoreContext.createNewGame('default');
+        scoreContext.createNewGame();
       }
     }, [route.params]),
   );

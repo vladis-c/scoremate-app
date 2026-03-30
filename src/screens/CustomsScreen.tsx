@@ -1,4 +1,4 @@
-import React, {useEffect, useLayoutEffect, useRef, useState} from 'react';
+import React, {useCallback, useEffect, useLayoutEffect, useRef, useState} from 'react';
 import {ScrollView, StyleSheet} from 'react-native';
 import {Button, IconButton} from 'react-native-paper';
 import ScrollContainer from '../components/ScrollContainer';
@@ -8,9 +8,11 @@ import {useScore} from '../context/ScoreContext';
 import {getRandomColor, getRandomNumber} from '../helpers';
 import {CustomsScreenProps, DRAWER_NAV} from '../navigation/navigation-types';
 import {colors} from '../theme';
+import { useFocusEffect } from '@react-navigation/native';
 
 const CustomsScreen = ({navigation, route}: CustomsScreenProps) => {
   const {fromStart, label} = route.params;
+  const scoreContext = useScore();
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -21,8 +23,13 @@ const CustomsScreen = ({navigation, route}: CustomsScreenProps) => {
     });
   }, [navigation, route.params]);
 
+    useFocusEffect(
+      useCallback(() => {
+       scoreContext.createNewGame()
+      }, []),
+    );
+
   const ref = useRef<ScrollView | null>(null);
-  const scoreContext = useScore();
   const [playerListCollapsed, setPlayerListCollapsed] = useState(false);
   const {players, customScore} = scoreContext;
   const [customScoreIsShown, setCustomScoreIsShown] = useState(false);
