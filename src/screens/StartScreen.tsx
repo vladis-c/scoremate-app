@@ -4,6 +4,7 @@ import {StyleSheet, View} from 'react-native';
 import {Button, Text} from 'react-native-paper';
 import ScrollContainer from '../components/ScrollContainer';
 import {startButton1Labels, startButton2Labels} from '../constants';
+import {useScore} from '../context/ScoreContext';
 import {
   getRandomColor,
   getRandomNumber,
@@ -19,6 +20,8 @@ import {colors, fonts} from '../theme';
 type BtnProps = {bgColor: string; textColor: string; label: string};
 
 const StartScreen = ({navigation}: StartScreenProps) => {
+  const scoreContext = useScore();
+
   const getBtnProps = (): BtnProps[] => {
     const newProps: BtnProps[] = [];
 
@@ -62,9 +65,9 @@ const StartScreen = ({navigation}: StartScreenProps) => {
           textColor={btnProps[0]?.textColor ?? colors.Black}
           style={styles.button}
           mode="elevated"
-          onPress={() =>
-            navigation.navigate(MAIN_NAV.DRAWER, {screen: DRAWER_NAV.SCORE})
-          }>
+          onPress={() => {
+            navigation.navigate(MAIN_NAV.DRAWER, {screen: DRAWER_NAV.SCORE});
+          }}>
           {btnProps[0]?.label}
         </Button>
         <Button
@@ -73,12 +76,13 @@ const StartScreen = ({navigation}: StartScreenProps) => {
           textColor={btnProps[1]?.textColor ?? colors.Black}
           style={styles.button}
           mode="elevated"
-          onPress={() =>
+          onPress={() => {
             navigation.navigate(MAIN_NAV.DRAWER, {
               screen: DRAWER_NAV.CUSTOMS,
               params: {fromStart: true, label: btnProps[1]?.label},
-            })
-          }>
+            });
+            scoreContext.createNewGame({name: ''});
+          }}>
           {btnProps[1]?.label}
         </Button>
       </ScrollContainer>

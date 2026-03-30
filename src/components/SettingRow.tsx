@@ -13,7 +13,13 @@ type SettingType = 'input' | 'switch' | 'player' | 'score';
 
 type SettingRowProps<S> = {
   type: S;
-  value: S extends 'switch' ? boolean : S extends 'score' ? number : string;
+  value: S extends 'switch'
+    ? boolean
+    : S extends 'score'
+      ? number
+      : S extends 'input'
+        ? number
+        : string;
   onChange: S extends 'switch' ? () => void : (v: string) => void;
   onBlur?: S extends 'input' ? () => void : never;
   onChangeColor?: S extends 'player' ? (c: string) => void : never;

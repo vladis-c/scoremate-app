@@ -96,7 +96,7 @@ const CustomsScreen = ({navigation, route}: CustomsScreenProps) => {
             }
           }}
           onBlur={handleSetNewPlayers}
-          value={amountOfPlayers.toString()}
+          value={amountOfPlayers}
           collapse={
             !fromStart
               ? {
@@ -151,9 +151,12 @@ const CustomsScreen = ({navigation, route}: CustomsScreenProps) => {
                 key={el.id + i}
                 type="input"
                 title={`Custom score ${i + 1}`}
-                onChange={e =>
-                  scoreContext.updateCustomScore({value: e, id: el.id})
-                }
+                onChange={e => {
+                  if (typeof e !== 'number') {
+                    return;
+                  }
+                  scoreContext.updateCustomScore({value: e, id: el.id});
+                }}
                 value={el.value}
               />
             ))}

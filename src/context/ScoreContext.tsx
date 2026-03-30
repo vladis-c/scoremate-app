@@ -1,8 +1,10 @@
 import React, {createContext, useContext, useState} from 'react';
 import {getRandomColor, shuffleArray} from '../helpers';
-import {CustomScore, Player} from '../types';
+import {CustomScore, Game, Player} from '../types';
 
 type ScoreContextType = {
+  currentGame: Game;
+  createNewGame: (name: Pick<Game, 'name'>) => void;
   players: Player[];
   customScore: CustomScore[];
   randomizeColorIsOn: boolean;
@@ -26,15 +28,22 @@ type ScoreContextType = {
 const ScoreContext = createContext<ScoreContextType | undefined>(undefined);
 
 export const ScoreProvider = ({children}: {children: React.ReactNode}) => {
+  const [currentGame, setCurrentGame] = useState<Game>({
+    id: 0,
+    name: '',
+  });
+
   const [players, setPlayers] = useState<Player[]>([
     {
-      id: 1,
+      id: 0,
       name: '',
       color: getRandomColor([]),
       score: 0,
     },
   ]);
-  const [customScore, setCustomScore] = useState<CustomScore[]>([]);
+  const [customScore, setCustomScore] = useState<CustomScore[]>([
+    {id: 0, label: '+1', value: 1},
+  ]);
   const [randomizeColorIsOn, setRandomizeColorIsOn] = useState(false);
 
   const setPlayerScore = (id: Player['id'], increment: number) => {
@@ -110,7 +119,7 @@ export const ScoreProvider = ({children}: {children: React.ReactNode}) => {
       const objectIndex = prevScore.findIndex(s => s.id === id);
       if (objectIndex !== -1) {
         const foundScore = prevScore[objectIndex];
-        const updatedScore = {...foundScore, value, label: value};
+        const updatedScore = {...foundScore, value, label: value.toString()};
         prevScore.splice(objectIndex, 1, updatedScore);
       }
       return prevScore;
@@ -122,7 +131,7 @@ export const ScoreProvider = ({children}: {children: React.ReactNode}) => {
       const prevScore = [...prev];
       prevScore.push({
         label: '',
-        value: '0',
+        value: 0,
         id: prevScore.length + 1,
       });
       return prevScore;
@@ -145,9 +154,17 @@ export const ScoreProvider = ({children}: {children: React.ReactNode}) => {
     setRandomizeColorIsOn(prev => !prev);
   };
 
+  const createNewGame = () => {
+    // SQL call to crete new game
+    console.log('** Creating new game **');
+    setCurrentGame(prev => prev);
+  };
+
   return (
     <ScoreContext.Provider
       value={{
+        currentGame,
+        createNewGame,
         players,
         customScore,
         randomizeColorIsOn,
