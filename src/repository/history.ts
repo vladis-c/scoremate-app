@@ -131,6 +131,13 @@ const updateScore = async (playerId: number, score: number) => {
   ]);
 };
 
+const resetGameScores = async (historyId: number) => {
+  const db = await getDB();
+  await db.runAsync('UPDATE HISTORY_PLAYERS SET score = 0 WHERE historyId = ?', [
+    historyId,
+  ]);
+};
+
 const addCustomScoring = async (historyId: number, value: number) => {
   const db = await getDB();
   await db.runAsync(
@@ -252,6 +259,7 @@ export {
   updateGame,
   updatePlayer,
   updateScore,
+  resetGameScores,
   addCustomScoring,
   removeCustomScoring,
   getAllGames,

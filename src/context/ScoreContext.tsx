@@ -5,6 +5,7 @@ import {
   createGame,
   deletePlayer,
   getLastGame,
+  resetGameScores,
   updateScore,
 } from '../repository/history';
 import {CustomScore, Game, Player} from '../types';
@@ -65,8 +66,12 @@ export const ScoreProvider = ({children}: {children: React.ReactNode}) => {
     setPlayers(prevPlayers);
   };
 
-  const resetPlayersScores = () => {
+  const resetPlayersScores = async () => {
+    if (!currentGame) {
+      return;
+    }
     setPlayers(prev => prev.map(p => ({...p, score: 0})));
+    await resetGameScores(currentGame?.id);
   };
 
   const setNewPlayer = async (newPlayer: MakeOptional<Player, 'color'>) => {
