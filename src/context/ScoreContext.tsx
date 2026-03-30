@@ -3,7 +3,7 @@ import {getRandomColor, shuffleArray} from '../helpers';
 import {CustomScore, Game, Player} from '../types';
 
 type ScoreContextType = {
-  currentGame: Game;
+  currentGame: Game | null;
   createNewGame: (name: Pick<Game, 'name'>) => void;
   players: Player[];
   customScore: CustomScore[];
@@ -28,10 +28,7 @@ type ScoreContextType = {
 const ScoreContext = createContext<ScoreContextType | undefined>(undefined);
 
 export const ScoreProvider = ({children}: {children: React.ReactNode}) => {
-  const [currentGame, setCurrentGame] = useState<Game>({
-    id: 0,
-    name: '',
-  });
+  const [currentGame, setCurrentGame] = useState<Game | null>(null);
 
   const [players, setPlayers] = useState<Player[]>([
     {

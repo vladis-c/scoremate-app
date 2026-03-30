@@ -56,9 +56,22 @@ const StartScreen = ({navigation}: StartScreenProps) => {
             Scoremate is your mate in tracking boardgames score.
           </Text>
           <Text style={styles.text}>
-            Choose between Scoremate preset and Custom experience:
+            {`Choose between Scoremate preset and Custom experience${scoreContext.currentGame ? `, or continue your last game ${scoreContext.currentGame.name}` : ''}`}
           </Text>
         </View>
+        {scoreContext.currentGame ? (
+          <Button
+            labelStyle={{fontSize: 16}}
+            buttonColor={btnProps[0]?.bgColor ?? colors.White}
+            textColor={btnProps[0]?.textColor ?? colors.Black}
+            style={styles.button}
+            mode="elevated"
+            onPress={() => {
+              navigation.navigate(MAIN_NAV.DRAWER, {screen: DRAWER_NAV.SCORE});
+            }}>
+            {'Continue your last game ' + scoreContext.currentGame.name}
+          </Button>
+        ) : null}
         <Button
           labelStyle={{fontSize: 16}}
           buttonColor={btnProps[0]?.bgColor ?? colors.White}
@@ -81,7 +94,6 @@ const StartScreen = ({navigation}: StartScreenProps) => {
               screen: DRAWER_NAV.CUSTOMS,
               params: {fromStart: true, label: btnProps[1]?.label},
             });
-            scoreContext.createNewGame({name: ''});
           }}>
           {btnProps[1]?.label}
         </Button>
