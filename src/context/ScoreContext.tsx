@@ -3,6 +3,7 @@ import {getRandomColor, shuffleArray} from '../helpers';
 import {
   addPlayer,
   createGame,
+  deletePlayer,
   getLastGame,
   updateScore,
 } from '../repository/history';
@@ -93,15 +94,19 @@ export const ScoreProvider = ({children}: {children: React.ReactNode}) => {
     }
   };
 
-  const removePlayer = (id: Player['id']) => {
-    setPlayers(prev => {
-      const prevPlayers = [...prev];
-      const objIndex = prevPlayers.findIndex(p => p.id === id);
-      if (objIndex !== -1) {
-        prevPlayers.splice(objIndex, 1);
-      }
-      return prevPlayers;
-    });
+  const removePlayer = async (id: Player['id']) => {
+    try {
+      await deletePlayer(id);
+    } finally {
+      setPlayers(prev => {
+        const prevPlayers = [...prev];
+        const objIndex = prevPlayers.findIndex(p => p.id === id);
+        if (objIndex !== -1) {
+          prevPlayers.splice(objIndex, 1);
+        }
+        return prevPlayers;
+      });
+    }
   };
 
   const setPlayerSettings = (
@@ -186,7 +191,6 @@ export const ScoreProvider = ({children}: {children: React.ReactNode}) => {
       setPlayers(prev =>
         prev.map((p, i) => ({...p, id: createdGame.playerIds[i]})),
       );
-      // setCustomScore(prev => [{...prev[0], id: createdGame.customScoringId}]);
     } catch (error) {
       setCurrentGame({id: 0, name: '', description: ''});
     }
