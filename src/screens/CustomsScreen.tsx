@@ -138,6 +138,7 @@ const CustomsScreen = ({navigation, route}: CustomsScreenProps) => {
                 }
                 value={player.name}
                 color={player.color}
+                onBlur={() => scoreContext.savePlayerSettings(player)}
               />
             ))
           : null}
@@ -190,6 +191,7 @@ const CustomsScreen = ({navigation, route}: CustomsScreenProps) => {
         onPress={() => {
           navigation.setParams({fromStart: false});
           navigation.navigate(DRAWER_NAV.SCORE, {isNew: false});
+          players.forEach(player => scoreContext.savePlayerSettings(player));
         }}>
         {fromStart ? 'Continue' : 'Apply'}
       </Button>

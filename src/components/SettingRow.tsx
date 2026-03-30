@@ -21,7 +21,11 @@ type SettingRowProps<S> = {
         ? number
         : string;
   onChange: S extends 'switch' ? () => void : (v: string) => void;
-  onBlur?: S extends 'input' ? () => void : never;
+  onBlur?: S extends 'input'
+    ? () => void
+    : S extends 'player'
+      ? () => void
+      : never;
   onChangeColor?: S extends 'player' ? (c: string) => void : never;
   color?: S extends 'player' ? string : never;
   title?: S extends 'player' ? never : string;
