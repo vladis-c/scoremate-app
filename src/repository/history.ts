@@ -5,8 +5,7 @@ const createHistoryTable = async () => {
   await db.execAsync(`
     CREATE TABLE IF NOT EXISTS HISTORY (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
-      gameName TEXT NOT NULL,
-      gameDescription TEXT,
+      gameName TEXT,
       createdAt TEXT NOT NULL,
       amountOfPlayers INTEGER DEFAULT 1
     );
@@ -14,9 +13,16 @@ const createHistoryTable = async () => {
     CREATE TABLE IF NOT EXISTS HISTORY_PLAYERS (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       historyId INTEGER NOT NULL,
-      playerName TEXT NOT NULL,
+      playerName TEXT,
       score REAL DEFAULT 0,
       color TEXT NOT NULL,
+      FOREIGN KEY (historyId) REFERENCES HISTORY (id) ON DELETE CASCADE
+    );
+
+    CREATE TABLE IF NOT EXISTS HISTORY_CUSTOM_SCORING (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      historyId INTEGER NOT NULL,
+      value INTEGER NOT NULL DEFAULT 1,
       FOREIGN KEY (historyId) REFERENCES HISTORY (id) ON DELETE CASCADE
     );
   `);
@@ -24,14 +30,13 @@ const createHistoryTable = async () => {
 
 const createGame = async (
   gameName: string,
-  gameDescription: string,
   createdAt: string,
   players: {playerName: string; color: string}[],
 ) => {
   const db = await getDB();
   const result = await db.runAsync(
-    'INSERT INTO HISTORY (gameName, gameDescription, createdAt, amountOfPlayers) VALUES (?, ?, ?, ?)',
-    [gameName, gameDescription, createdAt, players.length],
+    'INSERT INTO HISTORY (gameName, createdAt, amountOfPlayers) VALUES (?, ?, ?)',
+    [gameName, createdAt, players.length],
   );
   const historyId = result.lastInsertRowId;
   for (const player of players) {
@@ -40,6 +45,13 @@ const createGame = async (
       [historyId, player.playerName, player.color],
     );
   }
+
+  // preset default +1 custom scoring for quick increments (and anchor option)
+  await db.runAsync(
+    'INSERT INTO HISTORY_CUSTOM_SCORING (historyId, value) VALUES (?, ?)',
+    [historyId, 1],
+  );
+
   return historyId;
 };
 
@@ -79,12 +91,12 @@ const deletePlayer = async (playerId: number) => {
 const updateGame = async (
   historyId: number,
   gameName: string,
-  gameDescription: string,
+  gameDescription?: string,
 ) => {
   const db = await getDB();
   await db.runAsync(
     'UPDATE HISTORY SET gameName = ?, gameDescription = ? WHERE id = ?',
-    [gameName, gameDescription, historyId],
+    [gameName, gameDescription ?? null, historyId],
   );
 };
 
@@ -108,6 +120,119 @@ const updateScore = async (playerId: number, score: number) => {
   ]);
 };
 
+const addCustomScoring = async (historyId: number, value: number) => {
+  const db = await getDB();
+  await db.runAsync(
+    'INSERT INTO HISTORY_CUSTOM_SCORING (historyId, value) VALUES (?, ?)',
+    [historyId, value],
+  );
+};
+
+const removeCustomScoring = async (scoringId: number) => {
+  const db = await getDB();
+  const row = await db.getFirstAsync<{value: number}>(
+    'SELECT value FROM HISTORY_CUSTOM_SCORING WHERE id = ?',
+    [scoringId],
+  );
+  if (!row) {
+    throw new Error('Custom scoring entry not found');
+  }
+  if (row.value === 1) {
+    throw new Error('Cannot remove default +1 custom scoring');
+  }
+  await db.runAsync('DELETE FROM HISTORY_CUSTOM_SCORING WHERE id = ?', [
+    scoringId,
+  ]);
+};
+
+const getAllGames = async (page = 1, limit = 10) => {
+  const offset = (page - 1) * limit;
+  const db = await getDB();
+
+  const rows = await db.getAllAsync<{
+    id: number;
+    gameName: string;
+    createdAt: string;
+    amountOfPlayers: number;
+    playerNames: string | null;
+    hasCustomScoring: number;
+  }>(
+    `SELECT
+       H.id,
+       H.gameName,
+       H.createdAt,
+       H.amountOfPlayers,
+       GROUP_CONCAT(HP.playerName, ',') AS playerNames,
+       CASE WHEN EXISTS(
+         SELECT 1 FROM HISTORY_CUSTOM_SCORING C
+         WHERE C.historyId = H.id AND C.value != 1
+       ) THEN 1 ELSE 0 END AS hasCustomScoring
+     FROM HISTORY H
+     LEFT JOIN HISTORY_PLAYERS HP ON HP.historyId = H.id
+     GROUP BY H.id
+     ORDER BY H.createdAt DESC
+     LIMIT ? OFFSET ?`,
+    [limit, offset],
+  );
+
+  return rows.map(row => ({
+    id: row.id,
+    gameName: row.gameName,
+    createdAt: row.createdAt,
+    amountOfPlayers: row.amountOfPlayers,
+    playerNames: row.playerNames ? row.playerNames.split(',') : [],
+    customScoring: row.hasCustomScoring === 1,
+  }));
+};
+
+const getGameById = async (historyId: number) => {
+  const db = await getDB();
+
+  const history = await db.getFirstAsync<{
+    id: number;
+    gameName: string;
+    gameDescription: string | null;
+    createdAt: string;
+    amountOfPlayers: number;
+  }>('SELECT * FROM HISTORY WHERE id = ?', [historyId]);
+
+  if (!history) {
+    return null;
+  }
+
+  const players = await db.getAllAsync<{
+    id: number;
+    playerName: string;
+    score: number;
+    color: string;
+  }>('SELECT * FROM HISTORY_PLAYERS WHERE historyId = ?', [historyId]);
+
+  const customScoring = await db.getAllAsync<{
+    id: number;
+    value: number;
+  }>('SELECT * FROM HISTORY_CUSTOM_SCORING WHERE historyId = ?', [historyId]);
+
+  return {
+    ...history,
+    players,
+    customScoring,
+  };
+};
+
+const getLastGame = async () => {
+  const db = await getDB();
+
+  const lastGame = await db.getFirstAsync<{id: number}>(
+    'SELECT id FROM HISTORY ORDER BY datetime(createdAt) DESC LIMIT 1',
+  );
+
+  if (!lastGame) {
+    return null;
+  }
+
+  return getGameById(lastGame.id);
+};
+
 export {
   createHistoryTable,
   createGame,
@@ -116,4 +241,9 @@ export {
   updateGame,
   updatePlayer,
   updateScore,
+  addCustomScoring,
+  removeCustomScoring,
+  getAllGames,
+  getGameById,
+  getLastGame,
 };
