@@ -1,19 +1,48 @@
-import React, {useEffect, useRef, useState} from 'react';
+import {useFocusEffect} from '@react-navigation/native';
+import React, {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from 'react';
 import {ScrollView, StyleSheet, View} from 'react-native';
+import {TextInput} from 'react-native-paper';
 import AddCard from '../components/AddCard';
 import ScoreCard from '../components/ScoreCard';
 import ScrollContainer from '../components/ScrollContainer';
 import {useScore} from '../context/ScoreContext';
+import {ScoreScreenProps} from '../navigation/navigation-types';
 
-const ScoreScreen = () => {
+const ScoreScreen = ({navigation, route}: ScoreScreenProps) => {
   const ref = useRef<ScrollView | null>(null);
   const scoreContext = useScore();
-  const {players} = scoreContext;
   const [addCardHeight, setAddCardHeight] = useState<number | null>(null);
+
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerTitle: "",
+      headerLeft: () => (
+        <TextInput
+          mode="outlined"
+          value={scoreContext.currentGame?.name}
+          onChangeText={scoreContext.updateGame}
+        />
+      ),
+    });
+  }, [navigation]);
+
+  useFocusEffect(
+    useCallback(() => {
+      if (route.params.isNew) {
+        scoreContext.createNewGame();
+      }
+    }, [route.params]),
+  );
 
   useEffect(() => {
     ref.current?.scrollToEnd();
-  }, [players.length]);
+  }, [scoreContext.players.length]);
 
   return (
     <>
@@ -25,7 +54,7 @@ const ScoreScreen = () => {
       {addCardHeight !== null ? (
         <ScrollContainer style={{paddingTop: addCardHeight}} ref={ref}>
           <View style={styles.cardsContainer}>
-            {players.map(player => (
+            {scoreContext.players.map(player => (
               <View key={player.id}>
                 <ScoreCard
                   id={player.id}

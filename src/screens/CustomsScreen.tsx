@@ -169,10 +169,8 @@ const CustomsScreen = ({navigation, route}: CustomsScreenProps) => {
         buttonColor={colors.LightBlue}
         textColor={colors.Black}
         onPress={() => {
-          navigation.setParams({
-            fromStart: false,
-          });
-          navigation.navigate(DRAWER_NAV.SCORE);
+          navigation.setParams({fromStart: false});
+          navigation.navigate(DRAWER_NAV.SCORE, {isNew: false});
         }}>
         {fromStart ? 'Continue' : 'Apply'}
       </Button>

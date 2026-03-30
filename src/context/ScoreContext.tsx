@@ -4,7 +4,8 @@ import {CustomScore, Game, Player} from '../types';
 
 type ScoreContextType = {
   currentGame: Game | null;
-  createNewGame: (name: Pick<Game, 'name'>) => void;
+  createNewGame: () => void;
+  updateGame: (name: string) => void;
   players: Player[];
   customScore: CustomScore[];
   randomizeColorIsOn: boolean;
@@ -157,11 +158,16 @@ export const ScoreProvider = ({children}: {children: React.ReactNode}) => {
     setCurrentGame(prev => prev);
   };
 
+  const updateGame = (name: string) => {
+    setCurrentGame(prev => (!prev ? prev : {...prev, name}));
+  };
+
   return (
     <ScoreContext.Provider
       value={{
         currentGame,
         createNewGame,
+        updateGame,
         players,
         customScore,
         randomizeColorIsOn,
