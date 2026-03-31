@@ -12,12 +12,13 @@ const AddCard = () => {
     <Card style={styles.container}>
       <Card.Content style={styles.content}>
         <IconButton
-          disabled={amountOfPlayers === 0 || amountOfPlayers === 1}
+          // disabled={amountOfPlayers === 0 || amountOfPlayers === 1}
+          disabled={true}
           size={24}
           icon="shuffle"
           onPress={() => {
             // shuffles the array of players in random order
-            scoreContext.shufflePlayerOrder();
+            // scoreContext.shufflePlayerOrder();
           }}
         />
         <View style={styles.plusMinus}>

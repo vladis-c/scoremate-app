@@ -9,6 +9,7 @@ import React, {
 import {ScrollView, StyleSheet, View} from 'react-native';
 import {TextInput} from 'react-native-paper';
 import AddCard from '../components/AddCard';
+import InputHeader from '../components/InputHeader';
 import ScoreCard from '../components/ScoreCard';
 import ScrollContainer from '../components/ScrollContainer';
 import {useScore} from '../context/ScoreContext';
@@ -21,7 +22,19 @@ const ScoreScreen = ({navigation, route}: ScoreScreenProps) => {
 
   useLayoutEffect(() => {
     navigation.setOptions({
-      headerTitle: scoreContext.currentGame?.name,
+      headerTitle: '',
+      headerRight: () => {
+        const gameName = scoreContext.currentGame?.name ?? '';
+        return (
+          <InputHeader
+            value={gameName}
+            onChange={e => scoreContext.updateGame({gameName: e})}
+            onEndEditing={() =>
+              scoreContext.updateGame({gameName, saveToDb: true})
+            }
+          />
+        );
+      },
     });
   }, [navigation, scoreContext.currentGame?.name]);
 

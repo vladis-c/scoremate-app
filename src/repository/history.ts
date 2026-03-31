@@ -1,6 +1,7 @@
 import {getDB} from './db';
 
 const createHistoryTable = async () => {
+  // TODO: updatedAt, gameStatus: "created" | "finished" -> if finished - cannot be edited
   const db = await getDB();
   await db.execAsync(`
     CREATE TABLE IF NOT EXISTS HISTORY (
