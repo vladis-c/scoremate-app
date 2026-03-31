@@ -28,6 +28,7 @@ const ScoreScreen = ({navigation, route}: ScoreScreenProps) => {
   useFocusEffect(
     useCallback(() => {
       if (route.params?.isNew) {
+        scoreContext.clearStates();
         scoreContext.createNewGame();
       }
     }, [route.params]),

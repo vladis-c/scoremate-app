@@ -1,5 +1,5 @@
 import {Image} from 'expo-image';
-import React from 'react';
+import React, {useEffect, useRef} from 'react';
 import {StyleSheet, View} from 'react-native';
 import {Button, Text} from 'react-native-paper';
 import ScrollContainer from '../components/ScrollContainer';
@@ -17,7 +17,12 @@ import {
 } from '../navigation/navigation-types';
 import {colors, fonts} from '../theme';
 
-type BtnProps = {bgColor: string; textColor: string; label: string};
+type BtnProps = {
+  bgColor: string;
+  textColor: string;
+  label: string;
+  onPress: () => void;
+};
 
 const StartScreen = ({navigation}: StartScreenProps) => {
   const scoreContext = useScore();
@@ -25,17 +30,56 @@ const StartScreen = ({navigation}: StartScreenProps) => {
   const getBtnProps = (): BtnProps[] => {
     const newProps: BtnProps[] = [];
 
-    const bg1 = getRandomColor({useDefault: true});
-    const textColor1 = handleTextColorForBackground(bg1);
-    const label1 =
-      startButton1Labels[getRandomNumber(0, startButton1Labels.length - 1)];
-    newProps.push({bgColor: bg1, textColor: textColor1, label: label1});
+    if (scoreContext.currentGame) {
+      const bg1 = getRandomColor({useDefault: true});
+      const textColor1 = handleTextColorForBackground(bg1);
+      const label1 =
+        'Continue your last game ' + scoreContext.currentGame?.name;
+      newProps.push({
+        bgColor: bg1,
+        textColor: textColor1,
+        label: label1,
+        onPress: () => {
+          navigation.navigate(MAIN_NAV.DRAWER, {
+            screen: DRAWER_NAV.SCORE,
+            params: {isNew: false},
+          });
+        },
+      });
+    }
 
     const bg2 = getRandomColor({useDefault: true});
     const textColor2 = handleTextColorForBackground(bg2);
     const label2 =
+      startButton1Labels[getRandomNumber(0, startButton1Labels.length - 1)];
+    newProps.push({
+      bgColor: bg2,
+      textColor: textColor2,
+      label: label2,
+      onPress: () => {
+        navigation.navigate(MAIN_NAV.DRAWER, {
+          screen: DRAWER_NAV.SCORE,
+          params: {isNew: true},
+        });
+      },
+    });
+
+    const bg3 = getRandomColor({useDefault: true});
+    const textColor3 = handleTextColorForBackground(bg3);
+    const label3 =
       startButton2Labels[getRandomNumber(0, startButton2Labels.length - 1)];
-    newProps.push({bgColor: bg2, textColor: textColor2, label: label2});
+    newProps.push({
+      bgColor: bg3,
+      textColor: textColor3,
+      label: label3,
+      onPress: () => {
+        navigation.navigate(MAIN_NAV.DRAWER, {
+          screen: DRAWER_NAV.CUSTOMS,
+          params: {isNew: true, label: btnProps[1]?.label},
+        });
+      },
+    });
+
     return newProps;
   };
 
@@ -43,66 +87,37 @@ const StartScreen = ({navigation}: StartScreenProps) => {
 
   return (
     <>
-      <Image
-        style={styles.image}
-        source={require('../../assets/adaptive-icon.png')}
-        contentFit="contain"
-        transition={100}
-      />
       <ScrollContainer style={styles.container}>
+        <Image
+          style={styles.image}
+          source={require('../../assets/adaptive-icon.png')}
+          contentFit="contain"
+          transition={100}
+        />
         <View style={styles.textsContainer}>
           <Text style={styles.title}>Scoremate</Text>
           <Text style={styles.text}>
             Scoremate is your mate in tracking boardgames score.
           </Text>
-          <Text style={styles.text}>
-            {`Choose between Scoremate preset and Custom experience${scoreContext.currentGame ? `, or continue your last game ${scoreContext.currentGame.name}` : ''}`}
-          </Text>
+          <Text
+            style={
+              styles.text
+            }>{`Choose between Scoremate preset and Custom experience${scoreContext.currentGame ? `, or continue your last game ${scoreContext.currentGame.name}` : ''}`}</Text>
         </View>
-        {scoreContext.currentGame ? (
-          <Button
-            labelStyle={{fontSize: 16}}
-            buttonColor={btnProps[0]?.bgColor ?? colors.White}
-            textColor={btnProps[0]?.textColor ?? colors.Black}
-            style={styles.button}
-            mode="elevated"
-            onPress={() => {
-              navigation.navigate(MAIN_NAV.DRAWER, {
-                screen: DRAWER_NAV.SCORE,
-                params: {isNew: false},
-              });
-            }}>
-            {'Continue your last game ' + scoreContext.currentGame.name}
-          </Button>
-        ) : null}
-        <Button
-          labelStyle={{fontSize: 16}}
-          buttonColor={btnProps[0]?.bgColor ?? colors.White}
-          textColor={btnProps[0]?.textColor ?? colors.Black}
-          style={styles.button}
-          mode="elevated"
-          onPress={() => {
-            navigation.navigate(MAIN_NAV.DRAWER, {
-              screen: DRAWER_NAV.SCORE,
-              params: {isNew: true},
-            });
-          }}>
-          {btnProps[0]?.label}
-        </Button>
-        <Button
-          labelStyle={{fontSize: 16}}
-          buttonColor={btnProps[1]?.bgColor ?? colors.White}
-          textColor={btnProps[1]?.textColor ?? colors.Black}
-          style={styles.button}
-          mode="elevated"
-          onPress={() => {
-            navigation.navigate(MAIN_NAV.DRAWER, {
-              screen: DRAWER_NAV.CUSTOMS,
-              params: {isNew: true, label: btnProps[1]?.label},
-            });
-          }}>
-          {btnProps[1]?.label}
-        </Button>
+        {btnProps.map(props => {
+          return (
+            <Button
+              key={props.label}
+              labelStyle={{fontSize: 16}}
+              buttonColor={props?.bgColor ?? colors.White}
+              textColor={props?.textColor ?? colors.Black}
+              style={styles.button}
+              mode="elevated"
+              onPress={props.onPress}>
+              {props?.label}
+            </Button>
+          );
+        })}
       </ScrollContainer>
     </>
   );
@@ -118,11 +133,11 @@ const styles = StyleSheet.create({
   },
   title: {...fonts.BigHeading, textAlign: 'center'},
   text: {...fonts.BasicText, textAlign: 'center'},
-  textsContainer: {gap: 10, alignItems: 'center', top: 10, marginBottom: 10},
+  textsContainer: {gap: 24, alignItems: 'center', marginBottom: 10},
   button: {width: '100%', marginVertical: 10},
   image: {
     position: 'absolute',
-    top: 40,
+    top: -10,
     alignSelf: 'center',
     width: '50%',
     height: '50%',

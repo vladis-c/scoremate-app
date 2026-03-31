@@ -40,6 +40,7 @@ const CustomsScreen = ({navigation, route}: CustomsScreenProps) => {
   useFocusEffect(
     useCallback(() => {
       if (route.params.isNew) {
+        scoreContext.clearStates();
         scoreContext.createNewGame();
       }
     }, [route.params]),

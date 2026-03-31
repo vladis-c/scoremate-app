@@ -48,7 +48,7 @@ export const ScoreProvider = ({children}: {children: React.ReactNode}) => {
     {
       id: 0,
       name: '',
-      color: getRandomColor([], {useDefault: true}),
+      color: getRandomColor([]),
       score: 0,
     },
   ]);
@@ -219,7 +219,7 @@ export const ScoreProvider = ({children}: {children: React.ReactNode}) => {
 
   const createNewGame = async () => {
     try {
-      const playerColor = getRandomColor([], {useDefault: true});
+      const playerColor = getRandomColor([]);
       const createdGame = await historyDb.createGame({
         gameName: '',
         gameDescription: '',
