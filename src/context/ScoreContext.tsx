@@ -16,7 +16,13 @@ type ScoreContextType = {
   setPlayerSettings: (player: Omit<Player, 'score'>) => void;
   savePlayerSettings: (player: Player) => void;
   shufflePlayerOrder: () => void;
-  updateCustomScore: (score: Omit<CustomScore, 'label'>) => void;
+  updateCustomScore: ({
+    score,
+    saveToDb,
+  }: {
+    score: Omit<CustomScore, 'label'>;
+    saveToDb?: boolean;
+  }) => void;
   addCustomScore: () => void;
   removeCustomScore: () => void;
   clearCustomScores: () => void;
@@ -31,7 +37,7 @@ export const ScoreProvider = ({children}: {children: React.ReactNode}) => {
     {
       id: 0,
       name: '',
-      color: getRandomColor(),
+      color: getRandomColor([], {useDefault: true}),
       score: 0,
     },
   ]);
@@ -125,42 +131,58 @@ export const ScoreProvider = ({children}: {children: React.ReactNode}) => {
     setPlayers(prev => shuffleArray([...prev]));
   };
 
-  const updateCustomScore = async (score: Omit<CustomScore, 'label'>) => {
+  const updateCustomScore = async ({
+    score,
+    saveToDb,
+  }: {
+    score: Omit<CustomScore, 'label'>;
+    saveToDb?: boolean;
+  }) => {
     const prevScore = [...customScore];
     const objectIndex = prevScore.findIndex(s => s.id === score.id);
     if (objectIndex !== -1) {
-      const updatedScore = {
-        id: score.id,
-        value: score.value,
-        label: score.value.toString(),
-      };
-
+      if (!saveToDb) {
+        const updatedScore = {
+          id: score.id,
+          value: score.value,
+          label: score.value.toString(),
+        };
+        prevScore.splice(objectIndex, 1, updatedScore);
+        setCustomScore(prevScore);
+        return;
+      }
       try {
         if (!currentGame) {
           return;
         }
-        const id = await historyDb.addCustomScoring({
-          historyId: currentGame?.id,
+        await historyDb.updateCustomScoring({
           value: score.value,
+          scoreId: score.id,
         });
-        score.id = id;
-      } finally {
-        prevScore.splice(objectIndex, 1, updatedScore);
-        setCustomScore(prevScore);
-      }
+      } catch (error) {}
     }
   };
 
-  const addCustomScore = () => {
-    setCustomScore(prev => {
-      const prevScore = [...prev];
-      prevScore.push({
-        label: '',
-        value: 0,
-        id: prevScore.length + 1,
+  const addCustomScore = async () => {
+    const prevScore = [...customScore];
+    const newScore = {
+      label: '',
+      value: 0,
+      id: prevScore.length + 1,
+    };
+    let id = newScore.id;
+    try {
+      if (!currentGame) {
+        return;
+      }
+      id = await historyDb.addCustomScoring({
+        historyId: currentGame.id,
+        value: newScore.value,
       });
-      return prevScore;
-    });
+    } finally {
+      prevScore.push({...newScore, id});
+      setCustomScore(prevScore);
+    }
   };
 
   const removeCustomScore = async () => {
@@ -206,6 +228,7 @@ export const ScoreProvider = ({children}: {children: React.ReactNode}) => {
       setPlayers([
         {color: playerColor, id: createdGame.playerIds[0], name: '', score: 0},
       ]);
+      setCustomScore([]);
     } catch (error) {
       setCurrentGame({id: 0, name: '', description: ''});
     }
@@ -236,12 +259,13 @@ export const ScoreProvider = ({children}: {children: React.ReactNode}) => {
         })),
       );
       setCustomScore(
-        lastGame.customScoring.map(cs => ({
-          id: cs.id,
-          label:
-            cs.value > 0 ? '+' + cs.value : cs.value < 0 ? '-' + cs.value : '0',
-          value: cs.value,
-        })),
+        lastGame.customScoring
+          .filter(el => el.value !== 0)
+          .map(cs => ({
+            id: cs.id,
+            label: cs.value > 0 ? '+' + cs.value : cs.value.toString(),
+            value: cs.value,
+          })),
       );
     } catch (error) {
       setCurrentGame({id: 0, name: '', description: ''});

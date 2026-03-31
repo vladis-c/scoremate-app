@@ -158,6 +158,20 @@ const addCustomScoring = async ({
   return result.lastInsertRowId;
 };
 
+const updateCustomScoring = async ({
+  scoreId,
+  value,
+}: {
+  scoreId: number;
+  value: number;
+}) => {
+  const db = await getDB();
+  await db.runAsync(
+    'UPDATE HISTORY_CUSTOM_SCORING SET value = ? WHERE id = ?',
+    [value, scoreId],
+  );
+};
+
 const removeCustomScoring = async ({scoringId}: {scoringId: number}) => {
   const db = await getDB();
   const row = await db.getFirstAsync<{value: number}>(
@@ -273,6 +287,7 @@ export const historyDb = {
   updateScore,
   resetGameScores,
   addCustomScoring,
+  updateCustomScoring,
   removeCustomScoring,
   getAllGames,
   getGameById,

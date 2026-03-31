@@ -39,7 +39,6 @@ const CustomsScreen = ({navigation, route}: CustomsScreenProps) => {
 
   useFocusEffect(
     useCallback(() => {
-      console.log(route.params.isNew);
       if (route.params.isNew) {
         scoreContext.createNewGame();
       }
@@ -48,7 +47,9 @@ const CustomsScreen = ({navigation, route}: CustomsScreenProps) => {
 
   const ref = useRef<ScrollView | null>(null);
   const {players, customScore} = scoreContext;
-  const [customScoreIsShown, setCustomScoreIsShown] = useState(false);
+  const [customScoreIsShown, setCustomScoreIsShown] = useState(
+    customScore.length > 0,
+  );
 
   const [ownScoresSettingTitle] = useState(
     desireWords[getRandomNumber(0, desireWords.length - 1)] +
@@ -97,7 +98,7 @@ const CustomsScreen = ({navigation, route}: CustomsScreenProps) => {
             }
             value={player.name}
             color={player.color}
-            onBlur={() => scoreContext.savePlayerSettings(player)}
+            onEndEditing={() => scoreContext.savePlayerSettings(player)}
           />
         ))}
         <SettingRow
@@ -126,14 +127,19 @@ const CustomsScreen = ({navigation, route}: CustomsScreenProps) => {
             />
             {customScore.map((el, i) => (
               <SettingRow
-                key={el.id + i}
+                key={el.id}
                 type="input"
                 title={`Custom score ${i + 1}`}
                 onChange={e => {
-                  if (typeof e !== 'number') {
-                    return;
-                  }
-                  scoreContext.updateCustomScore({value: e, id: el.id});
+                  scoreContext.updateCustomScore({
+                    score: {value: +e, id: el.id},
+                  });
+                }}
+                onEndEditing={() => {
+                  scoreContext.updateCustomScore({
+                    score: {value: +el.value, id: el.id},
+                    saveToDb: true,
+                  });
                 }}
                 value={el.value}
               />

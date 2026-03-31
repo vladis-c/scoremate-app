@@ -1,10 +1,5 @@
 import React, {useState} from 'react';
-import {
-  KeyboardTypeOptions,
-  StyleSheet,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import {StyleSheet, TouchableOpacity, View} from 'react-native';
 import {IconButton, Switch, Text, TextInput} from 'react-native-paper';
 import {colors} from '../theme';
 import ColorPalette from './ColorPalette';
@@ -21,7 +16,7 @@ type SettingRowProps<S> = {
         ? number
         : string;
   onChange: S extends 'switch' ? () => void : (v: string) => void;
-  onBlur?: S extends 'input'
+  onEndEditing?: S extends 'input'
     ? () => void
     : S extends 'player'
       ? () => void
@@ -29,7 +24,6 @@ type SettingRowProps<S> = {
   onChangeColor?: S extends 'player' ? (c: string) => void : never;
   color?: S extends 'player' ? string : never;
   title?: S extends 'player' ? never : string;
-  keyboardType?: S extends 'input' ? KeyboardTypeOptions : never;
   collapse?:
     | {
         collapsed: boolean;
@@ -46,14 +40,14 @@ const SettingRow = <T extends SettingType>({
   type,
   title,
   onChange,
-  onBlur,
+  onEndEditing,
   onChangeColor,
   value,
   color,
-  keyboardType,
   collapse,
 }: SettingRowProps<T>) => {
   const [colorOpen, setColorOpen] = useState(false);
+  const [isFocused, setIsFocused] = useState(false);
 
   const Title = <Text>{title}</Text>;
 
@@ -86,18 +80,23 @@ const SettingRow = <T extends SettingType>({
         {Title}
         <View style={styles.right}>
           <TextInput
-            onBlur={onBlur}
-            style={styles.input}
-            mode="outlined"
-            value={value as string}
-            onChangeText={e => {
-              if (keyboardType === 'numeric') {
-                !isNaN(+e) && +e > 0 && onChange(e);
-              } else {
-                onChange(e);
+            onEndEditing={onEndEditing}
+            value={isFocused && value === 0 ? '' : (value as string)}
+            onFocus={() => setIsFocused(true)}
+            onBlur={() => {
+              setIsFocused(false);
+              if (value.toString().trim() === '' || value.toString() === '-') {
+                onChange('0');
               }
             }}
-            keyboardType={keyboardType ?? 'numeric'}
+            onChangeText={text => {
+              if (text === '' || text === '-' || /^-?\d+$/.test(text)) {
+                onChange(text);
+              }
+            }}
+            style={styles.input}
+            mode="outlined"
+            keyboardType="numbers-and-punctuation"
           />
           {collapse !== undefined ? (
             <IconButton
