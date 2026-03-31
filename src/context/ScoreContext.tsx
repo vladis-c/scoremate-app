@@ -31,7 +31,7 @@ export const ScoreProvider = ({children}: {children: React.ReactNode}) => {
     {
       id: 0,
       name: '',
-      color: getRandomColor([]),
+      color: getRandomColor(),
       score: 0,
     },
   ]);
@@ -114,7 +114,6 @@ export const ScoreProvider = ({children}: {children: React.ReactNode}) => {
   };
 
   const savePlayerSettings = async (player: Player) => {
-    console.log('player updating', player);
     await historyDb.updatePlayer({
       playerId: player.id,
       playerName: player.name,
@@ -140,10 +139,11 @@ export const ScoreProvider = ({children}: {children: React.ReactNode}) => {
         if (!currentGame) {
           return;
         }
-        score.id = await historyDb.addCustomScoring({
+        const id = await historyDb.addCustomScoring({
           historyId: currentGame?.id,
           value: score.value,
         });
+        score.id = id;
       } finally {
         prevScore.splice(objectIndex, 1, updatedScore);
         setCustomScore(prevScore);
@@ -186,23 +186,26 @@ export const ScoreProvider = ({children}: {children: React.ReactNode}) => {
 
   const createNewGame = async () => {
     try {
+      const playerColor = getRandomColor([], {useDefault: true});
       const createdGame = await historyDb.createGame({
         gameName: '',
         gameDescription: '',
         createdAt: new Date().toISOString(),
-        players: players.map(player => ({
-          playerName: player.name,
-          color: player.color,
-        })),
+        players: [
+          {
+            playerName: '',
+            color: playerColor,
+          },
+        ],
       });
       setCurrentGame({
         id: createdGame.historyId ?? 0,
         name: '',
         description: '',
       });
-      setPlayers(prev =>
-        prev.map((p, i) => ({...p, id: createdGame.playerIds[i]})),
-      );
+      setPlayers([
+        {color: playerColor, id: createdGame.playerIds[0], name: '', score: 0},
+      ]);
     } catch (error) {
       setCurrentGame({id: 0, name: '', description: ''});
     }

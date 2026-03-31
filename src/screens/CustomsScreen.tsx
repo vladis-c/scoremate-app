@@ -17,15 +17,15 @@ import {CustomsScreenProps, DRAWER_NAV} from '../navigation/navigation-types';
 import {colors} from '../theme';
 
 const CustomsScreen = ({navigation, route}: CustomsScreenProps) => {
-  const {isNew, label} = route.params;
   const scoreContext = useScore();
 
   useLayoutEffect(() => {
     navigation.setOptions({
-      headerTitle: label,
-      headerLeft: () => (
-        <IconButton icon="arrow-left" onPress={navigation.goBack} />
-      ),
+      headerTitle: route.params.label,
+      headerLeft: () =>
+        route.params.isNew ? null : (
+          <IconButton icon="arrow-left" onPress={navigation.goBack} />
+        ),
     });
   }, [navigation, route.params]);
 
@@ -39,10 +39,11 @@ const CustomsScreen = ({navigation, route}: CustomsScreenProps) => {
 
   useFocusEffect(
     useCallback(() => {
-      if (isNew) {
+      console.log(route.params.isNew);
+      if (route.params.isNew) {
         scoreContext.createNewGame();
       }
-    }, [isNew]),
+    }, [route.params]),
   );
 
   const ref = useRef<ScrollView | null>(null);
@@ -149,7 +150,7 @@ const CustomsScreen = ({navigation, route}: CustomsScreenProps) => {
           navigation.navigate(DRAWER_NAV.SCORE, {isNew: false});
           players.forEach(player => scoreContext.savePlayerSettings(player));
         }}>
-        {isNew ? 'Continue' : 'Apply'}
+        {route.params.isNew ? 'Continue' : 'Apply'}
       </Button>
     </>
   );
