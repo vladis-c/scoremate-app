@@ -34,6 +34,8 @@ type ScoreContextType = {
   clearCustomScores: () => void;
   gamesHistory: Game[];
   fetchGamesHistory: () => void;
+  fetchGame: (gameId?: number) => void;
+  clearStates: () => void;
 };
 
 const ScoreContext = createContext<ScoreContextType | undefined>(undefined);
@@ -269,24 +271,31 @@ export const ScoreProvider = ({children}: {children: React.ReactNode}) => {
         name: game.gameName,
         createdAt: game.createdAt,
         amountOfPlayers: game.amountOfPlayers,
-        hasCustomScoring: game.customScoring
+        hasCustomScoring: game.customScoring,
       })),
     );
   };
 
-  const fetchLastGame = async () => {
+  const fetchGame = async (gameId?: number) => {
     try {
-      const lastGame = await historyDb.getLastGame();
-      if (!lastGame) {
+      let game;
+      if (gameId) {
+        game = await historyDb.getGameById(gameId);
+      } else {
+        game = await historyDb.getLastGame();
+      }
+
+      if (!game) {
         return;
       }
+
       setCurrentGame({
-        id: lastGame.id,
-        name: lastGame.gameName,
-        description: lastGame.gameDescription,
+        id: game.id,
+        name: game.gameName,
+        description: game.gameDescription,
       });
       setPlayers(
-        lastGame.players.map(player => ({
+        game.players.map(player => ({
           color: player.color,
           id: player.id,
           name: player.playerName,
@@ -294,7 +303,7 @@ export const ScoreProvider = ({children}: {children: React.ReactNode}) => {
         })),
       );
       setCustomScore(
-        lastGame.customScoring
+        game.customScoring
           .filter(el => el.value !== 0)
           .map(cs => ({
             id: cs.id,
@@ -307,8 +316,16 @@ export const ScoreProvider = ({children}: {children: React.ReactNode}) => {
     }
   };
 
+  const clearStates = () => {
+    setGamesHistory([]);
+    setCurrentGame(null);
+    setPlayers([]);
+    setCustomScore([]);
+  };
+
   useEffect(() => {
-    fetchLastGame();
+    // fetching last game on app launch
+    fetchGame();
   }, []);
 
   return (
@@ -332,6 +349,8 @@ export const ScoreProvider = ({children}: {children: React.ReactNode}) => {
         clearCustomScores,
         gamesHistory,
         fetchGamesHistory,
+        fetchGame,
+        clearStates,
       }}>
       {children}
     </ScoreContext.Provider>

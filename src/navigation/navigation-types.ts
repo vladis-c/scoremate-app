@@ -44,3 +44,8 @@ export type CustomsScreenProps = NativeStackScreenProps<
   DrawerNavParamList,
   'Customs'
 >;
+
+export type HistoryScreenProps = NativeStackScreenProps<
+  DrawerNavParamList,
+  'History'
+>;

@@ -5,8 +5,9 @@ import React, {useCallback} from 'react';
 import {StyleSheet, View} from 'react-native';
 import {Card, Text} from 'react-native-paper';
 import {useScore} from '../context/ScoreContext';
+import {DRAWER_NAV, HistoryScreenProps} from '../navigation/navigation-types';
 
-const HistoryScreen = () => {
+const HistoryScreen = ({navigation}: HistoryScreenProps) => {
   const scoreContext = useScore();
 
   useFocusEffect(
@@ -19,13 +20,19 @@ const HistoryScreen = () => {
     <FlashList
       contentContainerStyle={styles.listContainer}
       renderItem={({
-        item: {createdAt, name, hasCustomScoring, amountOfPlayers},
+        item: {createdAt, name, hasCustomScoring, amountOfPlayers, id},
       }) => {
         const date = createdAt
           ? format(new Date(createdAt), 'd.M.yyyy H:mm')
           : '';
         return (
-          <Card style={styles.container} onPress={() => {}}>
+          <Card
+            style={styles.container}
+            onPress={() => {
+              scoreContext.clearStates();
+              scoreContext.fetchGame(id);
+              navigation.navigate(DRAWER_NAV.SCORE, {isNew: false});
+            }}>
             <Card.Content style={styles.content}>
               <View>
                 <Text>{name}</Text>
