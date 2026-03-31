@@ -114,6 +114,7 @@ export const ScoreProvider = ({children}: {children: React.ReactNode}) => {
   };
 
   const savePlayerSettings = async (player: Player) => {
+    console.log('player updating', player);
     await historyDb.updatePlayer({
       playerId: player.id,
       playerName: player.name,

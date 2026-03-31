@@ -9,13 +9,13 @@ import {IconButton, Switch, Text, TextInput} from 'react-native-paper';
 import {colors} from '../theme';
 import ColorPalette from './ColorPalette';
 
-type SettingType = 'input' | 'switch' | 'player' | 'score';
+type SettingType = 'input' | 'switch' | 'player' | 'increment';
 
 type SettingRowProps<S> = {
   type: S;
   value: S extends 'switch'
     ? boolean
-    : S extends 'score'
+    : S extends 'increment'
       ? number
       : S extends 'input'
         ? number
@@ -57,7 +57,7 @@ const SettingRow = <T extends SettingType>({
 
   const Title = <Text>{title}</Text>;
 
-  if (type === 'score') {
+  if (type === 'increment') {
     return (
       <ViewWrapper>
         {Title}

@@ -98,7 +98,7 @@ const StartScreen = ({navigation}: StartScreenProps) => {
           onPress={() => {
             navigation.navigate(MAIN_NAV.DRAWER, {
               screen: DRAWER_NAV.CUSTOMS,
-              params: {fromStart: true, label: btnProps[1]?.label},
+              params: {isNew: true, label: btnProps[1]?.label},
             });
           }}>
           {btnProps[1]?.label}

@@ -12,12 +12,12 @@ import ScrollContainer from '../components/ScrollContainer';
 import SettingRow from '../components/SettingRow';
 import {desireWords} from '../constants';
 import {useScore} from '../context/ScoreContext';
-import {getRandomColor, getRandomNumber} from '../helpers';
+import {getRandomNumber} from '../helpers';
 import {CustomsScreenProps, DRAWER_NAV} from '../navigation/navigation-types';
 import {colors} from '../theme';
 
 const CustomsScreen = ({navigation, route}: CustomsScreenProps) => {
-  const {fromStart, label} = route.params;
+  const {isNew, label} = route.params;
   const scoreContext = useScore();
 
   useLayoutEffect(() => {
@@ -29,17 +29,25 @@ const CustomsScreen = ({navigation, route}: CustomsScreenProps) => {
     });
   }, [navigation, route.params]);
 
+  useEffect(
+    () =>
+      navigation.addListener('blur', () => {
+        navigation.setParams({isNew: false});
+      }),
+    [navigation],
+  );
+
   useFocusEffect(
     useCallback(() => {
-      scoreContext.createNewGame();
-    }, []),
+      if (isNew) {
+        scoreContext.createNewGame();
+      }
+    }, [isNew]),
   );
 
   const ref = useRef<ScrollView | null>(null);
-  const [playerListCollapsed, setPlayerListCollapsed] = useState(false);
   const {players, customScore} = scoreContext;
   const [customScoreIsShown, setCustomScoreIsShown] = useState(false);
-  const [amountOfPlayers, setAmountOfPlayers] = useState(0);
 
   const [ownScoresSettingTitle] = useState(
     desireWords[getRandomNumber(0, desireWords.length - 1)] +
@@ -47,83 +55,50 @@ const CustomsScreen = ({navigation, route}: CustomsScreenProps) => {
   );
 
   useEffect(() => {
-    setAmountOfPlayers(players.length);
-  }, [players.length]);
-
-  useEffect(() => {
     ref.current?.scrollToEnd();
   }, [players.length, customScoreIsShown, customScore.length]);
-
-  const handleSetNewPlayers = () => {
-    const difference = amountOfPlayers - players.length;
-    if (difference > 0) {
-      const newIds = Array.from(
-        {length: difference},
-        (_, i) => players.length + i + 1,
-      );
-      const allIds = players.map(player => player.id).concat(newIds);
-      allIds.forEach(i =>
-        scoreContext.setNewPlayer({
-          id: i,
-          score: 0,
-          name: '',
-        }),
-      );
-      return;
-    }
-    if (difference < 0) {
-      const slicedPlayers = players.slice(amountOfPlayers, players.length);
-      slicedPlayers.forEach(player => scoreContext.removePlayer(player.id));
-      return;
-    }
-  };
 
   return (
     <>
       <ScrollContainer style={styles.container} ref={ref}>
         <SettingRow
-          type="input"
-          title="Amount of players"
-          onChange={e => {
-            const amount = +e;
-            if (!isNaN(amount)) {
-              setAmountOfPlayers(+e);
+          type="increment"
+          title="Add players"
+          onChange={v => {
+            const value = v as '+' | '-';
+            if (value === '+') {
+              scoreContext.setNewPlayer({
+                id: players.length + 1,
+                score: 0,
+                name: '',
+              });
+            } else {
+              scoreContext.removePlayer(players[players.length - 1].id);
             }
           }}
-          onBlur={handleSetNewPlayers}
-          value={amountOfPlayers}
-          collapse={
-            !fromStart
-              ? {
-                  collapsed: playerListCollapsed,
-                  onCollapse: () => setPlayerListCollapsed(prev => !prev),
-                }
-              : undefined
-          }
+          value={players.length - 1}
         />
-        {!playerListCollapsed
-          ? players.map(player => (
-              <SettingRow
-                key={player.id}
-                type="player"
-                onChange={e =>
-                  scoreContext.setPlayerSettings({
-                    ...player,
-                    name: e,
-                  })
-                }
-                onChangeColor={c =>
-                  scoreContext.setPlayerSettings({
-                    ...player,
-                    color: c,
-                  })
-                }
-                value={player.name}
-                color={player.color}
-                onBlur={() => scoreContext.savePlayerSettings(player)}
-              />
-            ))
-          : null}
+        {players.map(player => (
+          <SettingRow
+            key={player.id}
+            type="player"
+            onChange={e =>
+              scoreContext.setPlayerSettings({
+                ...player,
+                name: e,
+              })
+            }
+            onChangeColor={c =>
+              scoreContext.setPlayerSettings({
+                ...player,
+                color: c,
+              })
+            }
+            value={player.name}
+            color={player.color}
+            onBlur={() => scoreContext.savePlayerSettings(player)}
+          />
+        ))}
         <SettingRow
           type="switch"
           title={ownScoresSettingTitle}
@@ -136,7 +111,7 @@ const CustomsScreen = ({navigation, route}: CustomsScreenProps) => {
         {customScoreIsShown ? (
           <>
             <SettingRow
-              type="score"
+              type="increment"
               title="Add custom score count"
               onChange={v => {
                 const value = v as '+' | '-';
@@ -171,11 +146,10 @@ const CustomsScreen = ({navigation, route}: CustomsScreenProps) => {
         buttonColor={colors.LightBlue}
         textColor={colors.Black}
         onPress={() => {
-          navigation.setParams({fromStart: false});
           navigation.navigate(DRAWER_NAV.SCORE, {isNew: false});
           players.forEach(player => scoreContext.savePlayerSettings(player));
         }}>
-        {fromStart ? 'Continue' : 'Apply'}
+        {isNew ? 'Continue' : 'Apply'}
       </Button>
     </>
   );

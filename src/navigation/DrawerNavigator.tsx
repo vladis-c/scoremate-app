@@ -57,7 +57,7 @@ const DrawerNavigator = () => {
         options={{
           drawerIcon: () => <IconButton icon="cog" />,
         }}
-        initialParams={{fromStart: false, label: 'Amazing custom settings'}}
+        initialParams={{isNew: false, label: 'Custom settings'}}
       />
     </Drawer.Navigator>
   );
