@@ -4,7 +4,7 @@ export default ({config}: ConfigContext): ExpoConfig => ({
   ...config,
   name: 'Scoremate',
   slug: 'scoremate',
-  version: '1.1.1',
+  version: '1.2.0',
   orientation: 'portrait',
   icon: './assets/icon.png',
   userInterfaceStyle: 'light',
