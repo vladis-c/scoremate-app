@@ -1,8 +1,11 @@
 export type Game = {
-  id: number,
-  name: string,
-  description?: string,
-}
+  id: number;
+  name: string;
+  description?: string;
+  createdAt?: string;
+  amountOfPlayers?: number;
+  hasCustomScoring?: boolean;
+};
 
 export type Player = {
   color: string;

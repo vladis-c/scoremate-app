@@ -32,11 +32,14 @@ type ScoreContextType = {
   addCustomScore: () => void;
   removeCustomScore: () => void;
   clearCustomScores: () => void;
+  gamesHistory: Game[];
+  fetchGamesHistory: () => void;
 };
 
 const ScoreContext = createContext<ScoreContextType | undefined>(undefined);
 
 export const ScoreProvider = ({children}: {children: React.ReactNode}) => {
+  const [gamesHistory, setGamesHistory] = useState<Game[]>([]);
   const [currentGame, setCurrentGame] = useState<Game | null>(null);
 
   const [players, setPlayers] = useState<Player[]>([
@@ -258,6 +261,19 @@ export const ScoreProvider = ({children}: {children: React.ReactNode}) => {
     setCurrentGame(updatedGame);
   };
 
+  const fetchGamesHistory = async () => {
+    const games = await historyDb.getAllGames();
+    setGamesHistory(
+      games.map(game => ({
+        id: game.id,
+        name: game.gameName,
+        createdAt: game.createdAt,
+        amountOfPlayers: game.amountOfPlayers,
+        hasCustomScoring: game.customScoring
+      })),
+    );
+  };
+
   const fetchLastGame = async () => {
     try {
       const lastGame = await historyDb.getLastGame();
@@ -314,6 +330,8 @@ export const ScoreProvider = ({children}: {children: React.ReactNode}) => {
         addCustomScore,
         removeCustomScore,
         clearCustomScores,
+        gamesHistory,
+        fetchGamesHistory,
       }}>
       {children}
     </ScoreContext.Provider>

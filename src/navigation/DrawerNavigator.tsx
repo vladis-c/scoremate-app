@@ -3,6 +3,7 @@ import React from 'react';
 import {IconButton} from 'react-native-paper';
 import CustomsScreen from '../screens/CustomsScreen';
 import DiceScreen from '../screens/DiceScreen';
+import HistoryScreen from '../screens/HistoryScreen';
 import RandomizerScreen from '../screens/RandomizerScreen';
 import ScoreScreen from '../screens/ScoreScreen';
 import {fonts} from '../theme';
@@ -58,6 +59,13 @@ const DrawerNavigator = () => {
           drawerIcon: () => <IconButton icon="cog" />,
         }}
         initialParams={{isNew: false, label: 'Custom settings'}}
+      />
+      <Drawer.Screen
+        name={DRAWER_NAV.HISTORY}
+        component={HistoryScreen}
+        options={{
+          drawerIcon: () => <IconButton icon="view-list" />,
+        }}
       />
     </Drawer.Navigator>
   );
