@@ -4,7 +4,7 @@ import {IconButton, Switch, Text, TextInput} from 'react-native-paper';
 import {colors} from '../theme';
 import ColorPalette from './ColorPalette';
 
-type SettingType = 'input' | 'switch' | 'player' | 'increment';
+type SettingType = 'input' | 'switch' | 'player' | 'increment' | 'game';
 
 type SettingRowProps<S> = {
   type: S;
@@ -20,7 +20,9 @@ type SettingRowProps<S> = {
     ? () => void
     : S extends 'player'
       ? () => void
-      : never;
+      : S extends 'game'
+        ? () => void
+        : never;
   onChangeColor?: S extends 'player' ? (c: string) => void : never;
   color?: S extends 'player' ? string : never;
   title?: S extends 'player' ? never : string;
@@ -133,6 +135,22 @@ const SettingRow = <T extends SettingType>({
       </>
     );
   }
+  if (type === 'game') {
+    return (
+      <>
+        <ViewWrapper>
+          <TextInput
+            style={[styles.input, styles.gameInput]}
+            mode="outlined"
+            value={value as string}
+            onChangeText={e => onChange(e)}
+            label="Game title"
+            onEndEditing={onEndEditing}
+          />
+        </ViewWrapper>
+      </>
+    );
+  }
   return (
     <ViewWrapper>
       {Title}
@@ -165,6 +183,10 @@ const styles = StyleSheet.create({
   },
   nameInput: {
     width: '40%',
+    textAlign: 'left',
+  },
+  gameInput: {
+    width: '100%',
     textAlign: 'left',
   },
   right: {

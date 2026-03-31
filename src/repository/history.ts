@@ -99,16 +99,18 @@ const deletePlayer = async ({playerId}: {playerId: number}) => {
   );
 };
 
-const updateGame = async (
-  historyId: number,
-  gameName: string,
-  gameDescription?: string,
-) => {
+const updateGame = async ({
+  historyId,
+  gameName,
+}: {
+  historyId: number;
+  gameName: string;
+}) => {
   const db = await getDB();
-  await db.runAsync(
-    'UPDATE HISTORY SET gameName = ?, gameDescription = ? WHERE id = ?',
-    [gameName, gameDescription ?? null, historyId],
-  );
+  await db.runAsync('UPDATE HISTORY SET gameName = ? WHERE id = ?', [
+    gameName,
+    historyId,
+  ]);
 };
 
 const updatePlayer = async ({

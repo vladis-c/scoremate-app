@@ -46,7 +46,7 @@ const CustomsScreen = ({navigation, route}: CustomsScreenProps) => {
   );
 
   const ref = useRef<ScrollView | null>(null);
-  const {players, customScore} = scoreContext;
+  const {players, customScore, currentGame} = scoreContext;
   const [customScoreIsShown, setCustomScoreIsShown] = useState(
     customScore.length > 0,
   );
@@ -63,6 +63,19 @@ const CustomsScreen = ({navigation, route}: CustomsScreenProps) => {
   return (
     <>
       <ScrollContainer style={styles.container} ref={ref}>
+        <SettingRow
+          type="game"
+          onChange={e => {
+            scoreContext.updateGame({gameName: e});
+          }}
+          onEndEditing={() => {
+            scoreContext.updateGame({
+              gameName: currentGame?.name ?? '',
+              saveToDb: true,
+            });
+          }}
+          value={currentGame?.name ?? ''}
+        />
         <SettingRow
           type="increment"
           title="Add players"

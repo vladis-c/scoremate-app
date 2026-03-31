@@ -19,18 +19,11 @@ const ScoreScreen = ({navigation, route}: ScoreScreenProps) => {
   const scoreContext = useScore();
   const [addCardHeight, setAddCardHeight] = useState<number | null>(null);
 
-  // useLayoutEffect(() => {
-  //   navigation.setOptions({
-  //     headerTitle: '',
-  //     headerLeft: () => (
-  //       <TextInput
-  //         mode="outlined"
-  //         value={scoreContext.currentGame?.name}
-  //         onChangeText={scoreContext.updateGame}
-  //       />
-  //     ),
-  //   });
-  // }, [navigation]);
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerTitle: scoreContext.currentGame?.name,
+    });
+  }, [navigation, scoreContext.currentGame?.name]);
 
   useFocusEffect(
     useCallback(() => {

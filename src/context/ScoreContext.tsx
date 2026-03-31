@@ -6,7 +6,13 @@ import {CustomScore, Game, Player} from '../types';
 type ScoreContextType = {
   currentGame: Game | null;
   createNewGame: () => void;
-  updateGame: (name: string) => void;
+  updateGame: ({
+    gameName,
+    saveToDb,
+  }: {
+    gameName: string;
+    saveToDb?: boolean | undefined;
+  }) => void;
   players: Player[];
   customScore: CustomScore[];
   setPlayerScore: (id: Player['id'], increment: number) => void;
@@ -234,9 +240,22 @@ export const ScoreProvider = ({children}: {children: React.ReactNode}) => {
     }
   };
 
-  const updateGame = (name: string) => {
-    // Todo: SQL and game name
-    setCurrentGame(prev => (!prev ? prev : {...prev, name}));
+  const updateGame = async ({
+    gameName,
+    saveToDb,
+  }: {
+    gameName: string;
+    saveToDb?: boolean;
+  }) => {
+    if (!currentGame) {
+      return;
+    }
+    if (saveToDb) {
+      await historyDb.updateGame({gameName, historyId: currentGame.id});
+    }
+
+    const updatedGame = {...currentGame, name: gameName};
+    setCurrentGame(updatedGame);
   };
 
   const fetchLastGame = async () => {
