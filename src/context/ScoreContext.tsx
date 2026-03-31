@@ -17,7 +17,7 @@ type ScoreContextType = {
   customScore: CustomScore[];
   setPlayerScore: (id: Player['id'], increment: number) => void;
   resetPlayersScores: () => void;
-  setNewPlayer: (newPlayer: MakeOptional<Player, 'color'>) => void;
+  setNewPlayer: (newPlayer: Omit<MakeOptional<Player, 'color'>, 'id'>) => void;
   removePlayer: (id: Player['id']) => void;
   setPlayerSettings: (player: Omit<Player, 'score'>) => void;
   savePlayerSettings: (player: Player) => void;
@@ -87,27 +87,24 @@ export const ScoreProvider = ({children}: {children: React.ReactNode}) => {
     await historyDb.resetGameScores({historyId: currentGame.id});
   };
 
-  const setNewPlayer = async (newPlayer: MakeOptional<Player, 'color'>) => {
-    const prevPlayers = [...players];
-    const objIndex = prevPlayers.findIndex(p => p.id === newPlayer.id);
-    if (objIndex === -1) {
-      const appliedColors = prevPlayers.map(p => p.color);
-      const newColor = newPlayer?.color ?? getRandomColor(appliedColors);
+  const setNewPlayer = async (
+    newPlayer: Omit<MakeOptional<Player, 'color'>, 'id'>,
+  ) => {
+    const appliedColors = players.map(p => p.color);
+    const newColor = newPlayer?.color ?? getRandomColor(appliedColors);
+    let id = players.length + 1;
 
-      try {
-        if (!currentGame) {
-          return;
-        }
-        const id = await historyDb.addPlayer({
-          historyId: currentGame.id,
-          color: newColor,
-          playerName: newPlayer.name,
-        });
-        newPlayer.id = id;
-      } finally {
-        prevPlayers.push({...newPlayer, color: newColor});
-        setPlayers(prevPlayers);
+    try {
+      if (!currentGame) {
+        return;
       }
+      id = await historyDb.addPlayer({
+        historyId: currentGame.id,
+        color: newColor,
+        playerName: newPlayer.name,
+      });
+    } finally {
+      setPlayers(prev => [...prev, {...newPlayer, color: newColor, id}]);
     }
   };
 

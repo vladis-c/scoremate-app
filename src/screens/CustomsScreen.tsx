@@ -84,7 +84,6 @@ const CustomsScreen = ({navigation, route}: CustomsScreenProps) => {
             const value = v as '+' | '-';
             if (value === '+') {
               scoreContext.setNewPlayer({
-                id: players.length + 1,
                 score: 0,
                 name: '',
               });

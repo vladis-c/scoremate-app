@@ -37,7 +37,6 @@ const AddCard = () => {
             icon="plus"
             onPress={() => {
               scoreContext.setNewPlayer({
-                id: amountOfPlayers + 1,
                 score: 0,
                 name: '',
               });
