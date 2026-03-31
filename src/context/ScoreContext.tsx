@@ -33,15 +33,24 @@ type ScoreContextType = {
   removeCustomScore: () => void;
   clearCustomScores: () => void;
   gamesHistory: Game[];
-  fetchGamesHistory: () => void;
+  hasMoreGames: boolean;
+  fetchGamesHistory: ({
+    page,
+    limit,
+  }: {
+    page?: number | undefined;
+    limit?: number | undefined;
+  }) => void;
   fetchGame: (gameId?: number) => void;
   clearStates: () => void;
+  resetGamesHistory: () => void;
 };
 
 const ScoreContext = createContext<ScoreContextType | undefined>(undefined);
 
 export const ScoreProvider = ({children}: {children: React.ReactNode}) => {
   const [gamesHistory, setGamesHistory] = useState<Game[]>([]);
+  const [hasMoreGames, setHasMoreGames] = useState(false);
   const [currentGame, setCurrentGame] = useState<Game | null>(null);
 
   const [players, setPlayers] = useState<Player[]>([
@@ -263,17 +272,35 @@ export const ScoreProvider = ({children}: {children: React.ReactNode}) => {
     setCurrentGame(updatedGame);
   };
 
-  const fetchGamesHistory = async () => {
-    const games = await historyDb.getAllGames();
-    setGamesHistory(
-      games.map(game => ({
-        id: game.id,
-        name: game.gameName,
-        createdAt: game.createdAt,
-        amountOfPlayers: game.amountOfPlayers,
-        hasCustomScoring: game.customScoring,
-      })),
+  const fetchGamesHistory = async ({
+    page,
+    limit,
+  }: {
+    page?: number;
+    limit?: number;
+  }) => {
+    const {games, hasMore} = await historyDb.getAllGames({page, limit});
+    setGamesHistory(prev =>
+      page === 1
+        ? games.map(game => ({
+            id: game.id,
+            name: game.gameName,
+            createdAt: game.createdAt,
+            amountOfPlayers: game.amountOfPlayers,
+            hasCustomScoring: game.customScoring,
+          }))
+        : [
+            ...prev,
+            ...games.map(game => ({
+              id: game.id,
+              name: game.gameName,
+              createdAt: game.createdAt,
+              amountOfPlayers: game.amountOfPlayers,
+              hasCustomScoring: game.customScoring,
+            })),
+          ],
     );
+    setHasMoreGames(hasMore);
   };
 
   const fetchGame = async (gameId?: number) => {
@@ -316,8 +343,13 @@ export const ScoreProvider = ({children}: {children: React.ReactNode}) => {
     }
   };
 
+  const resetGamesHistory = () => {
+    setGamesHistory([]);
+  };
+
   const clearStates = () => {
     setGamesHistory([]);
+    setHasMoreGames(false);
     setCurrentGame(null);
     setPlayers([]);
     setCustomScore([]);
@@ -348,9 +380,11 @@ export const ScoreProvider = ({children}: {children: React.ReactNode}) => {
         removeCustomScore,
         clearCustomScores,
         gamesHistory,
+        hasMoreGames,
         fetchGamesHistory,
         fetchGame,
         clearStates,
+        resetGamesHistory,
       }}>
       {children}
     </ScoreContext.Provider>

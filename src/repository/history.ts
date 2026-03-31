@@ -191,10 +191,14 @@ const removeCustomScoring = async ({scoringId}: {scoringId: number}) => {
   ]);
 };
 
-const getAllGames = async (page = 1, limit = 10) => {
+const getAllGames = async ({
+  page = 1,
+  limit = 10,
+}: {page?: number; limit?: number} = {}) => {
   const offset = (page - 1) * limit;
   const db = await getDB();
 
+  // Query limit + 1 to detect if there are more pages
   const rows = await db.getAllAsync<{
     id: number;
     gameName: string;
@@ -218,17 +222,26 @@ const getAllGames = async (page = 1, limit = 10) => {
      GROUP BY H.id
      ORDER BY H.createdAt DESC
      LIMIT ? OFFSET ?`,
-    [limit, offset],
+    [limit + 1, offset],
   );
 
-  return rows.map(row => ({
-    id: row.id,
-    gameName: row.gameName,
-    createdAt: row.createdAt,
-    amountOfPlayers: row.amountOfPlayers,
-    playerNames: row.playerNames ? row.playerNames.split(',') : [],
-    customScoring: row.hasCustomScoring === 1,
-  }));
+  // If we got more than limit, there are more pages
+  const hasMore = rows.length > limit;
+  const games = rows.slice(0, limit);
+
+  return {
+    games: games.map(row => ({
+      id: row.id,
+      gameName: row.gameName,
+      createdAt: row.createdAt,
+      amountOfPlayers: row.amountOfPlayers,
+      playerNames: row.playerNames ? row.playerNames.split(',') : [],
+      customScoring: row.hasCustomScoring === 1,
+    })),
+    hasMore,
+    page,
+    limit,
+  };
 };
 
 const getGameById = async (historyId: number) => {
