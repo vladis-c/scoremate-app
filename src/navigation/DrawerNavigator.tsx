@@ -1,4 +1,10 @@
-import {createDrawerNavigator} from '@react-navigation/drawer';
+import {
+  DrawerContentScrollView,
+  DrawerItem,
+  DrawerItemList,
+  createDrawerNavigator,
+} from '@react-navigation/drawer';
+import {CommonActions} from '@react-navigation/native';
 import React from 'react';
 import {IconButton} from 'react-native-paper';
 import CustomsScreen from '../screens/CustomsScreen';
@@ -7,13 +13,31 @@ import HistoryScreen from '../screens/HistoryScreen';
 import RandomizerScreen from '../screens/RandomizerScreen';
 import ScoreScreen from '../screens/ScoreScreen';
 import {fonts} from '../theme';
-import {DRAWER_NAV, DrawerNavParamList} from './navigation-types';
+import {DRAWER_NAV, DrawerNavParamList, MAIN_NAV} from './navigation-types';
 
 const Drawer = createDrawerNavigator<DrawerNavParamList>();
 
 const DrawerNavigator = () => {
   return (
     <Drawer.Navigator
+      drawerContent={props => (
+        <DrawerContentScrollView {...props}>
+          <DrawerItemList {...props} />
+          <DrawerItem
+            label="Go to Start"
+            icon={() => <IconButton icon="home" />}
+            onPress={() => {
+              props.navigation.closeDrawer();
+              props.navigation.getParent()?.dispatch(
+                CommonActions.reset({
+                  index: 0,
+                  routes: [{name: MAIN_NAV.START}],
+                }),
+              );
+            }}
+          />
+        </DrawerContentScrollView>
+      )}
       screenOptions={({navigation}) => ({
         headerShown: true,
         drawerType: 'front',
