@@ -5,7 +5,7 @@ import {
   useFonts,
 } from '@expo-google-fonts/quicksand';
 import {useEffect, useState} from 'react';
-import {createHistoryTable} from '../repository/history';
+import {historyDb} from '../repository/history';
 
 export const useStart = () => {
   const [appIsReady, setAppIsReady] = useState(false);
@@ -21,7 +21,7 @@ export const useStart = () => {
     if (fontsLoaded && !dbReady) {
       (async () => {
         try {
-          await createHistoryTable();
+          await historyDb.createHistoryTable();
         } catch (error) {
           console.error('Error initializing database:', error);
         } finally {

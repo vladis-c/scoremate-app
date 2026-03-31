@@ -1,14 +1,6 @@
 import React, {createContext, useContext, useEffect, useState} from 'react';
 import {getRandomColor, shuffleArray} from '../helpers';
-import {
-  addPlayer,
-  createGame,
-  deletePlayer,
-  getLastGame,
-  resetGameScores,
-  updatePlayer,
-  updateScore,
-} from '../repository/history';
+import {historyDb} from '../repository/history';
 import {CustomScore, Game, Player} from '../types';
 
 type ScoreContextType = {
@@ -17,7 +9,6 @@ type ScoreContextType = {
   updateGame: (name: string) => void;
   players: Player[];
   customScore: CustomScore[];
-  randomizeColorIsOn: boolean;
   setPlayerScore: (id: Player['id'], increment: number) => void;
   resetPlayersScores: () => void;
   setNewPlayer: (newPlayer: MakeOptional<Player, 'color'>) => void;
@@ -29,7 +20,6 @@ type ScoreContextType = {
   addCustomScore: () => void;
   removeCustomScore: () => void;
   clearCustomScores: () => void;
-  toggleRandomizeColorIsSet: () => void;
 };
 
 const ScoreContext = createContext<ScoreContextType | undefined>(undefined);
@@ -46,7 +36,6 @@ export const ScoreProvider = ({children}: {children: React.ReactNode}) => {
     },
   ]);
   const [customScore, setCustomScore] = useState<CustomScore[]>([]);
-  const [randomizeColorIsOn, setRandomizeColorIsOn] = useState(false);
 
   const setPlayerScore = async (id: Player['id'], increment: number) => {
     const prevPlayers = [...players];
@@ -58,7 +47,7 @@ export const ScoreProvider = ({children}: {children: React.ReactNode}) => {
         ...found,
         score: found.score + increment,
       });
-      await updateScore(id, prevPlayers[objIndex].score);
+      await historyDb.updateScore(id, prevPlayers[objIndex].score);
     }
 
     setPlayers(prevPlayers);
@@ -69,7 +58,7 @@ export const ScoreProvider = ({children}: {children: React.ReactNode}) => {
       return;
     }
     setPlayers(prev => prev.map(p => ({...p, score: 0})));
-    await resetGameScores(currentGame?.id);
+    await historyDb.resetGameScores({historyId: currentGame.id});
   };
 
   const setNewPlayer = async (newPlayer: MakeOptional<Player, 'color'>) => {
@@ -77,19 +66,18 @@ export const ScoreProvider = ({children}: {children: React.ReactNode}) => {
     const objIndex = prevPlayers.findIndex(p => p.id === newPlayer.id);
     if (objIndex === -1) {
       const appliedColors = prevPlayers.map(p => p.color);
-      const newColor =
-        newPlayer?.color ??
-        getRandomColor(randomizeColorIsOn ? undefined : appliedColors);
+      const newColor = newPlayer?.color ?? getRandomColor(appliedColors);
 
       try {
         if (!currentGame) {
           return;
         }
-        newPlayer.id = await addPlayer({
+        const id = await historyDb.addPlayer({
           historyId: currentGame.id,
           color: newColor,
           playerName: newPlayer.name,
         });
+        newPlayer.id = id;
       } finally {
         prevPlayers.push({...newPlayer, color: newColor});
         setPlayers(prevPlayers);
@@ -99,7 +87,7 @@ export const ScoreProvider = ({children}: {children: React.ReactNode}) => {
 
   const removePlayer = async (id: Player['id']) => {
     try {
-      await deletePlayer(id);
+      await historyDb.deletePlayer({playerId: id});
     } finally {
       setPlayers(prev => {
         const prevPlayers = [...prev];
@@ -126,7 +114,7 @@ export const ScoreProvider = ({children}: {children: React.ReactNode}) => {
   };
 
   const savePlayerSettings = async (player: Player) => {
-    await updatePlayer({
+    await historyDb.updatePlayer({
       playerId: player.id,
       playerName: player.name,
       color: player.color,
@@ -137,18 +125,29 @@ export const ScoreProvider = ({children}: {children: React.ReactNode}) => {
     setPlayers(prev => shuffleArray([...prev]));
   };
 
-  const updateCustomScore = (score: Omit<CustomScore, 'label'>) => {
-    const {id, value} = score;
-    setCustomScore(prev => {
-      const prevScore = [...prev];
-      const objectIndex = prevScore.findIndex(s => s.id === id);
-      if (objectIndex !== -1) {
-        const foundScore = prevScore[objectIndex];
-        const updatedScore = {...foundScore, value, label: value.toString()};
+  const updateCustomScore = async (score: Omit<CustomScore, 'label'>) => {
+    const prevScore = [...customScore];
+    const objectIndex = prevScore.findIndex(s => s.id === score.id);
+    if (objectIndex !== -1) {
+      const updatedScore = {
+        id: score.id,
+        value: score.value,
+        label: score.value.toString(),
+      };
+
+      try {
+        if (!currentGame) {
+          return;
+        }
+        score.id = await historyDb.addCustomScoring({
+          historyId: currentGame?.id,
+          value: score.value,
+        });
+      } finally {
         prevScore.splice(objectIndex, 1, updatedScore);
+        setCustomScore(prevScore);
       }
-      return prevScore;
-    });
+    }
   };
 
   const addCustomScore = () => {
@@ -163,25 +162,30 @@ export const ScoreProvider = ({children}: {children: React.ReactNode}) => {
     });
   };
 
-  const removeCustomScore = () => {
-    setCustomScore(prev => {
-      const prevScore = [...prev];
-      prevScore.pop();
-      return prevScore;
+  const removeCustomScore = async () => {
+    try {
+      await historyDb.removeCustomScoring({
+        scoringId: customScore[customScore.length - 1].id,
+      });
+    } finally {
+      setCustomScore(prev => {
+        const prevScore = [...prev];
+        prevScore.pop();
+        return prevScore;
+      });
+    }
+  };
+
+  const clearCustomScores = async () => {
+    customScore.forEach(async cs => {
+      await historyDb.removeCustomScoring({scoringId: cs.id});
     });
-  };
-
-  const clearCustomScores = () => {
     setCustomScore([]);
-  };
-
-  const toggleRandomizeColorIsSet = () => {
-    setRandomizeColorIsOn(prev => !prev);
   };
 
   const createNewGame = async () => {
     try {
-      const createdGame = await createGame({
+      const createdGame = await historyDb.createGame({
         gameName: '',
         gameDescription: '',
         createdAt: new Date().toISOString(),
@@ -204,12 +208,13 @@ export const ScoreProvider = ({children}: {children: React.ReactNode}) => {
   };
 
   const updateGame = (name: string) => {
+    // Todo: SQL and game name
     setCurrentGame(prev => (!prev ? prev : {...prev, name}));
   };
 
   const fetchLastGame = async () => {
     try {
-      const lastGame = await getLastGame();
+      const lastGame = await historyDb.getLastGame();
       if (!lastGame) {
         return;
       }
@@ -251,7 +256,6 @@ export const ScoreProvider = ({children}: {children: React.ReactNode}) => {
         updateGame,
         players,
         customScore,
-        randomizeColorIsOn,
         setPlayerScore,
         resetPlayersScores,
         setNewPlayer,
@@ -263,7 +267,6 @@ export const ScoreProvider = ({children}: {children: React.ReactNode}) => {
         addCustomScore,
         removeCustomScore,
         clearCustomScores,
-        toggleRandomizeColorIsSet,
       }}>
       {children}
     </ScoreContext.Provider>

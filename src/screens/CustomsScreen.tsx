@@ -40,10 +40,6 @@ const CustomsScreen = ({navigation, route}: CustomsScreenProps) => {
   const {players, customScore} = scoreContext;
   const [customScoreIsShown, setCustomScoreIsShown] = useState(false);
   const [amountOfPlayers, setAmountOfPlayers] = useState(0);
-  const [randomColorsSettingTitle] = useState(
-    desireWords[getRandomNumber(0, desireWords.length - 1)] +
-      ' get random colors',
-  );
 
   const [ownScoresSettingTitle] = useState(
     desireWords[getRandomNumber(0, desireWords.length - 1)] +
@@ -57,14 +53,6 @@ const CustomsScreen = ({navigation, route}: CustomsScreenProps) => {
   useEffect(() => {
     ref.current?.scrollToEnd();
   }, [players.length, customScoreIsShown, customScore.length]);
-
-  useEffect(() => {
-    if (scoreContext.randomizeColorIsOn) {
-      players.forEach(player =>
-        scoreContext.setPlayerSettings({...player, color: getRandomColor()}),
-      );
-    }
-  }, [scoreContext.randomizeColorIsOn]);
 
   const handleSetNewPlayers = () => {
     const difference = amountOfPlayers - players.length;
@@ -93,12 +81,6 @@ const CustomsScreen = ({navigation, route}: CustomsScreenProps) => {
   return (
     <>
       <ScrollContainer style={styles.container} ref={ref}>
-        <SettingRow
-          type="switch"
-          title={randomColorsSettingTitle}
-          onChange={() => scoreContext.toggleRandomizeColorIsSet()}
-          value={scoreContext.randomizeColorIsOn}
-        />
         <SettingRow
           type="input"
           title="Amount of players"

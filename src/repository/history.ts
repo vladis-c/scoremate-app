@@ -82,7 +82,7 @@ const addPlayer = async ({
   return playerResult.lastInsertRowId;
 };
 
-const deletePlayer = async (playerId: number) => {
+const deletePlayer = async ({playerId}: {playerId: number}) => {
   const db = await getDB();
   const result = await db.getFirstAsync<{historyId: number}>(
     'SELECT historyId FROM HISTORY_PLAYERS WHERE id = ?',
@@ -135,7 +135,7 @@ const updateScore = async (playerId: number, score: number) => {
   ]);
 };
 
-const resetGameScores = async (historyId: number) => {
+const resetGameScores = async ({historyId}: {historyId: number}) => {
   const db = await getDB();
   await db.runAsync(
     'UPDATE HISTORY_PLAYERS SET score = 0 WHERE historyId = ?',
@@ -143,15 +143,22 @@ const resetGameScores = async (historyId: number) => {
   );
 };
 
-const addCustomScoring = async (historyId: number, value: number) => {
+const addCustomScoring = async ({
+  historyId,
+  value,
+}: {
+  historyId: number;
+  value: number;
+}) => {
   const db = await getDB();
-  await db.runAsync(
+  const result = await db.runAsync(
     'INSERT INTO HISTORY_CUSTOM_SCORING (historyId, value) VALUES (?, ?)',
     [historyId, value],
   );
+  return result.lastInsertRowId;
 };
 
-const removeCustomScoring = async (scoringId: number) => {
+const removeCustomScoring = async ({scoringId}: {scoringId: number}) => {
   const db = await getDB();
   const row = await db.getFirstAsync<{value: number}>(
     'SELECT value FROM HISTORY_CUSTOM_SCORING WHERE id = ?',
@@ -256,7 +263,7 @@ const getLastGame = async () => {
   return getGameById(lastGame.id);
 };
 
-export {
+export const historyDb = {
   createHistoryTable,
   createGame,
   addPlayer,
