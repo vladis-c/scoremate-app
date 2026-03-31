@@ -9,7 +9,6 @@ import {DRAWER_NAV, HistoryScreenProps} from '../navigation/navigation-types';
 
 const HistoryScreen = ({navigation}: HistoryScreenProps) => {
   const scoreContext = useScore();
-
   const [page, setPage] = useState(1);
 
   const {gamesHistory, hasMoreGames} = scoreContext;
@@ -46,7 +45,6 @@ const HistoryScreen = ({navigation}: HistoryScreenProps) => {
           <Card
             style={styles.container}
             onPress={() => {
-              scoreContext.clearStates();
               scoreContext.fetchGame(id);
               navigation.navigate(DRAWER_NAV.SCORE, {isNew: false});
             }}>
