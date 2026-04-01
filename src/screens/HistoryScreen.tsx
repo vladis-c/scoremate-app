@@ -14,13 +14,14 @@ const HistoryScreen = ({navigation}: HistoryScreenProps) => {
   const {gamesHistory, hasMoreGames} = scoreContext;
 
   useEffect(() => {
-    scoreContext.fetchGamesHistory({page});
+    if (page !== 0) {
+      scoreContext.fetchGamesHistory({page});
+    }
   }, [page]);
 
   useFocusEffect(
     useCallback(() => {
       setPage(1);
-      scoreContext.resetGamesHistory();
     }, []),
   );
 
@@ -33,7 +34,7 @@ const HistoryScreen = ({navigation}: HistoryScreenProps) => {
           setPage(prev => prev + 1);
         }
       }}
-      onEndReachedThreshold={0.5}
+      onEndReachedThreshold={0.1}
       renderItem={({item}) => {
         const {createdAt, name, hasCustomScoring, amountOfPlayers, id} = item;
 
@@ -45,6 +46,8 @@ const HistoryScreen = ({navigation}: HistoryScreenProps) => {
           <Card
             style={styles.container}
             onPress={() => {
+              setPage(0);
+              scoreContext.resetGamesHistory();
               scoreContext.fetchGame(id);
               navigation.navigate(DRAWER_NAV.SCORE, {isNew: false});
             }}>
@@ -73,6 +76,7 @@ export default HistoryScreen;
 const styles = StyleSheet.create({
   listContainer: {
     paddingHorizontal: 20,
+    paddingBottom: 48,
   },
   container: {
     width: '100%',
