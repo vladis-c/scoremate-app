@@ -11,6 +11,7 @@ import {
   Text,
 } from 'react-native-paper';
 import {Game} from '../types';
+import ConfirmationDialog from './ConfirmationDialog';
 
 type GameCardProps = {
   item: Game;
@@ -53,7 +54,6 @@ const GameCard = ({
               {name ? <Text>{name}</Text> : null}
               <Text>{date}</Text>
             </View>
-
             <View style={{alignItems: 'flex-end'}}>
               <Text>
                 {amountOfPlayers} {amountOfPlayers === 1 ? 'player' : 'players'}
@@ -63,35 +63,20 @@ const GameCard = ({
           </Card.Content>
         </Card>
       </Swipeable>
-
-      <Portal>
-        <Dialog
-          visible={isConfirmationVisible}
-          onDismiss={() => setIsConfirmationVisible(false)}>
-          <Dialog.Content>
-            <Text>
-              Are you sure you want to delete this game from history? This
-              action cannot be undone.
-            </Text>
-          </Dialog.Content>
-          <Dialog.Actions>
-            <Button
-              onPress={() => {
-                setIsConfirmationVisible(false);
-              }}>
-              Cancel
-            </Button>
-            <Button
-              onPress={() => {
-                setIsConfirmationVisible(false);
-                onDelete();
-              }}
-              textColor="red">
-              Delete
-            </Button>
-          </Dialog.Actions>
-        </Dialog>
-      </Portal>
+      <ConfirmationDialog
+        isConfirmationVisible={isConfirmationVisible}
+        setIsConfirmationVisible={setIsConfirmationVisible}
+        text="Are you sure you want to delete this game from history? This action cannot be undone."
+        onPressLeft={() => {
+          setIsConfirmationVisible(false);
+        }}
+        onPressRight={() => {
+          setIsConfirmationVisible(false);
+          onDelete();
+        }}
+        leftText="Cancel"
+        rightText="Delete"
+      />
     </>
   );
 };
