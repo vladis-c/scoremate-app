@@ -42,6 +42,7 @@ type ScoreContextType = {
     limit?: number | undefined;
   }) => void;
   fetchGame: (gameId?: number) => void;
+  deleteGame: (historyId: number) => Promise<void>;
   clearStates: () => void;
   resetGamesHistory: () => void;
 };
@@ -340,6 +341,18 @@ export const ScoreProvider = ({children}: {children: React.ReactNode}) => {
     }
   };
 
+  const deleteGame = async (historyId: number) => {
+    setGamesHistory(prev => {
+      const prevGames = [...prev];
+      const foundIndex = prevGames.findIndex(el => el.id === historyId);
+      if (foundIndex !== -1) {
+        prevGames.splice(foundIndex, 1);
+      }
+      return prevGames;
+    });
+    await historyDb.deleteGame({historyId});
+  };
+
   const resetGamesHistory = () => {
     setGamesHistory([]);
   };
@@ -380,6 +393,7 @@ export const ScoreProvider = ({children}: {children: React.ReactNode}) => {
         hasMoreGames,
         fetchGamesHistory,
         fetchGame,
+        deleteGame,
         clearStates,
         resetGamesHistory,
       }}>

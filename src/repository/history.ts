@@ -61,6 +61,11 @@ const createGame = async ({
   };
 };
 
+const deleteGame = async ({historyId}: {historyId: number}) => {
+  const db = await getDB();
+  await db.runAsync('DELETE FROM HISTORY WHERE id = ?', [historyId]);
+};
+
 const addPlayer = async ({
   historyId,
   playerName,
@@ -296,6 +301,7 @@ const getLastGame = async () => {
 export const historyDb = {
   createHistoryTable,
   createGame,
+  deleteGame,
   addPlayer,
   deletePlayer,
   updateGame,
