@@ -1,5 +1,6 @@
-import React, {useState} from 'react';
-import {StyleSheet, View} from 'react-native';
+import React, {useEffect, useRef, useState} from 'react';
+import {Keyboard, StyleSheet, View} from 'react-native';
+import {TextInput as RNTextInput} from 'react-native';
 import {IconButton, TextInput} from 'react-native-paper';
 import {colors} from '../theme';
 
@@ -13,10 +14,20 @@ const InputHeader = ({
   onEndEditing: () => void;
 }) => {
   const [isEditState, setIsEditState] = useState(false);
+  const inputRef = useRef<RNTextInput>(null);
+
+  useEffect(() => {
+    if (isEditState) {
+      inputRef.current?.focus();
+    } else {
+      Keyboard.dismiss();
+    }
+  }, [isEditState]);
 
   return (
     <View style={styles.container}>
       <TextInput
+        ref={inputRef}
         style={[
           styles.input,
           {
