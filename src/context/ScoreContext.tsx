@@ -42,7 +42,8 @@ type ScoreContextType = {
     limit?: number | undefined;
   }) => void;
   fetchGame: (gameId?: number) => void;
-  deleteGame: (historyId: number) => Promise<void>;
+  deleteGame: (historyId: number | undefined) => void;
+  deleteCurrentGame: () => Promise<boolean>;
   clearStates: () => void;
   resetGamesHistory: () => void;
 };
@@ -341,7 +342,18 @@ export const ScoreProvider = ({children}: {children: React.ReactNode}) => {
     }
   };
 
-  const deleteGame = async (historyId: number) => {
+  const deleteCurrentGame = async () => {
+    if (!currentGame) {
+      return false;
+    }
+    return await deleteGame(currentGame.id);
+  };
+
+  const deleteGame = async (historyId: number | undefined) => {
+    if (!historyId) {
+      return false;
+    }
+
     setGamesHistory(prev => {
       const prevGames = [...prev];
       const foundIndex = prevGames.findIndex(el => el.id === historyId);
@@ -350,7 +362,12 @@ export const ScoreProvider = ({children}: {children: React.ReactNode}) => {
       }
       return prevGames;
     });
-    await historyDb.deleteGame({historyId});
+
+    try {
+      await historyDb.deleteGame({historyId});
+    } finally {
+      return true;
+    }
   };
 
   const resetGamesHistory = () => {
@@ -394,6 +411,7 @@ export const ScoreProvider = ({children}: {children: React.ReactNode}) => {
         fetchGamesHistory,
         fetchGame,
         deleteGame,
+        deleteCurrentGame,
         clearStates,
         resetGamesHistory,
       }}>

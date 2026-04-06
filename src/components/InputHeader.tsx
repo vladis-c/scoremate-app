@@ -3,17 +3,23 @@ import {Keyboard, StyleSheet, View} from 'react-native';
 import {TextInput as RNTextInput} from 'react-native';
 import {IconButton, TextInput} from 'react-native-paper';
 import {colors} from '../theme';
+import ConfirmationDialog from './ConfirmationDialog';
+
+type InputHeaderProps = {
+  value: string;
+  onChange: (v: string) => void;
+  onEndEditing: () => void;
+  onDelete: () => void;
+};
 
 const InputHeader = ({
   value,
   onChange,
   onEndEditing,
-}: {
-  value: string;
-  onChange: (v: string) => void;
-  onEndEditing: () => void;
-}) => {
+  onDelete,
+}: InputHeaderProps) => {
   const [isEditState, setIsEditState] = useState(false);
+  const [isConfirmationVisible, setIsConfirmationVisible] = useState(false);
   const inputRef = useRef<RNTextInput>(null);
 
   useEffect(() => {
@@ -26,30 +32,52 @@ const InputHeader = ({
 
   return (
     <View style={styles.container}>
-      <TextInput
-        ref={inputRef}
-        style={[
-          styles.input,
-          {
-            backgroundColor: !isEditState ? 'transparent' : undefined,
-          },
-        ]}
-        mode="outlined"
-        value={value}
-        onChangeText={onChange}
-        onEndEditing={onEndEditing}
-        disabled={!isEditState}
-        outlineStyle={{borderColor: 'transparent'}}
-        textColor={colors.Black}
-        contentStyle={styles.inputContent}
-      />
+      <View style={styles.containerWithText}>
+        <TextInput
+          ref={inputRef}
+          style={[
+            styles.input,
+            {
+              backgroundColor: !isEditState ? 'transparent' : undefined,
+            },
+          ]}
+          mode="outlined"
+          value={value}
+          onChangeText={onChange}
+          onEndEditing={onEndEditing}
+          disabled={!isEditState}
+          outlineStyle={{borderColor: 'transparent'}}
+          textColor={colors.Black}
+          contentStyle={styles.inputContent}
+        />
+        <IconButton
+          icon={isEditState ? 'check' : 'pencil'}
+          size={12}
+          iconColor={colors.Blue}
+          onPress={() => setIsEditState(prev => !prev)}
+          style={styles.edit}
+          containerColor={colors.White}
+        />
+      </View>
       <IconButton
-        icon={isEditState ? 'check' : 'pencil'}
+        icon="delete"
         size={12}
         iconColor={colors.Blue}
-        onPress={() => setIsEditState(prev => !prev)}
+        onPress={() => setIsConfirmationVisible(true)}
         style={styles.edit}
         containerColor={colors.White}
+      />
+      <ConfirmationDialog
+        isConfirmationVisible={isConfirmationVisible}
+        setIsConfirmationVisible={setIsConfirmationVisible}
+        text="Are you sure you want to delete this game? This action cannot be undone. You will be redirected to the start screen."
+        leftText="Cancel"
+        rightText="Delete"
+        onPressLeft={() => setIsConfirmationVisible(false)}
+        onPressRight={() => {
+          setIsConfirmationVisible(false);
+          onDelete();
+        }}
       />
     </View>
   );
@@ -61,7 +89,11 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     flex: 1,
-    marginRight: 20,
+    marginRight: 16,
+  },
+  containerWithText: {
+    flexDirection: 'row',
+    flex: 1,
     gap: 8,
   },
   input: {

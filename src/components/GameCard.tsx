@@ -67,6 +67,8 @@ const GameCard = ({
         isConfirmationVisible={isConfirmationVisible}
         setIsConfirmationVisible={setIsConfirmationVisible}
         text="Are you sure you want to delete this game from history? This action cannot be undone."
+        leftText="Cancel"
+        rightText="Delete"
         onPressLeft={() => {
           setIsConfirmationVisible(false);
         }}
@@ -74,8 +76,6 @@ const GameCard = ({
           setIsConfirmationVisible(false);
           onDelete();
         }}
-        leftText="Cancel"
-        rightText="Delete"
       />
     </>
   );

@@ -1,4 +1,4 @@
-import {useFocusEffect} from '@react-navigation/native';
+import {CommonActions, useFocusEffect} from '@react-navigation/native';
 import React, {
   useCallback,
   useEffect,
@@ -13,7 +13,7 @@ import InputHeader from '../components/InputHeader';
 import ScoreCard from '../components/ScoreCard';
 import ScrollContainer from '../components/ScrollContainer';
 import {useScore} from '../context/ScoreContext';
-import {ScoreScreenProps} from '../navigation/navigation-types';
+import {MAIN_NAV, ScoreScreenProps} from '../navigation/navigation-types';
 
 const ScoreScreen = ({navigation, route}: ScoreScreenProps) => {
   const ref = useRef<ScrollView | null>(null);
@@ -32,6 +32,17 @@ const ScoreScreen = ({navigation, route}: ScoreScreenProps) => {
             onEndEditing={() =>
               scoreContext.updateGame({gameName, saveToDb: true})
             }
+            onDelete={async () => {
+              const deleted = await scoreContext.deleteCurrentGame();
+              if (deleted) {
+                navigation.getParent()?.dispatch(
+                  CommonActions.reset({
+                    index: 0,
+                    routes: [{name: MAIN_NAV.START}],
+                  }),
+                );
+              }
+            }}
           />
         );
       },
