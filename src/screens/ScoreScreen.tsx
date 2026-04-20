@@ -7,8 +7,6 @@ import React, {
   useState,
 } from 'react';
 import {ScrollView, StyleSheet, View} from 'react-native';
-import {TextInput} from 'react-native-paper';
-import AddCard from '../components/AddCard';
 import QuickOptions from '../components/QuickOptions';
 import ScoreCard from '../components/ScoreCard';
 import ScrollContainer from '../components/ScrollContainer';
@@ -53,7 +51,7 @@ const ScoreScreen = ({navigation, route}: ScoreScreenProps) => {
       <View
         style={styles.add}
         onLayout={e => setAddCardHeight(e.nativeEvent.layout.height)}>
-        <AddCard     
+        <QuickOptions
           onDelete={() => {
             navigation.getParent()?.dispatch(
               CommonActions.reset({

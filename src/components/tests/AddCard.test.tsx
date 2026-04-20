@@ -1,6 +1,6 @@
 import {fireEvent, render} from '@testing-library/react-native';
 import React from 'react';
-import AddCard from '../AddCard';
+import QuickOptions from '../QuickOptions';
 
 jest.mock('../../context/ScoreContext', () => ({useScore: jest.fn()}));
 const {useScore} = require('../../context/ScoreContext');
@@ -48,7 +48,7 @@ describe('AddCard', () => {
       resetPlayersScores: jest.fn(),
     });
 
-    const {getByTestId} = render(<AddCard />);
+    const {getByTestId} = render(<QuickOptions />);
     fireEvent.press(getByTestId('icon-shuffle'));
     expect(shufflePlayerOrder).toHaveBeenCalled();
   });
@@ -66,7 +66,7 @@ describe('AddCard', () => {
       resetPlayersScores: jest.fn(),
     });
 
-    const {getByTestId} = render(<AddCard />);
+    const {getByTestId} = render(<QuickOptions />);
     fireEvent.press(getByTestId('icon-minus'));
     expect(removePlayer).toHaveBeenCalledWith(2);
   });
@@ -81,7 +81,7 @@ describe('AddCard', () => {
       resetPlayersScores: jest.fn(),
     });
 
-    const {getByTestId} = render(<AddCard />);
+    const {getByTestId} = render(<QuickOptions />);
     fireEvent.press(getByTestId('icon-plus'));
     expect(setNewPlayer).toHaveBeenCalledWith({id: 2, score: 0, name: ''});
   });
@@ -99,7 +99,7 @@ describe('AddCard', () => {
       resetPlayersScores,
     });
 
-    const {getByTestId} = render(<AddCard />);
+    const {getByTestId} = render(<QuickOptions />);
     fireEvent.press(getByTestId('icon-refresh'));
     expect(resetPlayersScores).toHaveBeenCalled();
   });
