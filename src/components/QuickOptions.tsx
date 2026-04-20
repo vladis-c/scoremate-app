@@ -5,19 +5,19 @@ import {IconButton, TextInput} from 'react-native-paper';
 import {colors} from '../theme';
 import ConfirmationDialog from './ConfirmationDialog';
 
-type InputHeaderProps = {
+type QuickOptionsProps = {
   value: string;
   onChange: (v: string) => void;
   onEndEditing: () => void;
   onDelete: () => void;
 };
 
-const InputHeader = ({
+const QuickOptions = ({
   value,
   onChange,
   onEndEditing,
   onDelete,
-}: InputHeaderProps) => {
+}: QuickOptionsProps) => {
   const [isEditState, setIsEditState] = useState(false);
   const [isConfirmationVisible, setIsConfirmationVisible] = useState(false);
   const inputRef = useRef<RNTextInput>(null);
@@ -49,23 +49,24 @@ const InputHeader = ({
           outlineStyle={{borderColor: 'transparent'}}
           textColor={colors.Black}
           contentStyle={styles.inputContent}
+          placeholder="Game name"
         />
         <IconButton
           icon={isEditState ? 'check' : 'pencil'}
           size={12}
-          iconColor={colors.Blue}
           onPress={() => setIsEditState(prev => !prev)}
           style={styles.edit}
-          containerColor={colors.White}
+          iconColor={colors.White}
+          containerColor={colors.Blue}
         />
       </View>
       <IconButton
         icon="delete"
         size={12}
-        iconColor={colors.Blue}
         onPress={() => setIsConfirmationVisible(true)}
         style={styles.edit}
-        containerColor={colors.White}
+        iconColor={colors.White}
+        containerColor={colors.Red}
       />
       <ConfirmationDialog
         isConfirmationVisible={isConfirmationVisible}
@@ -83,13 +84,12 @@ const InputHeader = ({
   );
 };
 
-export default InputHeader;
+export default QuickOptions;
 
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     flex: 1,
-    marginRight: 16,
   },
   containerWithText: {
     flexDirection: 'row',
@@ -97,7 +97,7 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   input: {
-    height: 35,
+    height: 32,
     flex: 1,
   },
   inputContent: {

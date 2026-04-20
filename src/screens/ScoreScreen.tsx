@@ -9,7 +9,7 @@ import React, {
 import {ScrollView, StyleSheet, View} from 'react-native';
 import {TextInput} from 'react-native-paper';
 import AddCard from '../components/AddCard';
-import InputHeader from '../components/InputHeader';
+import QuickOptions from '../components/QuickOptions';
 import ScoreCard from '../components/ScoreCard';
 import ScrollContainer from '../components/ScrollContainer';
 import {useScore} from '../context/ScoreContext';
@@ -23,29 +23,6 @@ const ScoreScreen = ({navigation, route}: ScoreScreenProps) => {
   useLayoutEffect(() => {
     navigation.setOptions({
       headerTitle: '',
-      headerRight: () => {
-        const gameName = scoreContext.currentGame?.name ?? '';
-        return (
-          <InputHeader
-            value={gameName}
-            onChange={e => scoreContext.updateGame({gameName: e})}
-            onEndEditing={() =>
-              scoreContext.updateGame({gameName, saveToDb: true})
-            }
-            onDelete={async () => {
-              const deleted = await scoreContext.deleteCurrentGame();
-              if (deleted) {
-                navigation.getParent()?.dispatch(
-                  CommonActions.reset({
-                    index: 0,
-                    routes: [{name: MAIN_NAV.START}],
-                  }),
-                );
-              }
-            }}
-          />
-        );
-      },
     });
   }, [navigation, scoreContext.currentGame?.name]);
 
@@ -76,7 +53,16 @@ const ScoreScreen = ({navigation, route}: ScoreScreenProps) => {
       <View
         style={styles.add}
         onLayout={e => setAddCardHeight(e.nativeEvent.layout.height)}>
-        <AddCard />
+        <AddCard     
+          onDelete={() => {
+            navigation.getParent()?.dispatch(
+              CommonActions.reset({
+                index: 0,
+                routes: [{name: MAIN_NAV.START}],
+              }),
+            );
+          }}
+        />
       </View>
       {addCardHeight !== null ? (
         <ScrollContainer style={{paddingTop: addCardHeight}} ref={ref}>
