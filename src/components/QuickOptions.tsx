@@ -1,5 +1,10 @@
 import React, {useEffect, useRef, useState} from 'react';
-import {Keyboard, StyleSheet, View} from 'react-native';
+import {
+  Keyboard,
+  StyleSheet,
+  TouchableWithoutFeedback,
+  View,
+} from 'react-native';
 import {TextInput as RNTextInput} from 'react-native';
 import {Card, Divider, IconButton, Text, TextInput} from 'react-native-paper';
 import {useScore} from '../context/ScoreContext';
@@ -32,35 +37,37 @@ const QuickOptions = ({onDelete}: QuickOptionsProps) => {
     <Card style={styles.card}>
       <Card.Content style={styles.content}>
         <View style={styles.topContainer}>
-          <View style={styles.containerWithText}>
-            <TextInput
-              ref={inputRef}
-              style={[
-                styles.input,
-                {
-                  backgroundColor: !isEditState ? 'transparent' : undefined,
-                },
-              ]}
-              mode="outlined"
-              value={gameName}
-              onChangeText={e => scoreContext.updateGame({gameName: e})}
-              onEndEditing={() =>
-                scoreContext.updateGame({gameName, saveToDb: true})
-              }
-              disabled={!isEditState}
-              outlineStyle={{borderColor: 'transparent'}}
-              textColor={colors.Black}
-              contentStyle={styles.inputContent}
-              placeholder="Game name"
-            />
-            <IconButton
-              icon={isEditState ? 'check' : 'pencil'}
-              size={12}
-              onPress={() => setIsEditState(prev => !prev)}
-              iconColor={colors.White}
-              containerColor={colors.Blue}
-            />
-          </View>
+          <TouchableWithoutFeedback onPress={() => setIsEditState(true)}>
+            <View style={styles.containerWithText}>
+              <TextInput
+                ref={inputRef}
+                style={[
+                  styles.input,
+                  {
+                    backgroundColor: !isEditState ? 'transparent' : undefined,
+                  },
+                ]}
+                mode="outlined"
+                value={gameName}
+                onChangeText={e => scoreContext.updateGame({gameName: e})}
+                onEndEditing={() =>
+                  scoreContext.updateGame({gameName, saveToDb: true})
+                }
+                disabled={!isEditState}
+                outlineStyle={{borderColor: 'transparent'}}
+                textColor={colors.Black}
+                contentStyle={styles.inputContent}
+                placeholder="Game name"
+              />
+              <IconButton
+                icon={isEditState ? 'check' : 'pencil'}
+                size={12}
+                onPress={() => setIsEditState(prev => !prev)}
+                iconColor={colors.White}
+                containerColor={colors.Blue}
+              />
+            </View>
+          </TouchableWithoutFeedback>
           <IconButton
             icon="delete"
             size={12}
