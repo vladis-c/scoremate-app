@@ -1,6 +1,6 @@
 import {fireEvent, render} from '@testing-library/react-native';
 import React from 'react';
-import StartScreen from '../HomeScreen';
+import HomeScreen from '../HomeScreen';
 
 jest.mock('../../constants', () => ({
   startButton1Labels: ['Start Game'],
@@ -41,7 +41,7 @@ describe('HomeScreen', () => {
 
   it('Text renders correctly on HomeScreen', () => {
     const {getByText} = render(
-      <StartScreen navigation={navigationMock} route={routeMock} />,
+      <HomeScreen navigation={navigationMock} route={routeMock} />,
     );
     expect(
       getByText(/Scoremate is your mate in tracking boardgames score\./i),
@@ -53,7 +53,7 @@ describe('HomeScreen', () => {
 
   it('Buttons render with labels from constants', () => {
     const {getByText} = render(
-      <StartScreen navigation={navigationMock} route={routeMock} />,
+      <HomeScreen navigation={navigationMock} route={routeMock} />,
     );
     expect(getByText('Start Game')).toBeTruthy();
     expect(getByText('Customize')).toBeTruthy();
@@ -61,7 +61,7 @@ describe('HomeScreen', () => {
 
   it('Pressing first button navigates to ScoreScreen', () => {
     const {getByText} = render(
-      <StartScreen navigation={navigationMock} route={routeMock} />,
+      <HomeScreen navigation={navigationMock} route={routeMock} />,
     );
     fireEvent.press(getByText('Start Game'));
     expect(navigationMock.navigate).toHaveBeenCalledWith('MainDrawer', {
@@ -71,7 +71,7 @@ describe('HomeScreen', () => {
 
   it('Pressing second button navigates to CustomsScreen with params', () => {
     const {getByText} = render(
-      <StartScreen navigation={navigationMock} route={routeMock} />,
+      <HomeScreen navigation={navigationMock} route={routeMock} />,
     );
     fireEvent.press(getByText('Customize'));
     expect(navigationMock.navigate).toHaveBeenCalledWith('MainDrawer', {

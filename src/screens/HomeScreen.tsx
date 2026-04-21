@@ -24,7 +24,7 @@ type BtnProps = {
   onPress: () => void;
 };
 
-const StartScreen = ({navigation}: StartScreenProps) => {
+const HomeScreen = ({navigation}: StartScreenProps) => {
   const scoreContext = useScore();
 
   const getBtnProps = (): BtnProps[] => {
@@ -86,50 +86,49 @@ const StartScreen = ({navigation}: StartScreenProps) => {
   const btnProps = getBtnProps();
 
   return (
-    <>
-      <ScrollContainer contentStyle={styles.container}>
-        <Image
-          style={styles.image}
-          source={require('../../assets/adaptive-icon.png')}
-          contentFit="contain"
-          transition={100}
-        />
-        <View style={styles.textsContainer}>
-          <Text style={styles.title}>Scoremate</Text>
-          <Text style={styles.text}>
-            Scoremate is your mate in tracking boardgames score.
-          </Text>
-          <Text
-            style={
-              styles.text
-            }>{`Choose between Scoremate preset and Custom experience${scoreContext.currentGame ? `, or continue your last game ${scoreContext.currentGame.name}` : ''}`}</Text>
-        </View>
-        {btnProps.map(props => {
-          return (
-            <Button
-              key={props.label}
-              labelStyle={{fontSize: 16}}
-              buttonColor={props?.bgColor ?? colors.White}
-              textColor={props?.textColor ?? colors.Black}
-              style={styles.button}
-              mode="elevated"
-              onPress={props.onPress}>
-              {props?.label}
-            </Button>
-          );
-        })}
-      </ScrollContainer>
-    </>
+    <ScrollContainer contentStyle={styles.container}>
+      <Image
+        style={styles.image}
+        source={require('../../assets/adaptive-icon.png')}
+        contentFit="contain"
+        transition={100}
+      />
+      <View style={styles.textsContainer}>
+        <Text style={styles.title}>Scoremate</Text>
+        <Text style={styles.text}>
+          Scoremate is your mate in tracking boardgames score.
+        </Text>
+        <Text
+          style={
+            styles.text
+          }>{`Choose between Scoremate preset and Custom experience${scoreContext.currentGame ? `, or continue your last game ${scoreContext.currentGame.name}` : ''}`}</Text>
+      </View>
+      {btnProps.map(props => {
+        return (
+          <Button
+            key={props.label}
+            labelStyle={{fontSize: 16}}
+            buttonColor={props?.bgColor ?? colors.White}
+            textColor={props?.textColor ?? colors.Black}
+            style={styles.button}
+            mode="elevated"
+            onPress={props.onPress}>
+            {props?.label}
+          </Button>
+        );
+      })}
+    </ScrollContainer>
   );
 };
 
-export default StartScreen;
+export default HomeScreen;
 
 const styles = StyleSheet.create({
   container: {
     justifyContent: 'center',
     flex: 1,
-    marginTop: 20,
+    marginTop: 24,
+    paddingHorizontal: 16,
   },
   title: {...fonts.BigHeading, textAlign: 'center'},
   text: {...fonts.BasicText, textAlign: 'center'},
