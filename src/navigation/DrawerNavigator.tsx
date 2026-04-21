@@ -7,11 +7,11 @@ import {
 import {CommonActions} from '@react-navigation/native';
 import React from 'react';
 import {IconButton} from 'react-native-paper';
+import CurrentSessionScreen from '../screens/CurrentSessionScreen';
 import CustomsScreen from '../screens/CustomsScreen';
 import DiceScreen from '../screens/DiceScreen';
 import HistoryScreen from '../screens/HistoryScreen';
 import RandomizerScreen from '../screens/RandomizerScreen';
-import ScoreScreen from '../screens/ScoreScreen';
 import {fonts} from '../theme';
 import {DRAWER_NAV, DrawerNavParamList, MAIN_NAV} from './navigation-types';
 
@@ -24,7 +24,8 @@ const DrawerNavigator = () => {
         <DrawerContentScrollView {...props}>
           <DrawerItemList {...props} />
           <DrawerItem
-            label="Go to Start"
+            labelStyle={{...fonts.BasicText}}
+            label={DRAWER_NAV.HOME}
             icon={() => <IconButton icon="home" />}
             onPress={() => {
               props.navigation.closeDrawer();
@@ -56,8 +57,8 @@ const DrawerNavigator = () => {
         ),
       })}>
       <Drawer.Screen
-        name={DRAWER_NAV.SCORE}
-        component={ScoreScreen}
+        name={DRAWER_NAV.CURRENT}
+        component={CurrentSessionScreen}
         options={{
           drawerIcon: () => <IconButton icon="star" />,
         }}
@@ -77,7 +78,7 @@ const DrawerNavigator = () => {
         }}
       />
       <Drawer.Screen
-        name={DRAWER_NAV.CUSTOMS}
+        name={DRAWER_NAV.CUSTOMISATION}
         component={CustomsScreen}
         options={{
           drawerIcon: () => <IconButton icon="cog" />,

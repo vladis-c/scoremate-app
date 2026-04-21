@@ -1,6 +1,6 @@
 import {fireEvent, render, waitFor} from '@testing-library/react-native';
 import React from 'react';
-import ScoreScreen from '../ScoreScreen';
+import CurrentSessionScreen from '../CurrentSessionScreen';
 
 jest.mock('../../context/ScoreContext', () => ({useScore: jest.fn()}));
 const {useScore} = require('../../context/ScoreContext');
@@ -56,7 +56,7 @@ describe('ScoreScreen', () => {
   it('renders 1 ScoreCard for 1 player and 2 ScoreCards for 2 players', async () => {
     // 1
     useScore.mockReturnValue({players: [P1]});
-    const {getByTestId, getAllByTestId, rerender} = render(<ScoreScreen />);
+    const {getByTestId, getAllByTestId, rerender} = render(<CurrentSessionScreen />);
 
     fireEvent(getByTestId('add-wrapper'), 'layout', {
       nativeEvent: {layout: {height: 50}},
@@ -68,7 +68,7 @@ describe('ScoreScreen', () => {
 
     // 2
     useScore.mockReturnValue({players: [P1, P2]});
-    rerender(<ScoreScreen />);
+    rerender(<CurrentSessionScreen />);
 
     fireEvent(getByTestId('add-wrapper'), 'layout', {
       nativeEvent: {layout: {height: 50}},

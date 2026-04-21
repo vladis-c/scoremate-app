@@ -42,7 +42,7 @@ const HistoryScreen = ({navigation}: HistoryScreenProps) => {
               setPage(0);
               scoreContext.resetGamesHistory();
               scoreContext.fetchGame(item.id);
-              navigation.navigate(DRAWER_NAV.SCORE, {isNew: false});
+              navigation.navigate(DRAWER_NAV.CURRENT, {isNew: false});
             }}
             onDelete={async () => {
               setPage(1);

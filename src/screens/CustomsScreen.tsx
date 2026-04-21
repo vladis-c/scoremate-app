@@ -166,7 +166,7 @@ const CustomsScreen = ({navigation, route}: CustomsScreenProps) => {
         buttonColor={colors.LightBlue}
         textColor={colors.Black}
         onPress={() => {
-          navigation.navigate(DRAWER_NAV.SCORE, {isNew: false});
+          navigation.navigate(DRAWER_NAV.CURRENT, {isNew: false});
           players.forEach(player => scoreContext.savePlayerSettings(player));
         }}>
         {route.params.isNew ? 'Continue' : 'Apply'}

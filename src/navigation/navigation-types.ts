@@ -8,11 +8,12 @@ export const MAIN_NAV = {
 export type MainNavProps = ObjectValues<typeof MAIN_NAV>;
 
 export const DRAWER_NAV = {
-  CUSTOMS: 'Customs',
-  SCORE: 'Score',
+  CUSTOMISATION: 'Customisation',
+  CURRENT: 'Current Session',
   RANDOM: 'Randomizer',
   DICE: 'Dice',
   HISTORY: 'History',
+  HOME: "Back to Home"
 } as const;
 export type DrawerNavProps = ObjectValues<typeof DRAWER_NAV>;
 
@@ -24,8 +25,8 @@ export type MainNavParamList = {
 };
 
 export type DrawerNavParamList = {
-  [DRAWER_NAV.CUSTOMS]: {label: string; isNew: boolean};
-  [DRAWER_NAV.SCORE]: {isNew: boolean};
+  [DRAWER_NAV.CUSTOMISATION]: {label: string; isNew: boolean};
+  [DRAWER_NAV.CURRENT]: {isNew: boolean};
   [DRAWER_NAV.RANDOM]: undefined;
   [DRAWER_NAV.DICE]: undefined;
   [DRAWER_NAV.HISTORY]: undefined;
@@ -38,11 +39,11 @@ export type StartScreenProps = NativeStackScreenProps<
 >;
 export type ScoreScreenProps = NativeStackScreenProps<
   DrawerNavParamList,
-  'Score'
+  'Current Session'
 >;
 export type CustomsScreenProps = NativeStackScreenProps<
   DrawerNavParamList,
-  'Customs'
+  'Customisation'
 >;
 
 export type HistoryScreenProps = NativeStackScreenProps<

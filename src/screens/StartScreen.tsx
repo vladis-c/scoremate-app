@@ -41,7 +41,7 @@ const StartScreen = ({navigation}: StartScreenProps) => {
         label: label1,
         onPress: () => {
           navigation.navigate(MAIN_NAV.DRAWER, {
-            screen: DRAWER_NAV.SCORE,
+            screen: DRAWER_NAV.CURRENT,
             params: {isNew: false},
           });
         },
@@ -58,7 +58,7 @@ const StartScreen = ({navigation}: StartScreenProps) => {
       label: label2,
       onPress: () => {
         navigation.navigate(MAIN_NAV.DRAWER, {
-          screen: DRAWER_NAV.SCORE,
+          screen: DRAWER_NAV.CURRENT,
           params: {isNew: true},
         });
       },
@@ -74,7 +74,7 @@ const StartScreen = ({navigation}: StartScreenProps) => {
       label: label3,
       onPress: () => {
         navigation.navigate(MAIN_NAV.DRAWER, {
-          screen: DRAWER_NAV.CUSTOMS,
+          screen: DRAWER_NAV.CUSTOMISATION,
           params: {isNew: true, label: btnProps[1]?.label},
         });
       },

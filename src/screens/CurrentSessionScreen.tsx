@@ -7,7 +7,7 @@ import ScrollContainer from '../components/ScrollContainer';
 import {useScore} from '../context/ScoreContext';
 import {MAIN_NAV, ScoreScreenProps} from '../navigation/navigation-types';
 
-const ScoreScreen = ({navigation, route}: ScoreScreenProps) => {
+const CurrentSessionScreen = ({navigation, route}: ScoreScreenProps) => {
   const ref = useRef<ScrollView | null>(null);
   const scoreContext = useScore();
 
@@ -65,7 +65,7 @@ const ScoreScreen = ({navigation, route}: ScoreScreenProps) => {
   );
 };
 
-export default ScoreScreen;
+export default CurrentSessionScreen;
 
 const styles = StyleSheet.create({
   container: {flexGrow: 1, paddingHorizontal: 8},
