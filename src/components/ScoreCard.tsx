@@ -227,7 +227,7 @@ const styles = StyleSheet.create({
   },
   edit: {
     position: 'absolute',
-    right: -10,
+    right: 0,
     elevation: 5,
     shadowOffset: {
       width: 0,
@@ -235,5 +235,6 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 0.2,
     shadowRadius: 1,
+    top: 12
   },
 });

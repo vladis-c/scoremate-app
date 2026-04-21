@@ -1,11 +1,5 @@
 import {CommonActions, useFocusEffect} from '@react-navigation/native';
-import React, {
-  useCallback,
-  useEffect,
-  useLayoutEffect,
-  useRef,
-  useState,
-} from 'react';
+import React, {useCallback, useEffect, useLayoutEffect, useRef} from 'react';
 import {ScrollView, StyleSheet, View} from 'react-native';
 import QuickOptions from '../components/QuickOptions';
 import ScoreCard from '../components/ScoreCard';
@@ -16,7 +10,6 @@ import {MAIN_NAV, ScoreScreenProps} from '../navigation/navigation-types';
 const ScoreScreen = ({navigation, route}: ScoreScreenProps) => {
   const ref = useRef<ScrollView | null>(null);
   const scoreContext = useScore();
-  const [addCardHeight, setAddCardHeight] = useState<number | null>(null);
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -47,49 +40,34 @@ const ScoreScreen = ({navigation, route}: ScoreScreenProps) => {
   }, [scoreContext.players.length]);
 
   return (
-    <>
-      <View
-        style={styles.add}
-        onLayout={e => setAddCardHeight(e.nativeEvent.layout.height)}>
-        <QuickOptions
-          onDelete={() => {
-            navigation.getParent()?.dispatch(
-              CommonActions.reset({
-                index: 0,
-                routes: [{name: MAIN_NAV.START}],
-              }),
-            );
-          }}
-        />
-      </View>
-      {addCardHeight !== null ? (
-        <ScrollContainer style={{paddingTop: addCardHeight}} ref={ref}>
-          <View style={styles.cardsContainer}>
-            {scoreContext.players.map(player => (
-              <View key={player.id}>
-                <ScoreCard
-                  id={player.id}
-                  color={player.color}
-                  name={player.name}
-                />
-              </View>
-            ))}
-          </View>
-        </ScrollContainer>
-      ) : null}
-    </>
+    <View style={styles.container}>
+      <QuickOptions
+        onDelete={() => {
+          navigation.getParent()?.dispatch(
+            CommonActions.reset({
+              index: 0,
+              routes: [{name: MAIN_NAV.START}],
+            }),
+          );
+        }}
+      />
+      <ScrollContainer ref={ref} containerStyle={styles.scrollContainer}>
+        {scoreContext.players.map(player => (
+          <ScoreCard
+            key={player.id}
+            id={player.id}
+            color={player.color}
+            name={player.name}
+          />
+        ))}
+      </ScrollContainer>
+    </View>
   );
 };
 
 export default ScoreScreen;
 
 const styles = StyleSheet.create({
-  add: {
-    position: 'absolute',
-    top: 0,
-    zIndex: 100,
-    width: '100%',
-    paddingHorizontal: 20,
-  },
-  cardsContainer: {width: '100%'},
+  container: {flexGrow: 1, paddingHorizontal: 8},
+  scrollContainer: {marginTop: -8},
 });

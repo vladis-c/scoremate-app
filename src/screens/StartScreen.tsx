@@ -87,7 +87,7 @@ const StartScreen = ({navigation}: StartScreenProps) => {
 
   return (
     <>
-      <ScrollContainer style={styles.container}>
+      <ScrollContainer contentStyle={styles.container}>
         <Image
           style={styles.image}
           source={require('../../assets/adaptive-icon.png')}

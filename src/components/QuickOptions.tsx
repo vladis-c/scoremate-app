@@ -31,7 +31,7 @@ const QuickOptions = ({onDelete}: QuickOptionsProps) => {
   return (
     <Card style={styles.card}>
       <Card.Content style={styles.content}>
-        <View style={styles.container}>
+        <View style={styles.topContainer}>
           <View style={styles.containerWithText}>
             <TextInput
               ref={inputRef}
@@ -57,7 +57,6 @@ const QuickOptions = ({onDelete}: QuickOptionsProps) => {
               icon={isEditState ? 'check' : 'pencil'}
               size={12}
               onPress={() => setIsEditState(prev => !prev)}
-              style={styles.edit}
               iconColor={colors.White}
               containerColor={colors.Blue}
             />
@@ -66,7 +65,6 @@ const QuickOptions = ({onDelete}: QuickOptionsProps) => {
             icon="delete"
             size={12}
             onPress={() => setIsConfirmationVisible(true)}
-            style={styles.edit}
             iconColor={colors.White}
             containerColor={colors.Red}
           />
@@ -87,30 +85,32 @@ const QuickOptions = ({onDelete}: QuickOptionsProps) => {
           />
         </View>
         <Divider style={{backgroundColor: colors.Black}} />
-        <Text style={{textAlign: 'center'}}>Add or remove players</Text>
-        <View style={styles.addRemove}>
-          <IconButton
-            disabled={amountOfPlayers === 0}
-            size={12}
-            icon="minus"
-            onPress={() => {
-              // removing last player
-              scoreContext.removePlayer(players[amountOfPlayers - 1].id);
-            }}
-            iconColor={colors.Black}
-          />
-          <Text variant="headlineMedium">{amountOfPlayers}</Text>
-          <IconButton
-            size={12}
-            icon="plus"
-            onPress={() => {
-              scoreContext.setNewPlayer({
-                score: 0,
-                name: '',
-              });
-            }}
-            iconColor={colors.Black}
-          />
+        <View style={styles.bottomContainer}>
+          <Text style={{textAlign: 'center'}}>Add or remove players</Text>
+          <View style={styles.addRemove}>
+            <IconButton
+              disabled={amountOfPlayers === 0}
+              size={12}
+              icon="minus"
+              onPress={() => {
+                // removing last player
+                scoreContext.removePlayer(players[amountOfPlayers - 1].id);
+              }}
+              iconColor={colors.Black}
+            />
+            <Text variant="headlineMedium">{amountOfPlayers}</Text>
+            <IconButton
+              size={12}
+              icon="plus"
+              onPress={() => {
+                scoreContext.setNewPlayer({
+                  score: 0,
+                  name: '',
+                });
+              }}
+              iconColor={colors.Black}
+            />
+          </View>
         </View>
       </Card.Content>
     </Card>
@@ -121,23 +121,21 @@ export default QuickOptions;
 
 const styles = StyleSheet.create({
   card: {
-    width: '100%',
-    marginVertical: 8,
+    margin: 8,
   },
   content: {
-    flexDirection: 'column',
-    width: '100%',
+    paddingHorizontal: 16,
     gap: 4,
   },
+  topContainer: {
+    flexDirection: 'row',
+  },
+  bottomContainer: {},
   addRemove: {
     alignItems: 'center',
     justifyContent: 'center',
     flexDirection: 'row',
     gap: 8,
-  },
-  container: {
-    flexDirection: 'row',
-    flex: 1,
   },
   containerWithText: {
     flexDirection: 'row',
@@ -155,5 +153,4 @@ const styles = StyleSheet.create({
     fontSize: 18,
     top: -2,
   },
-  edit: {},
 });

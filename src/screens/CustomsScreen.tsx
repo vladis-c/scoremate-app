@@ -63,7 +63,7 @@ const CustomsScreen = ({navigation, route}: CustomsScreenProps) => {
 
   return (
     <>
-      <ScrollContainer style={styles.container} ref={ref}>
+      <ScrollContainer contentStyle={styles.container} ref={ref}>
         <SettingRow
           type="game"
           onChange={e => {

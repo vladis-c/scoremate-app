@@ -1,4 +1,4 @@
-import React, {useRef} from 'react';
+import React from 'react';
 import {
   KeyboardAvoidingView,
   Platform,
@@ -10,19 +10,25 @@ import {
 
 type ScrollContainerProps = {
   children: React.ReactNode;
-  style?: StyleProp<ViewStyle>;
+  contentStyle?: StyleProp<ViewStyle>;
+  containerStyle?: StyleProp<ViewStyle>;
   ref?: React.RefObject<ScrollView | null>;
 };
 
-const ScrollContainer = ({children, style, ref}: ScrollContainerProps) => {
+const ScrollContainer = ({
+  children,
+  contentStyle,
+  containerStyle,
+  ref,
+}: ScrollContainerProps) => {
   return (
     <KeyboardAvoidingView
-      style={{flex: 1}}
+      style={[styles.container, containerStyle]}
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       keyboardVerticalOffset={30}>
       <ScrollView
-        style={{margin: 1, marginBottom: 90}}
-        contentContainerStyle={[styles.container, style]}
+        style={styles.scroll}
+        contentContainerStyle={[styles.content, contentStyle]}
         ref={ref}>
         {children}
       </ScrollView>
@@ -33,10 +39,11 @@ const ScrollContainer = ({children, style, ref}: ScrollContainerProps) => {
 export default ScrollContainer;
 
 const styles = StyleSheet.create({
-  container: {
+  container: {flex: 1},
+  scroll: {margin: 1, marginBottom: 64, paddingHorizontal: 8},
+  content: {
     flexGrow: 1,
     justifyContent: 'flex-start',
     alignItems: 'center',
-    padding: 20,
   },
 });
