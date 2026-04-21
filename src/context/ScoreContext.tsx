@@ -343,10 +343,11 @@ export const ScoreProvider = ({children}: {children: React.ReactNode}) => {
   };
 
   const deleteCurrentGame = async () => {
-    if (!currentGame) {
-      return false;
+    const deleted = await deleteGame(currentGame?.id);
+    if (deleted) {
+      setCurrentGame(null);
     }
-    return await deleteGame(currentGame.id);
+    return deleted;
   };
 
   const deleteGame = async (historyId: number | undefined) => {
