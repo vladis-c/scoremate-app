@@ -1,6 +1,6 @@
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import React from 'react';
-import StartScreen from '../screens/StartScreen';
+import StartScreen from '../screens/HomeScreen';
 import DrawerNavigator from './DrawerNavigator';
 import {MAIN_NAV, MainNavParamList} from './navigation-types';
 

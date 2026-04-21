@@ -5,7 +5,7 @@ import CurrentSessionScreen from '../CurrentSessionScreen';
 jest.mock('../../context/ScoreContext', () => ({useScore: jest.fn()}));
 const {useScore} = require('../../context/ScoreContext');
 
-jest.mock('../../components/AddCard', () => {
+jest.mock('../../components/QuickOptions', () => {
   const React = require('react');
   const {View, Text} = require('react-native');
   // expose a wrapper that we can trigger layout on to allow ScoreScreen to render cards
@@ -16,7 +16,7 @@ jest.mock('../../components/AddCard', () => {
       React.createElement(
         View,
         {testID: 'add-card'},
-        React.createElement(Text, null, 'AddCard'),
+        React.createElement(Text, null, 'QuickOptions'),
       ),
     );
 });
@@ -45,7 +45,7 @@ jest.mock('../../components/ScrollContainer', () => {
   );
 });
 
-describe('ScoreScreen', () => {
+describe('CurrentSessionScreen', () => {
   const P1 = {id: 1, name: 'P1', color: '#111'};
   const P2 = {id: 2, name: 'P2', color: '#222'};
 
@@ -56,7 +56,9 @@ describe('ScoreScreen', () => {
   it('renders 1 ScoreCard for 1 player and 2 ScoreCards for 2 players', async () => {
     // 1
     useScore.mockReturnValue({players: [P1]});
-    const {getByTestId, getAllByTestId, rerender} = render(<CurrentSessionScreen />);
+    const {getByTestId, getAllByTestId, rerender} = render(
+      <CurrentSessionScreen />,
+    );
 
     fireEvent(getByTestId('add-wrapper'), 'layout', {
       nativeEvent: {layout: {height: 50}},

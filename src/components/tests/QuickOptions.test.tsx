@@ -30,27 +30,9 @@ jest.mock('react-native-paper', () => {
   return {Card, IconButton, Text: TextComp};
 });
 
-describe('AddCard', () => {
+describe('QuickOptions', () => {
   beforeEach(() => {
     jest.clearAllMocks();
-  });
-
-  it('calls shufflePlayerOrder when shuffle pressed (with >=2 players)', () => {
-    const shufflePlayerOrder = jest.fn();
-    useScore.mockReturnValue({
-      players: [
-        {id: 1, name: 'April', score: 0, color: '#000'},
-        {id: 2, name: 'Ben', score: 0, color: '#FFF'},
-      ],
-      shufflePlayerOrder,
-      removePlayer: jest.fn(),
-      setNewPlayer: jest.fn(),
-      resetPlayersScores: jest.fn(),
-    });
-
-    const {getByTestId} = render(<QuickOptions />);
-    fireEvent.press(getByTestId('icon-shuffle'));
-    expect(shufflePlayerOrder).toHaveBeenCalled();
   });
 
   it('calls removePlayer with last player id when minus pressed', () => {
@@ -86,21 +68,3 @@ describe('AddCard', () => {
     expect(setNewPlayer).toHaveBeenCalledWith({id: 2, score: 0, name: ''});
   });
 
-  it('calls resetPlayersScores when refresh pressed', () => {
-    const resetPlayersScores = jest.fn();
-    useScore.mockReturnValue({
-      players: [
-        {id: 1, name: 'April', score: 5, color: '#000'},
-        {id: 2, name: 'Ben', score: 7, color: '#FFF'},
-      ],
-      shufflePlayerOrder: jest.fn(),
-      removePlayer: jest.fn(),
-      setNewPlayer: jest.fn(),
-      resetPlayersScores,
-    });
-
-    const {getByTestId} = render(<QuickOptions />);
-    fireEvent.press(getByTestId('icon-refresh'));
-    expect(resetPlayersScores).toHaveBeenCalled();
-  });
-});

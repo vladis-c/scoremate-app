@@ -1,6 +1,6 @@
 import {fireEvent, render} from '@testing-library/react-native';
 import React from 'react';
-import StartScreen from '../StartScreen';
+import StartScreen from '../HomeScreen';
 
 jest.mock('../../constants', () => ({
   startButton1Labels: ['Start Game'],
@@ -31,7 +31,7 @@ jest.mock('../../components/ScrollContainer', () => {
   return (props: any) => React.createElement(View, props, props.children);
 });
 
-describe('StartScreen', () => {
+describe('HomeScreen', () => {
   const navigationMock = {navigate: jest.fn()} as any;
   const routeMock = {params: {}} as any;
 
@@ -39,7 +39,7 @@ describe('StartScreen', () => {
     jest.clearAllMocks();
   });
 
-  it('Text renders correctly on StartScreen', () => {
+  it('Text renders correctly on HomeScreen', () => {
     const {getByText} = render(
       <StartScreen navigation={navigationMock} route={routeMock} />,
     );
