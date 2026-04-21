@@ -3,15 +3,15 @@ import {
   Alert,
   Keyboard,
   StyleSheet,
-  TouchableOpacity,
   TouchableWithoutFeedback,
   View,
 } from 'react-native';
 import {Card, Text, TextInput} from 'react-native-paper';
 import {getRandomNumber} from '../helpers';
+import {fonts} from '../theme';
 
 const RandomizerScreen = () => {
-  const [random, setRandom] = useState<number | null>(null);
+  const [randomNumber, setRandomNumber] = useState<number | null>(null);
   const [limits, setLimits] = useState<[number, number]>([1, 10]);
 
   const handleValidateLimits = () => {
@@ -29,7 +29,7 @@ const RandomizerScreen = () => {
     if (!valid) {
       return;
     }
-    setRandom(getRandomNumber(limits[0], limits[1]));
+    setRandomNumber(getRandomNumber(limits[0], limits[1]));
   };
 
   const handleSetLimits = (type: 'from' | 'to', value: number) => {
@@ -42,61 +42,61 @@ const RandomizerScreen = () => {
   };
 
   return (
-    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-      <View style={styles.container}>
-        <Card style={styles.card}>
-          <Card.Content style={styles.content}>
-            <View style={styles.inputs}>
-              <TextInput
-                value={limits[0].toString()}
-                keyboardType="numeric"
-                onChangeText={t => {
-                  const number = +t;
-                  if (!isNaN(number)) {
-                    handleSetLimits('from', number);
-                  }
-                }}
-                onBlur={handleValidateLimits}
-                mode="outlined"
-                label="From"
-                style={styles.input}
-                autoComplete="off"
-              />
-              <TextInput
-                value={limits[1].toString()}
-                keyboardType="numeric"
-                onChangeText={t => {
-                  const number = +t;
-                  if (!isNaN(number)) {
-                    handleSetLimits('to', number);
-                  }
-                }}
-                onBlur={handleValidateLimits}
-                mode="outlined"
-                label="To"
-                style={styles.input}
-                autoComplete="off"
-              />
-            </View>
-            <TouchableOpacity
-              style={styles.textContainer}
-              onPress={() => {
-                Keyboard.dismiss();
-                handleSetRandom();
-              }}>
-              {random !== null ? (
-                <Text variant="bodySmall">
-                  Press on number to randomize again
-                </Text>
-              ) : null}
-              <Text variant={random !== null ? 'bodyLarge' : 'bodySmall'}>
-                {random !== null ? random : 'Press here to randomize'}
+    <View style={styles.container}>
+      <Card>
+        <Card.Content style={styles.content}>
+          <View style={styles.inputs}>
+            <TextInput
+              value={limits[0].toString()}
+              keyboardType="numeric"
+              onChangeText={t => {
+                const number = +t;
+                if (!isNaN(number)) {
+                  handleSetLimits('from', number);
+                }
+              }}
+              onBlur={handleValidateLimits}
+              mode="outlined"
+              label="From"
+              style={styles.input}
+              autoComplete="off"
+            />
+            <TextInput
+              value={limits[1].toString()}
+              keyboardType="numeric"
+              onChangeText={t => {
+                const number = +t;
+                if (!isNaN(number)) {
+                  handleSetLimits('to', number);
+                }
+              }}
+              onBlur={handleValidateLimits}
+              mode="outlined"
+              label="To"
+              style={styles.input}
+              autoComplete="off"
+            />
+          </View>
+          <TouchableWithoutFeedback
+            style={styles.textContainer}
+            onPress={() => {
+              Keyboard.dismiss();
+              handleSetRandom();
+            }}>
+            <View style={{height: 256}}>
+              <Text style={[{textAlign: 'center'}, fonts.SmallHeading]}>
+                {randomNumber === null
+                  ? 'Press here to randomize'
+                  : 'Press on number to randomize again'}
               </Text>
-            </TouchableOpacity>
-          </Card.Content>
-        </Card>
-      </View>
-    </TouchableWithoutFeedback>
+              <Text style={[{textAlign: 'center'}, fonts.HugeText]}>
+                {randomNumber}
+              </Text>
+            </View>
+          </TouchableWithoutFeedback>
+        </Card.Content>
+      </Card>
+    </View>
   );
 };
 
@@ -106,17 +106,14 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
-    marginTop: 100,
-    marginHorizontal: 20,
+    marginHorizontal: 16,
+    marginTop: 32,
   },
-  card: {width: '100%'},
   content: {
     alignItems: 'center',
-    justifyContent: 'flex-start',
+    gap: 8,
   },
   inputs: {
-    marginTop: 50,
-    marginBottom: 20,
     width: '100%',
     flexDirection: 'row',
     alignItems: 'center',
@@ -124,8 +121,6 @@ const styles = StyleSheet.create({
   },
   textContainer: {
     width: '100%',
-    minHeight: 300,
-    marginTop: 10,
     alignItems: 'center',
     justifyContent: 'center',
   },

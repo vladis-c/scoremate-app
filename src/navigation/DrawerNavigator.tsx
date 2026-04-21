@@ -70,13 +70,13 @@ const DrawerNavigator = () => {
           drawerIcon: () => <IconButton icon="refresh" />,
         }}
       />
-      <Drawer.Screen
+      {/* <Drawer.Screen
         name={DRAWER_NAV.DICE}
         component={DiceScreen}
         options={{
           drawerIcon: () => <IconButton icon="dice-6" />,
         }}
-      />
+      /> */}
       <Drawer.Screen
         name={DRAWER_NAV.CUSTOMISATION}
         component={CustomsScreen}
