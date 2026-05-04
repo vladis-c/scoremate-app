@@ -1,6 +1,6 @@
 import {fireEvent, render, waitFor} from '@testing-library/react-native';
 import React from 'react';
-import CustomsScreen from '../CustomsScreen';
+import CustomisationScreen from '../CustomisationScreen';
 
 jest.mock('../../helpers', () => ({
   getRandomColor: jest.fn(() => '#abcdef'),
@@ -143,7 +143,7 @@ describe('CustomsScreen', () => {
 
   it('renders Continue when fromStart=true and pressing button navigates and sets params', () => {
     const {getByText} = render(
-      <CustomsScreen navigation={navigationMock} route={route} />,
+      <CustomisationScreen navigation={navigationMock} route={route} />,
     );
 
     const btn = getByText('Continue');
@@ -172,7 +172,7 @@ describe('CustomsScreen', () => {
     });
 
     const {getByTestId} = render(
-      <CustomsScreen navigation={navigationMock} route={route} />,
+      <CustomisationScreen navigation={navigationMock} route={route} />,
     );
 
     const input = getByTestId('input-Amount of players');
@@ -204,7 +204,7 @@ describe('CustomsScreen', () => {
     });
 
     const {getByTestId} = render(
-      <CustomsScreen navigation={navigationMock} route={route} />,
+      <CustomisationScreen navigation={navigationMock} route={route} />,
     );
 
     const input = getByTestId('input-Amount of players');
@@ -234,7 +234,7 @@ describe('CustomsScreen', () => {
       updateCustomScore: jest.fn(),
     });
 
-    render(<CustomsScreen navigation={navigationMock} route={route} />);
+    render(<CustomisationScreen navigation={navigationMock} route={route} />);
 
     await waitFor(() => {
       expect(setPlayerSettings).toHaveBeenCalledTimes(2);
@@ -260,7 +260,7 @@ describe('CustomsScreen', () => {
     });
 
     const {getByTestId, getByText} = render(
-      <CustomsScreen navigation={navigationMock} route={route} />,
+      <CustomisationScreen navigation={navigationMock} route={route} />,
     );
 
     const ownTitle = 'Please set my own scores';

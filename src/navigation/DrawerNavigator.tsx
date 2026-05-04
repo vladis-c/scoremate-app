@@ -8,7 +8,7 @@ import {CommonActions} from '@react-navigation/native';
 import React from 'react';
 import {IconButton} from 'react-native-paper';
 import CurrentSessionScreen from '../screens/CurrentSessionScreen';
-import CustomsScreen from '../screens/CustomsScreen';
+import CustomisationScreen from '../screens/CustomisationScreen';
 import DiceScreen from '../screens/DiceScreen';
 import HistoryScreen from '../screens/HistoryScreen';
 import RandomizerScreen from '../screens/RandomizerScreen';
@@ -79,7 +79,7 @@ const DrawerNavigator = () => {
       /> */}
       <Drawer.Screen
         name={DRAWER_NAV.CUSTOMISATION}
-        component={CustomsScreen}
+        component={CustomisationScreen}
         options={{
           drawerIcon: () => <IconButton icon="cog" />,
         }}

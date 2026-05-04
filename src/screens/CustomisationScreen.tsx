@@ -13,10 +13,10 @@ import SettingRow from '../components/SettingRow';
 import {desireWords} from '../constants';
 import {useScore} from '../context/ScoreContext';
 import {getRandomNumber} from '../helpers';
-import {CustomsScreenProps, DRAWER_NAV} from '../navigation/navigation-types';
+import {CustomisationScreenProps, DRAWER_NAV} from '../navigation/navigation-types';
 import {colors} from '../theme';
 
-const CustomsScreen = ({navigation, route}: CustomsScreenProps) => {
+const CustomisationScreen = ({navigation, route}: CustomisationScreenProps) => {
   const scoreContext = useScore();
 
   useLayoutEffect(() => {
@@ -29,13 +29,13 @@ const CustomsScreen = ({navigation, route}: CustomsScreenProps) => {
     });
   }, [navigation, route.params]);
 
-  useEffect(
-    () =>
-      navigation.addListener('blur', () => {
-        navigation.setParams({isNew: false});
-      }),
-    [navigation],
-  );
+  useEffect(() => {
+    const resetParams = () => {
+      navigation.setParams({isNew: false});
+    };
+    navigation.addListener('blur', resetParams);
+    return () => navigation.removeListener('blur', resetParams);
+  }, [navigation]);
 
   useFocusEffect(
     useCallback(() => {
@@ -175,7 +175,7 @@ const CustomsScreen = ({navigation, route}: CustomsScreenProps) => {
   );
 };
 
-export default CustomsScreen;
+export default CustomisationScreen;
 
 const styles = StyleSheet.create({
   container: {alignItems: 'stretch'},

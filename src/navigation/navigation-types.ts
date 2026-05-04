@@ -13,7 +13,7 @@ export const DRAWER_NAV = {
   RANDOM: 'Randomizer',
   DICE: 'Dice',
   HISTORY: 'History',
-  HOME: "Back to Home"
+  HOME: 'Back to Home',
 } as const;
 export type DrawerNavProps = ObjectValues<typeof DRAWER_NAV>;
 
@@ -41,7 +41,7 @@ export type ScoreScreenProps = NativeStackScreenProps<
   DrawerNavParamList,
   'Current Session'
 >;
-export type CustomsScreenProps = NativeStackScreenProps<
+export type CustomisationScreenProps = NativeStackScreenProps<
   DrawerNavParamList,
   'Customisation'
 >;

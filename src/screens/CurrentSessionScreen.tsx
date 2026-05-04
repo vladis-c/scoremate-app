@@ -27,13 +27,12 @@ const CurrentSessionScreen = ({navigation, route}: ScoreScreenProps) => {
   );
 
   // resetting the navigation param state when moving away from the screen
-  useEffect(
-    () =>
-      navigation.addListener('blur', () => {
-        navigation.setParams({isNew: false});
-      }),
-    [navigation],
-  );
+  useEffect(() => {
+    const resetParams = () => {
+      navigation.setParams({isNew: false});
+    };
+    navigation.addListener('blur', resetParams);
+  }, [navigation]);
 
   useEffect(() => {
     ref.current?.scrollToEnd();
