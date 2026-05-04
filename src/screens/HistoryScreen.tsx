@@ -3,6 +3,7 @@ import {FlashList} from '@shopify/flash-list';
 import React, {useCallback, useEffect, useState} from 'react';
 import {StyleSheet, View} from 'react-native';
 import GameCard from '../components/GameCard';
+import HistoryFilters from '../components/HistoryFilters';
 import {useScore} from '../context/ScoreContext';
 import {DRAWER_NAV, HistoryScreenProps} from '../navigation/navigation-types';
 
@@ -26,6 +27,7 @@ const HistoryScreen = ({navigation}: HistoryScreenProps) => {
 
   return (
     <View style={styles.screenContainer}>
+      <HistoryFilters page={page} />
       <FlashList
         data={gamesHistory}
         contentContainerStyle={styles.listContainer}
@@ -44,9 +46,9 @@ const HistoryScreen = ({navigation}: HistoryScreenProps) => {
               scoreContext.fetchGame(item.id);
               navigation.navigate(DRAWER_NAV.CURRENT, {isNew: false});
             }}
-            onDelete={async () => {
+            onDelete={() => {
               setPage(1);
-              await scoreContext.deleteGame(item.id);
+              scoreContext.deleteGame(item.id);
             }}
           />
         )}
@@ -60,14 +62,14 @@ export default HistoryScreen;
 const styles = StyleSheet.create({
   screenContainer: {
     flex: 1,
+    paddingHorizontal: 8,
   },
   listContainer: {
-    paddingHorizontal: 20,
     paddingBottom: 48,
   },
   container: {
     width: '100%',
-    marginVertical: 10,
+    marginVertical: 8,
   },
   content: {
     width: '100%',

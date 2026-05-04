@@ -6,10 +6,7 @@ import {CustomScore, Game, Player} from '../types';
 type ScoreContextType = {
   currentGame: Game | null;
   createNewGame: () => void;
-  updateGame: ({
-    gameName,
-    saveToDb,
-  }: {
+  updateGame: (props: {
     gameName: string;
     saveToDb?: boolean | undefined;
   }) => void;
@@ -22,10 +19,7 @@ type ScoreContextType = {
   setPlayerSettings: (player: Omit<Player, 'score'>) => void;
   savePlayerSettings: (player: Player) => void;
   shufflePlayerOrder: () => void;
-  updateCustomScore: ({
-    score,
-    saveToDb,
-  }: {
+  updateCustomScore: (props: {
     score: Omit<CustomScore, 'label'>;
     saveToDb?: boolean;
   }) => void;
@@ -34,12 +28,10 @@ type ScoreContextType = {
   clearCustomScores: () => void;
   gamesHistory: Game[];
   hasMoreGames: boolean;
-  fetchGamesHistory: ({
-    page,
-    limit,
-  }: {
-    page?: number | undefined;
-    limit?: number | undefined;
+  fetchGamesHistory: (props: {
+    searchParam?: string;
+    page?: number;
+    limit?: number;
   }) => void;
   fetchGame: (gameId?: number) => void;
   deleteGame: (historyId: number | undefined) => void;
@@ -272,13 +264,19 @@ export const ScoreProvider = ({children}: {children: React.ReactNode}) => {
   };
 
   const fetchGamesHistory = async ({
+    searchParam,
     page,
     limit,
   }: {
+    searchParam?: string;
     page?: number;
     limit?: number;
   }) => {
-    const {games, hasMore} = await historyDb.getAllGames({page, limit});
+    const {games, hasMore} = await historyDb.getAllGames({
+      searchParam,
+      page,
+      limit,
+    });
     setGamesHistory(prev =>
       page === 1
         ? games.map(game => ({

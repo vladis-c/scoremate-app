@@ -198,9 +198,14 @@ const removeCustomScoring = async ({scoringId}: {scoringId: number}) => {
 };
 
 const getAllGames = async ({
+  searchParam = '',
   page = 1,
   limit = 10,
-}: {page?: number; limit?: number} = {}) => {
+}: {
+  searchParam?: string;
+  page?: number;
+  limit?: number;
+} = {}) => {
   const offset = (page - 1) * limit;
   const db = await getDB();
 
@@ -225,10 +230,11 @@ const getAllGames = async ({
        ) THEN 1 ELSE 0 END AS hasCustomScoring
      FROM HISTORY H
      LEFT JOIN HISTORY_PLAYERS HP ON HP.historyId = H.id
+     WHERE LOWER(H.gameName) LIKE '%' || LOWER(?) || '%'
      GROUP BY H.id
      ORDER BY H.createdAt DESC
      LIMIT ? OFFSET ?`,
-    [limit + 1, offset],
+    [searchParam, limit + 1, offset],
   );
 
   // If we got more than limit, there are more pages

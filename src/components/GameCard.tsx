@@ -2,14 +2,7 @@ import {format} from 'date-fns';
 import React, {useState} from 'react';
 import {StyleSheet, View} from 'react-native';
 import Swipeable from 'react-native-gesture-handler/ReanimatedSwipeable';
-import {
-  Button,
-  Card,
-  Dialog,
-  IconButton,
-  Portal,
-  Text,
-} from 'react-native-paper';
+import {Card, IconButton, Text} from 'react-native-paper';
 import {Game} from '../types';
 import ConfirmationDialog from './ConfirmationDialog';
 
@@ -84,13 +77,8 @@ const GameCard = ({
 export default GameCard;
 
 const styles = StyleSheet.create({
-  listContainer: {
-    paddingHorizontal: 20,
-    paddingBottom: 48,
-  },
   container: {
-    width: '100%',
-    marginVertical: 10,
+    margin: 8,
   },
   content: {
     width: '100%',

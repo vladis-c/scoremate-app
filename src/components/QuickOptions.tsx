@@ -58,6 +58,7 @@ const QuickOptions = ({onDelete}: QuickOptionsProps) => {
                 textColor={colors.Black}
                 contentStyle={styles.inputContent}
                 placeholder="Game name"
+                placeholderTextColor={colors.MidGrey}
               />
               <IconButton
                 icon={isEditState ? 'check' : 'pencil'}
