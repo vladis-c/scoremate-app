@@ -3,7 +3,7 @@ import {FlashList} from '@shopify/flash-list';
 import React, {useCallback, useEffect, useState} from 'react';
 import {StyleSheet, View} from 'react-native';
 import GameCard from '../components/GameCard';
-import HistoryFilters from '../components/HistoryFilters';
+import HistorySearch from '../components/HistorySearch';
 import {useScore} from '../context/ScoreContext';
 import {DRAWER_NAV, HistoryScreenProps} from '../navigation/navigation-types';
 
@@ -27,7 +27,7 @@ const HistoryScreen = ({navigation}: HistoryScreenProps) => {
 
   return (
     <View style={styles.screenContainer}>
-      <HistoryFilters page={page} />
+      <HistorySearch page={page} />
       <FlashList
         data={gamesHistory}
         contentContainerStyle={styles.listContainer}

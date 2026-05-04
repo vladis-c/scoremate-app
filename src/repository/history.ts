@@ -1,3 +1,4 @@
+import {HistoryFilters} from '../types';
 import {getDB} from './db';
 
 const createHistoryTable = async () => {
@@ -198,16 +199,33 @@ const removeCustomScoring = async ({scoringId}: {scoringId: number}) => {
 };
 
 const getAllGames = async ({
-  searchParam = '',
+  filters,
   page = 1,
   limit = 10,
 }: {
-  searchParam?: string;
+  filters?: HistoryFilters;
   page?: number;
   limit?: number;
 } = {}) => {
   const offset = (page - 1) * limit;
   const db = await getDB();
+
+  const dateRange = filters?.dateRange;
+  const searchValue = filters?.searchParam ?? '';
+  const queryParams: Array<string | number> = [`%${searchValue}%`];
+  const whereClauses = ['LOWER(H.gameName) LIKE LOWER(?)'];
+
+  if (dateRange?.start) {
+    whereClauses.push('H.createdAt >= ?');
+    queryParams.push(dateRange.start.toISOString());
+  }
+
+  if (dateRange?.end) {
+    whereClauses.push('H.createdAt <= ?');
+    queryParams.push(dateRange.end.toISOString());
+  }
+
+  const whereStatement = whereClauses.join('\n      AND ');
 
   // Query limit + 1 to detect if there are more pages
   const rows = await db.getAllAsync<{
@@ -230,11 +248,11 @@ const getAllGames = async ({
        ) THEN 1 ELSE 0 END AS hasCustomScoring
      FROM HISTORY H
      LEFT JOIN HISTORY_PLAYERS HP ON HP.historyId = H.id
-     WHERE LOWER(H.gameName) LIKE '%' || LOWER(?) || '%'
+     WHERE ${whereStatement}
      GROUP BY H.id
      ORDER BY H.createdAt DESC
      LIMIT ? OFFSET ?`,
-    [searchParam, limit + 1, offset],
+    [...queryParams, limit + 1, offset],
   );
 
   // If we got more than limit, there are more pages

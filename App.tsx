@@ -5,12 +5,15 @@ import {useCallback} from 'react';
 import {ClickOutsideProvider} from 'react-native-click-outside';
 import 'react-native-gesture-handler';
 import {PaperProvider} from 'react-native-paper';
+import {en, registerTranslation} from 'react-native-paper-dates';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 import {ScoreProvider} from './src/context/ScoreContext';
 import {useStart} from './src/hooks/useStart';
 import {useUpdate} from './src/hooks/useUpdate';
 import MainNavigator from './src/navigation/MainNavigator';
 import {NavigationTheme, PaperTheme} from './src/theme';
+
+registerTranslation('en', en);
 
 SplashScreen.preventAutoHideAsync();
 

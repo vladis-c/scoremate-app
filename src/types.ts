@@ -29,3 +29,11 @@ export type CustomScore = {
   label: string;
   id: number;
 };
+
+export type HistoryFilters = {
+  dateRange?: {
+    start?: Date;
+    end?: Date;
+  };
+  searchParam?: string;
+};
