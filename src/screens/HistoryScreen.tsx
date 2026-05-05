@@ -1,6 +1,5 @@
-import {useFocusEffect} from '@react-navigation/native';
 import {FlashList} from '@shopify/flash-list';
-import React, {useCallback, useEffect} from 'react';
+import React, {useEffect} from 'react';
 import {StyleSheet, View} from 'react-native';
 import GameCard from '../components/GameCard';
 import HistorySearch from '../components/HistorySearch';
@@ -18,6 +17,8 @@ const HistoryScreen = ({navigation}: HistoryScreenProps) => {
       scoreContext.fetchGamesHistory();
     }
   }, [historyFilters.page]);
+
+  //TODO: bug: when searching and erasing the search line to empty - list does not scroll to top correctly
 
   return (
     <View style={styles.screenContainer}>

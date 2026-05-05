@@ -1,7 +1,15 @@
 import {format} from 'date-fns';
 import React, {useState} from 'react';
 import {StyleSheet, TouchableOpacity, View} from 'react-native';
-import {Button, Card, Divider, Modal, Portal, Text} from 'react-native-paper';
+import {
+  Button,
+  Card,
+  Divider,
+  IconButton,
+  Modal,
+  Portal,
+  Text,
+} from 'react-native-paper';
 import {DatePickerModal} from 'react-native-paper-dates';
 import {useScore} from '../context/ScoreContext';
 import {colors, fonts} from '../theme';
@@ -28,14 +36,12 @@ const HistoryFilters = ({
             <Text style={styles.title}>Set filters to find games</Text>
             <Divider style={{backgroundColor: colors.Black}} />
             <View>
-              <View>
+              <View style={styles.filterRow}>
                 <TouchableOpacity onPress={() => setDatePickerVisible(true)}>
-                  <View style={styles.filterLine}>
+                  <View style={styles.touchableLine}>
                     <Text style={styles.filterLineLeft}>Date range</Text>
                     <Text style={styles.filterLineRight}>
-                      {dateRange?.start && dateRange?.end
-                        ? `${format(new Date(dateRange.start), 'd.M.yyyy')} - ${format(new Date(dateRange.end), 'd.M.yyyy')}`
-                        : ''}
+                      {`${dateRange?.start ? format(new Date(dateRange.start), 'd.M.yyyy') : 'D.M.YYYY'} - ${dateRange?.end ? format(new Date(dateRange.end), 'd.M.yyyy') : ''}`}
                     </Text>
                   </View>
                 </TouchableOpacity>
@@ -49,10 +55,21 @@ const HistoryFilters = ({
                   onConfirm={({startDate, endDate}) => {
                     setDatePickerVisible(false);
                     scoreContext.setDateRangeFilter({
-                      start: startDate,
-                      end: endDate,
+                      dateRange: {
+                        start: startDate,
+                        end: endDate,
+                      },
                     });
                   }}
+                />
+                <IconButton
+                  icon="delete"
+                  size={12}
+                  onPress={() => {
+                    scoreContext.setDateRangeFilter({reset: true});
+                  }}
+                  iconColor={colors.White}
+                  containerColor={colors.Red}
                 />
               </View>
             </View>
@@ -81,6 +98,12 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   title: {...fonts.SmallHeading, textAlign: 'center'},
+  filterRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    gap: 4,
+  },
   filterLineLeft: {
     borderBottomWidth: 1,
     borderBottomColor: colors.DarkGrey,
@@ -94,7 +117,7 @@ const styles = StyleSheet.create({
     paddingTop: 6,
     borderRadius: 4,
   },
-  filterLine: {
+  touchableLine: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
