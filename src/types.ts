@@ -36,4 +36,6 @@ export type HistoryFilters = {
     end?: Date;
   };
   searchParam?: string;
+  page: number;
+  limit: number;
 };

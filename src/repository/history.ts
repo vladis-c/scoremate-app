@@ -198,15 +198,8 @@ const removeCustomScoring = async ({scoringId}: {scoringId: number}) => {
   ]);
 };
 
-const getAllGames = async ({
-  filters,
-  page = 1,
-  limit = 10,
-}: {
-  filters?: HistoryFilters;
-  page?: number;
-  limit?: number;
-} = {}) => {
+const getAllGames = async ({filters}: {filters: HistoryFilters}) => {
+  const {limit, page} = filters;
   const offset = (page - 1) * limit;
   const db = await getDB();
 

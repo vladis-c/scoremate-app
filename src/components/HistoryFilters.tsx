@@ -59,7 +59,7 @@ const HistoryFilters = ({
             <Button
               onPress={() => {
                 setFilterModalVisible(false);
-                scoreContext.fetchGamesHistory({filters: {dateRange}});
+                scoreContext.fetchGamesHistory();
               }}>
               Confirm
             </Button>

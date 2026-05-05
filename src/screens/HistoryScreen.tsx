@@ -1,6 +1,6 @@
 import {useFocusEffect} from '@react-navigation/native';
 import {FlashList} from '@shopify/flash-list';
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useCallback, useEffect} from 'react';
 import {StyleSheet, View} from 'react-native';
 import GameCard from '../components/GameCard';
 import HistorySearch from '../components/HistorySearch';
@@ -9,31 +9,25 @@ import {DRAWER_NAV, HistoryScreenProps} from '../navigation/navigation-types';
 
 const HistoryScreen = ({navigation}: HistoryScreenProps) => {
   const scoreContext = useScore();
-  const [page, setPage] = useState(1);
+  const {historyFilters, loading} = scoreContext;
 
   const {gamesHistory, hasMoreGames} = scoreContext;
 
   useEffect(() => {
-    if (page !== 0) {
-      scoreContext.fetchGamesHistory({page});
+    if (historyFilters.page !== 0 && !loading) {
+      scoreContext.fetchGamesHistory();
     }
-  }, [page]);
-
-  useFocusEffect(
-    useCallback(() => {
-      setPage(1);
-    }, []),
-  );
+  }, [historyFilters.page]);
 
   return (
     <View style={styles.screenContainer}>
-      <HistorySearch page={page} />
+      <HistorySearch />
       <FlashList
         data={gamesHistory}
         contentContainerStyle={styles.listContainer}
         onEndReached={() => {
           if (hasMoreGames) {
-            setPage(prev => prev + 1);
+            scoreContext.setPageFilter(historyFilters.page + 1);
           }
         }}
         onEndReachedThreshold={0.1}
@@ -41,13 +35,13 @@ const HistoryScreen = ({navigation}: HistoryScreenProps) => {
           <GameCard
             item={item}
             onPress={() => {
-              setPage(0);
+              scoreContext.setPageFilter(0);
               scoreContext.resetGamesHistory();
               scoreContext.fetchGame(item.id);
               navigation.navigate(DRAWER_NAV.CURRENT, {isNew: false});
             }}
             onDelete={() => {
-              setPage(1);
+              scoreContext.setPageFilter(1);
               scoreContext.deleteGame(item.id);
             }}
           />

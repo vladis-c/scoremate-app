@@ -4,6 +4,7 @@ import {historyDb} from '../repository/history';
 import {CustomScore, Game, HistoryFilters, Player} from '../types';
 
 type ScoreContextType = {
+  loading: boolean;
   currentGame: Game | null;
   createNewGame: () => void;
   updateGame: (props: {
@@ -28,11 +29,7 @@ type ScoreContextType = {
   clearCustomScores: () => void;
   gamesHistory: Game[];
   hasMoreGames: boolean;
-  fetchGamesHistory: (props: {
-    filters?: HistoryFilters;
-    page?: number;
-    limit?: number;
-  }) => void;
+  fetchGamesHistory: (searchParam?: string) => void;
   fetchGame: (gameId?: number) => void;
   deleteGame: (historyId: number | undefined) => void;
   deleteCurrentGame: () => Promise<boolean>;
@@ -40,6 +37,8 @@ type ScoreContextType = {
   resetGamesHistory: () => void;
   historyFilters: HistoryFilters;
   setDateRangeFilter: (dateRange: HistoryFilters['dateRange']) => void;
+  setPageFilter: (page: HistoryFilters['page']) => void;
+  setSearchParamFilter: (page: HistoryFilters['searchParam']) => void;
 };
 
 const historyFiltersInitialValue: HistoryFilters = {
@@ -48,11 +47,14 @@ const historyFiltersInitialValue: HistoryFilters = {
     end: undefined,
   },
   searchParam: '',
+  page: 1,
+  limit: 10,
 };
 
 const ScoreContext = createContext<ScoreContextType | undefined>(undefined);
 
 export const ScoreProvider = ({children}: {children: React.ReactNode}) => {
+  const [loading, setLoading] = useState(false);
   const [gamesHistory, setGamesHistory] = useState<Game[]>([]);
   const [hasMoreGames, setHasMoreGames] = useState(false);
   const [historyFilters, setHistoryFilters] = useState<HistoryFilters>(
@@ -276,21 +278,18 @@ export const ScoreProvider = ({children}: {children: React.ReactNode}) => {
     setCurrentGame(updatedGame);
   };
 
-  const fetchGamesHistory = async ({
-    filters,
-    page,
-    limit,
-  }: {
-    filters?: HistoryFilters;
-    page?: number;
-    limit?: number;
-  }) => {
+  const fetchGamesHistory = async (searchParam?: string) => {
+    setLoading(true);
+    setHistoryFilters(prev => ({...prev, searchParam}));
+    console.log('fetching games');
+
     const {games, hasMore} = await historyDb.getAllGames({
-      filters,
-      page,
-      limit,
+      filters: {...historyFilters, searchParam},
     });
-    const shouldReplace = page === 1 || !!filters;
+    console.log('fetched games', games.length);
+    setLoading(false);
+
+    const shouldReplace = historyFilters.page === 1 || !!historyFilters;
     setGamesHistory(prev =>
       shouldReplace
         ? games.map(game => ({
@@ -313,11 +312,17 @@ export const ScoreProvider = ({children}: {children: React.ReactNode}) => {
     );
     setHasMoreGames(hasMore);
 
-    if (filters?.searchParam !== undefined) {
-      setHistoryFilters(prev => ({...prev, searchParam: filters.searchParam}));
+    if (historyFilters?.searchParam !== undefined) {
+      setHistoryFilters(prev => ({
+        ...prev,
+        searchParam: historyFilters.searchParam,
+      }));
     }
-    if (filters?.dateRange) {
-      setHistoryFilters(prev => ({...prev, dateRange: filters.dateRange}));
+    if (historyFilters?.dateRange) {
+      setHistoryFilters(prev => ({
+        ...prev,
+        dateRange: historyFilters.dateRange,
+      }));
     }
   };
 
@@ -407,6 +412,12 @@ export const ScoreProvider = ({children}: {children: React.ReactNode}) => {
   const setDateRangeFilter = (dateRange: HistoryFilters['dateRange']) => {
     setHistoryFilters(prev => ({...prev, dateRange}));
   };
+  const setPageFilter = (page: HistoryFilters['page']) => {
+    setHistoryFilters(prev => ({...prev, page}));
+  };
+  const setSearchParamFilter = (searchParam: HistoryFilters['searchParam']) => {
+    setHistoryFilters(prev => ({...prev, searchParam}));
+  };
 
   useEffect(() => {
     // fetching last game on app launch
@@ -416,6 +427,7 @@ export const ScoreProvider = ({children}: {children: React.ReactNode}) => {
   return (
     <ScoreContext.Provider
       value={{
+        loading,
         currentGame,
         createNewGame,
         updateGame,
@@ -442,6 +454,8 @@ export const ScoreProvider = ({children}: {children: React.ReactNode}) => {
         resetGamesHistory,
         historyFilters,
         setDateRangeFilter,
+        setPageFilter,
+        setSearchParamFilter,
       }}>
       {children}
     </ScoreContext.Provider>

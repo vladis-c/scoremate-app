@@ -1,13 +1,18 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {StyleSheet} from 'react-native';
 import {Card, IconButton, TextInput} from 'react-native-paper';
 import {useScore} from '../context/ScoreContext';
 import {colors} from '../theme';
 import HistoryFilters from './HistoryFilters';
 
-const HistorySearch = ({page}: {page: number}) => {
+const HistorySearch = () => {
   const scoreContext = useScore();
+  const {historyFilters} = scoreContext;
   const [filterModalVisible, setFilterModalVisible] = useState(false);
+
+  useEffect(() => {
+    console.log('historyFilters:', JSON.stringify(historyFilters, null, 4));
+  }, [historyFilters]);
 
   return (
     <Card style={styles.card}>
@@ -15,9 +20,7 @@ const HistorySearch = ({page}: {page: number}) => {
         <TextInput
           style={styles.input}
           mode="outlined"
-          onChangeText={e =>
-            scoreContext.fetchGamesHistory({filters: {searchParam: e}, page})
-          }
+          onChangeText={e => scoreContext.fetchGamesHistory(e)}
           outlineStyle={{borderColor: 'transparent'}}
           textColor={colors.Black}
           contentStyle={styles.inputContent}
