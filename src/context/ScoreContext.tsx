@@ -38,7 +38,6 @@ type ScoreContextType = {
   historyFilters: HistoryFilters;
   setDateRangeFilter: (dateRange: HistoryFilters['dateRange']) => void;
   setPageFilter: (page: HistoryFilters['page']) => void;
-  setSearchParamFilter: (page: HistoryFilters['searchParam']) => void;
 };
 
 const historyFiltersInitialValue: HistoryFilters = {
@@ -280,18 +279,25 @@ export const ScoreProvider = ({children}: {children: React.ReactNode}) => {
 
   const fetchGamesHistory = async (searchParam?: string) => {
     setLoading(true);
-    setHistoryFilters(prev => ({...prev, searchParam}));
+    const isSearch = searchParam !== undefined;
+    const pageReset = isSearch ? 1 : historyFilters.page;
+    const newHistoryFilters = {
+      ...historyFilters,
+      searchParam: isSearch ? searchParam : historyFilters.searchParam,
+      page: pageReset,
+    };
+    setHistoryFilters(newHistoryFilters);
     console.log('fetching games');
 
     const {games, hasMore} = await historyDb.getAllGames({
-      filters: {...historyFilters, searchParam},
+      filters: newHistoryFilters,
     });
     console.log('fetched games', games.length);
+    console.log('has more', hasMore);
     setLoading(false);
 
-    const shouldReplace = historyFilters.page === 1 || !!historyFilters;
     setGamesHistory(prev =>
-      shouldReplace
+      newHistoryFilters.page === 1
         ? games.map(game => ({
             id: game.id,
             name: game.gameName,
@@ -311,19 +317,6 @@ export const ScoreProvider = ({children}: {children: React.ReactNode}) => {
           ],
     );
     setHasMoreGames(hasMore);
-
-    if (historyFilters?.searchParam !== undefined) {
-      setHistoryFilters(prev => ({
-        ...prev,
-        searchParam: historyFilters.searchParam,
-      }));
-    }
-    if (historyFilters?.dateRange) {
-      setHistoryFilters(prev => ({
-        ...prev,
-        dateRange: historyFilters.dateRange,
-      }));
-    }
   };
 
   const fetchGame = async (gameId?: number) => {
@@ -410,13 +403,10 @@ export const ScoreProvider = ({children}: {children: React.ReactNode}) => {
   };
 
   const setDateRangeFilter = (dateRange: HistoryFilters['dateRange']) => {
-    setHistoryFilters(prev => ({...prev, dateRange}));
+    setHistoryFilters(prev => ({...prev, dateRange, page: 1}));
   };
   const setPageFilter = (page: HistoryFilters['page']) => {
     setHistoryFilters(prev => ({...prev, page}));
-  };
-  const setSearchParamFilter = (searchParam: HistoryFilters['searchParam']) => {
-    setHistoryFilters(prev => ({...prev, searchParam}));
   };
 
   useEffect(() => {
@@ -455,7 +445,6 @@ export const ScoreProvider = ({children}: {children: React.ReactNode}) => {
         historyFilters,
         setDateRangeFilter,
         setPageFilter,
-        setSearchParamFilter,
       }}>
       {children}
     </ScoreContext.Provider>
