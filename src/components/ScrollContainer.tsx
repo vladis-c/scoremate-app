@@ -1,6 +1,8 @@
 import React from 'react';
 import {
   KeyboardAvoidingView,
+  NativeScrollEvent,
+  NativeSyntheticEvent,
   Platform,
   ScrollView,
   StyleProp,
@@ -13,6 +15,7 @@ type ScrollContainerProps = {
   contentStyle?: StyleProp<ViewStyle>;
   containerStyle?: StyleProp<ViewStyle>;
   ref?: React.RefObject<ScrollView | null>;
+  onScroll?: (event: NativeSyntheticEvent<NativeScrollEvent>) => void;
 };
 
 const ScrollContainer = ({
@@ -20,6 +23,7 @@ const ScrollContainer = ({
   contentStyle,
   containerStyle,
   ref,
+  onScroll,
 }: ScrollContainerProps) => {
   return (
     <KeyboardAvoidingView
@@ -27,6 +31,7 @@ const ScrollContainer = ({
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       keyboardVerticalOffset={30}>
       <ScrollView
+        onScroll={onScroll}
         style={styles.scroll}
         contentContainerStyle={[styles.content, contentStyle]}
         ref={ref}>

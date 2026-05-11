@@ -1,6 +1,7 @@
 import {CommonActions, useFocusEffect} from '@react-navigation/native';
 import React, {useCallback, useEffect, useLayoutEffect, useRef} from 'react';
 import {ScrollView, StyleSheet, View} from 'react-native';
+import AnimatedFab from '../components/AnimatedFab';
 import QuickOptions from '../components/QuickOptions';
 import ScoreCard from '../components/ScoreCard';
 import ScrollContainer from '../components/ScrollContainer';
@@ -60,6 +61,12 @@ const CurrentSessionScreen = ({navigation, route}: ScoreScreenProps) => {
           />
         ))}
       </ScrollContainer>
+      <AnimatedFab
+        onPress={() => {
+          // scoreContext.updateGame({saveToDb: true, status: 'finished'})
+          console.log("s")
+        }}
+      />
     </View>
   );
 };

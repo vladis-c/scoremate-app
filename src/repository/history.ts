@@ -120,15 +120,26 @@ const deletePlayer = async ({playerId}: {playerId: number}) => {
 const updateGame = async ({
   historyId,
   gameName,
+  status,
 }: {
   historyId: number;
-  gameName: string;
+  gameName?: string;
+  status?: GameStatus;
 }) => {
   const db = await getDB();
-  await db.runAsync('UPDATE HISTORY SET gameName = ? WHERE id = ?', [
-    gameName,
-    historyId,
-  ]);
+  if (status) {
+    await db.runAsync('UPDATE HISTORY SET status = ? WHERE id = ?', [
+      status,
+      historyId,
+    ]);
+  }
+
+  if (gameName) {
+    await db.runAsync('UPDATE HISTORY SET gameName = ? WHERE id = ?', [
+      gameName,
+      historyId,
+    ]);
+  }
 };
 
 const updatePlayer = async ({
@@ -152,20 +163,6 @@ const updateScore = async (playerId: number, score: number) => {
   await db.runAsync('UPDATE HISTORY_PLAYERS SET score = ? WHERE id = ?', [
     score,
     playerId,
-  ]);
-};
-
-const changeGameStatus = async ({
-  historyId,
-  status,
-}: {
-  historyId: number;
-  status: 'created' | 'finished';
-}) => {
-  const db = await getDB();
-  await db.runAsync('UPDATE HISTORY SET status = ? WHERE id = ?', [
-    status,
-    historyId,
   ]);
 };
 
@@ -304,7 +301,7 @@ const getGameById = async (historyId: number) => {
     gameDescription?: string;
     createdAt: string;
     amountOfPlayers: number;
-    status: GameStatus
+    status: GameStatus;
   }>('SELECT * FROM HISTORY WHERE id = ?', [historyId]);
 
   if (!history) {
@@ -353,7 +350,6 @@ export const historyDb = {
   updateGame,
   updatePlayer,
   updateScore,
-  changeGameStatus,
   resetGameScores,
   addCustomScoring,
   updateCustomScoring,

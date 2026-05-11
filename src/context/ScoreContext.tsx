@@ -1,15 +1,16 @@
 import React, {createContext, useContext, useEffect, useState} from 'react';
 import {getRandomColor, shuffleArray} from '../helpers';
 import {historyDb} from '../repository/history';
-import {CustomScore, Game, HistoryFilters, Player} from '../types';
+import {CustomScore, Game, GameStatus, HistoryFilters, Player} from '../types';
 
 type ScoreContextType = {
   loading: boolean;
   currentGame: Game | null;
   createNewGame: () => void;
-  updateGame: (props: {
-    gameName: string;
-    saveToDb?: boolean | undefined;
+  updateGame: (props:  {
+    gameName?: string;
+    status?: GameStatus;
+    saveToDb?: boolean;
   }) => void;
   players: Player[];
   customScore: CustomScore[];
@@ -265,9 +266,11 @@ export const ScoreProvider = ({children}: {children: React.ReactNode}) => {
 
   const updateGame = async ({
     gameName,
+    status,
     saveToDb,
   }: {
-    gameName: string;
+    gameName?: string;
+    status?: GameStatus;
     saveToDb?: boolean;
   }) => {
     if (!currentGame) {
@@ -276,8 +279,14 @@ export const ScoreProvider = ({children}: {children: React.ReactNode}) => {
     if (saveToDb) {
       await historyDb.updateGame({gameName, historyId: currentGame.id});
     }
+    let updatedGame = currentGame;
+    if (gameName) {
+      updatedGame = {...updatedGame, name: gameName};
+    }
+    if (status) {
+      updatedGame = {...updatedGame, status};
+    }
 
-    const updatedGame = {...currentGame, name: gameName};
     setCurrentGame(updatedGame);
   };
 
