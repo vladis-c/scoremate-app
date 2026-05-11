@@ -15,7 +15,7 @@ type GameCardProps = {
 const GameCard = ({
   onPress,
   onDelete,
-  item: {name, createdAt, amountOfPlayers, hasCustomScoring},
+  item: {name, createdAt, amountOfPlayers, hasCustomScoring, status},
 }: GameCardProps) => {
   const [isConfirmationVisible, setIsConfirmationVisible] = useState(false);
 
@@ -45,6 +45,7 @@ const GameCard = ({
           <Card.Content style={styles.content}>
             <View>
               {name ? <Text>{name}</Text> : null}
+              <Text>{status}</Text>
               <Text>{date}</Text>
             </View>
             <View style={{alignItems: 'flex-end'}}>

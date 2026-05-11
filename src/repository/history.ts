@@ -1,15 +1,16 @@
-import {HistoryFilters} from '../types';
+import {GameStatus, HistoryFilters} from '../types';
 import {getDB} from './db';
 
 const createHistoryTable = async () => {
-  // TODO: updatedAt, gameStatus: "created" | "finished" -> if finished - cannot be edited
+  // TODO: updatedAt, status: "created" | "finished" -> if finished - cannot be edited
   const db = await getDB();
   await db.execAsync(`
     CREATE TABLE IF NOT EXISTS HISTORY (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       gameName TEXT,
       createdAt TEXT NOT NULL,
-      amountOfPlayers INTEGER DEFAULT 1
+      amountOfPlayers INTEGER DEFAULT 1,
+      status TEXT NOT NULL DEFAULT 'created'
     );
     
     CREATE TABLE IF NOT EXISTS HISTORY_PLAYERS (
@@ -28,6 +29,16 @@ const createHistoryTable = async () => {
       FOREIGN KEY (historyId) REFERENCES HISTORY (id) ON DELETE CASCADE
     );
   `);
+
+  const columns = await db.getAllAsync<{name: string}>(
+    'PRAGMA table_info(HISTORY);',
+  );
+  const hasStatusColumn = columns.some(col => col.name === 'status');
+  if (!hasStatusColumn) {
+    await db.execAsync(
+      "ALTER TABLE HISTORY ADD COLUMN status TEXT NOT NULL DEFAULT 'created';",
+    );
+  }
 };
 
 const createGame = async ({
@@ -144,6 +155,20 @@ const updateScore = async (playerId: number, score: number) => {
   ]);
 };
 
+const changeGameStatus = async ({
+  historyId,
+  status,
+}: {
+  historyId: number;
+  status: 'created' | 'finished';
+}) => {
+  const db = await getDB();
+  await db.runAsync('UPDATE HISTORY SET status = ? WHERE id = ?', [
+    status,
+    historyId,
+  ]);
+};
+
 const resetGameScores = async ({historyId}: {historyId: number}) => {
   const db = await getDB();
   await db.runAsync(
@@ -228,12 +253,14 @@ const getAllGames = async ({filters}: {filters: HistoryFilters}) => {
     amountOfPlayers: number;
     playerNames: string | null;
     hasCustomScoring: number;
+    status: GameStatus;
   }>(
     `SELECT
        H.id,
        H.gameName,
        H.createdAt,
        H.amountOfPlayers,
+       H.status,
        GROUP_CONCAT(HP.playerName, ',') AS playerNames,
        CASE WHEN EXISTS(
          SELECT 1 FROM HISTORY_CUSTOM_SCORING C
@@ -260,6 +287,7 @@ const getAllGames = async ({filters}: {filters: HistoryFilters}) => {
       amountOfPlayers: row.amountOfPlayers,
       playerNames: row.playerNames ? row.playerNames.split(',') : [],
       customScoring: row.hasCustomScoring === 1,
+      status: row.status,
     })),
     hasMore,
     page,
@@ -276,6 +304,7 @@ const getGameById = async (historyId: number) => {
     gameDescription?: string;
     createdAt: string;
     amountOfPlayers: number;
+    status: GameStatus
   }>('SELECT * FROM HISTORY WHERE id = ?', [historyId]);
 
   if (!history) {
@@ -324,6 +353,7 @@ export const historyDb = {
   updateGame,
   updatePlayer,
   updateScore,
+  changeGameStatus,
   resetGameScores,
   addCustomScoring,
   updateCustomScoring,

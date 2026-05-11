@@ -252,13 +252,14 @@ export const ScoreProvider = ({children}: {children: React.ReactNode}) => {
         id: createdGame.historyId ?? 0,
         name: '',
         description: '',
+        status: 'created',
       });
       setPlayers([
         {color: playerColor, id: createdGame.playerIds[0], name: '', score: 0},
       ]);
       setCustomScore([]);
     } catch (error) {
-      setCurrentGame({id: 0, name: '', description: ''});
+      setCurrentGame({id: 0, name: '', description: '', status: 'created'});
     }
   };
 
@@ -304,6 +305,7 @@ export const ScoreProvider = ({children}: {children: React.ReactNode}) => {
             createdAt: game.createdAt,
             amountOfPlayers: game.amountOfPlayers,
             hasCustomScoring: game.customScoring,
+            status: game.status,
           }))
         : [
             ...prev,
@@ -313,6 +315,7 @@ export const ScoreProvider = ({children}: {children: React.ReactNode}) => {
               createdAt: game.createdAt,
               amountOfPlayers: game.amountOfPlayers,
               hasCustomScoring: game.customScoring,
+              status: game.status,
             })),
           ],
     );
@@ -336,6 +339,7 @@ export const ScoreProvider = ({children}: {children: React.ReactNode}) => {
         id: game.id,
         name: game.gameName,
         description: game.gameDescription,
+        status: game.status,
       });
       setPlayers(
         game.players.map(player => ({
@@ -355,7 +359,7 @@ export const ScoreProvider = ({children}: {children: React.ReactNode}) => {
           })),
       );
     } catch (error) {
-      setCurrentGame({id: 0, name: '', description: ''});
+      setCurrentGame({id: 0, name: '', description: '', status: 'created'});
     }
   };
 

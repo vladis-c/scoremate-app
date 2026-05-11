@@ -1,3 +1,5 @@
+export type GameStatus = 'created' | 'finished';
+
 export type Game = {
   id: number;
   name: string;
@@ -5,6 +7,7 @@ export type Game = {
   createdAt?: string;
   amountOfPlayers?: number;
   hasCustomScoring?: boolean;
+  status: GameStatus;
 };
 
 export type Player = {
