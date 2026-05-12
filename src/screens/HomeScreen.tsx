@@ -1,5 +1,5 @@
 import {Image} from 'expo-image';
-import React, {useEffect, useRef} from 'react';
+import React from 'react';
 import {StyleSheet, View} from 'react-native';
 import {Button, Text} from 'react-native-paper';
 import ScrollContainer from '../components/ScrollContainer';
@@ -27,10 +27,13 @@ type BtnProps = {
 const HomeScreen = ({navigation}: StartScreenProps) => {
   const scoreContext = useScore();
 
+  const shouldDisplayCurrentSession =
+    scoreContext.currentGame && scoreContext.currentGame.status !== 'finished';
+
   const getBtnProps = (): BtnProps[] => {
     const newProps: BtnProps[] = [];
 
-    if (scoreContext.currentGame) {
+    if (shouldDisplayCurrentSession) {
       const bg1 = getRandomColor({useDefault: true});
       const textColor1 = handleTextColorForBackground(bg1);
       const label1 =
@@ -101,7 +104,7 @@ const HomeScreen = ({navigation}: StartScreenProps) => {
         <Text
           style={
             styles.text
-          }>{`Choose between Scoremate preset and Custom experience${scoreContext.currentGame ? `, or continue your last game ${scoreContext.currentGame.name}` : ''}`}</Text>
+          }>{`Choose between Scoremate preset and Custom experience${shouldDisplayCurrentSession ? `, or continue your last game ${scoreContext?.currentGame?.name}` : ''}`}</Text>
       </View>
       {btnProps.map(props => {
         return (

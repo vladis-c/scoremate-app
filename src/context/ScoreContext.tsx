@@ -7,7 +7,7 @@ type ScoreContextType = {
   loading: boolean;
   currentGame: Game | null;
   createNewGame: () => void;
-  updateGame: (props:  {
+  updateGame: (props: {
     gameName?: string;
     status?: GameStatus;
     saveToDb?: boolean;
@@ -277,7 +277,7 @@ export const ScoreProvider = ({children}: {children: React.ReactNode}) => {
       return;
     }
     if (saveToDb) {
-      await historyDb.updateGame({gameName, historyId: currentGame.id});
+      await historyDb.updateGame({gameName, historyId: currentGame.id, status});
     }
     let updatedGame = currentGame;
     if (gameName) {

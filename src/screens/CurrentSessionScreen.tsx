@@ -39,18 +39,18 @@ const CurrentSessionScreen = ({navigation, route}: ScoreScreenProps) => {
     ref.current?.scrollToEnd();
   }, [scoreContext.players.length]);
 
+  const goToStart = () => {
+    navigation.getParent()?.dispatch(
+      CommonActions.reset({
+        index: 0,
+        routes: [{name: MAIN_NAV.START}],
+      }),
+    );
+  };
+
   return (
     <View style={styles.container}>
-      <QuickOptions
-        onDelete={() => {
-          navigation.getParent()?.dispatch(
-            CommonActions.reset({
-              index: 0,
-              routes: [{name: MAIN_NAV.START}],
-            }),
-          );
-        }}
-      />
+      <QuickOptions onDelete={goToStart} />
       <ScrollContainer ref={ref} containerStyle={styles.scrollContainer}>
         {scoreContext.players.map(player => (
           <ScoreCard
@@ -63,8 +63,8 @@ const CurrentSessionScreen = ({navigation, route}: ScoreScreenProps) => {
       </ScrollContainer>
       <AnimatedFab
         onPress={() => {
-          // scoreContext.updateGame({saveToDb: true, status: 'finished'})
-          console.log("s")
+          scoreContext.updateGame({saveToDb: true, status: 'finished'});
+          goToStart();
         }}
       />
     </View>
