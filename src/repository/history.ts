@@ -2,7 +2,6 @@ import {GameStatus, HistoryFilters} from '../types';
 import {getDB} from './db';
 
 const createHistoryTable = async () => {
-  // TODO: updatedAt, status: "created" | "finished" -> if finished - cannot be edited
   const db = await getDB();
   await db.execAsync(`
     CREATE TABLE IF NOT EXISTS HISTORY (

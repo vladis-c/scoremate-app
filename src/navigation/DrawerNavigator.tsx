@@ -64,6 +64,14 @@ const DrawerNavigator = () => {
         }}
       />
       <Drawer.Screen
+        name={DRAWER_NAV.CUSTOMISATION}
+        component={CustomisationScreen}
+        options={{
+          drawerIcon: () => <IconButton icon="cog" />,
+        }}
+        initialParams={{isNew: false, label: 'Custom settings'}}
+      />
+      <Drawer.Screen
         name={DRAWER_NAV.RANDOM}
         component={RandomizerScreen}
         options={{
@@ -77,14 +85,6 @@ const DrawerNavigator = () => {
           drawerIcon: () => <IconButton icon="dice-6" />,
         }}
       /> */}
-      <Drawer.Screen
-        name={DRAWER_NAV.CUSTOMISATION}
-        component={CustomisationScreen}
-        options={{
-          drawerIcon: () => <IconButton icon="cog" />,
-        }}
-        initialParams={{isNew: false, label: 'Custom settings'}}
-      />
       <Drawer.Screen
         name={DRAWER_NAV.HISTORY}
         component={HistoryScreen}
