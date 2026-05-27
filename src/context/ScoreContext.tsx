@@ -1,3 +1,4 @@
+import {endOfDay} from 'date-fns';
 import React, {createContext, useContext, useEffect, useState} from 'react';
 import {getRandomColor, shuffleArray} from '../helpers';
 import {historyDb} from '../repository/history';
@@ -47,7 +48,7 @@ type ScoreContextType = {
 const historyFiltersInitialValue: HistoryFilters = {
   dateRange: {
     start: undefined,
-    end: new Date(),
+    end: endOfDay(new Date()),
   },
   searchParam: '',
   page: 1,
